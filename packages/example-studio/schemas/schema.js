@@ -213,6 +213,18 @@ export default createSchema({
           ]
         },
         {
+          name: 'minimal',
+          type: 'array',
+          title: 'Blocks',
+          editor: 'slate',
+          of: [
+            {
+              title: 'Paragraph',
+              type: 'paragraph',
+            }
+          ]
+        },
+        {
           name: 'authors',
           title: 'Authors',
           type: 'array',

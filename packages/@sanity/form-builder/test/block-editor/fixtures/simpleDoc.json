@@ -1,0 +1,41 @@
+{
+  "_id": "simpleDoc",
+  "_type": "object",
+  "title": "Test document",
+  "content": [
+    {
+      "_type": "paragraph",
+      "_key": "first",
+      "nodes": [
+        {
+          "_type": "textspan",
+          "content": "this is"
+        },
+        {
+          "_type": "textspan",
+          "content": " italic ",
+          "marks": ["em"]
+        },
+        {
+          "_type": "textspan",
+          "content": "and this is"
+        },
+        {
+          "_type": "textspan",
+          "content": " bold",
+          "marks": ["strong"]
+        }
+      ]
+    },
+    {
+      "_type": "paragraph",
+      "_key": "empty",
+      "nodes": [
+        {
+          "_type": "textspan",
+          "content": ""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "_type": "object",
+  "title": "Test document",
+  "content": [
+    {
+      "_type": "paragraph",
+      "_key": "6faaf41006d5",
+      "nodes": [
+        {
+          "_type": "textspan",
+          "content": "this is"
+        },
+        {
+          "_type": "textspan",
+          "content": " italic ",
+          "marks": [
+            {
+              "_type": "mark",
+              "type": "em"
+            }
+          ]
+        },
+        {
+          "_type": "textspan",
+          "content": "and this is"
+        },
+        {
+          "_type": "textspan",
+          "content": " bold",
+          "marks": [
+            {
+              "_type": "mark",
+              "type": "strong"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "paragraph",
+      "_key": "c69fd8ef47cc",
+      "nodes": [
+        {
+          "_type": "textspan",
+          "content": "And here's a "
+        },
+        {
+          "_type": "link",
+          "href": "http://example.com",
+          "nodes": [
+            {
+              "_type": "textspan",
+              "content": "Italic link",
+              "marks": [
+                {
+                  "_type": "mark",
+                  "type": "em"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "_type": "address",
+      "_key": "29f48cf2a3e7",
+      "street": "Thorvald Meyers gate",
+      "zip": "0551"
+    }
+  ]
+}

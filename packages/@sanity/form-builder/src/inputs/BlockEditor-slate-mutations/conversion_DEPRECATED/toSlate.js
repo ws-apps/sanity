@@ -1,7 +1,7 @@
 // Converts a persisted array to a slate compatible json document
 import {pick} from 'lodash'
 import {Raw, Block, Document, State, Character, Mark, Text, Inline} from 'slate'
-import {createMemberValue} from '../../../state/FormBuilderState'
+import {createFieldValue} from '../../../state/FormBuilderState'
 import {SLATE_TEXT_BLOCKS, SLATE_LIST_BLOCKS, SLATE_DEFAULT_NODE, SLATE_BLOCK_FORMATTING_OPTION_KEYS} from '../constants'
 
 export const DESERIALIZE = {
@@ -84,11 +84,11 @@ export const DESERIALIZE = {
       return DESERIALIZE.listBlock(node, context)
     }
 
-    // find type in type definition's `of` property
-    const fieldDef = context.type.of.find(ofType => ofType.type === node._type)
+    // find type in field definition's `of` property
+    const fieldDef = context.field.of.find(ofType => ofType.type === node._type)
 
-    const value = createMemberValue(node, {
-      type: fieldDef,
+    const value = createFieldValue(node, {
+      field: fieldDef,
       schema: context.schema,
       resolveInputComponent: context.resolveInputComponent
     })
@@ -106,7 +106,8 @@ export const DESERIALIZE = {
   }
 }
 
-export default function toSlate(array, context) {
+export default function toSlate(array = [], context) {
+
   if (array.length === 0) {
     return State.create({
       document: Document.create({
