@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -13,7 +14,9 @@ export default [
     },
     after: {
       a: 'The nice dog'
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a'], 'The nice dog')
   },
 
   {
@@ -28,6 +31,8 @@ export default [
     },
     after: {
       a: ['The nice dog']
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 0], 'The nice dog')
   },
 ]

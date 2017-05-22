@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -16,7 +17,9 @@ export default [
       a: {
         c: 10
       }
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 'b'])
   },
 
   {
@@ -29,7 +32,9 @@ export default [
     },
     after: {
       a: [0, 10, 30, 40, 50]
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 2])
   },
 
   {
@@ -42,7 +47,11 @@ export default [
     },
     after: {
       a: [30, 40, 50]
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 2])
+      .unset(['a', 1])
+      .unset(['a', 0])
   },
 
   {
@@ -55,7 +64,8 @@ export default [
     },
     after: {
       a: [0, 10, 20, 30, 40, 50]
-    }
+    },
+    changes: (new ChangeSet())
   },
 
   {
@@ -74,7 +84,8 @@ export default [
         b: 7,
         c: 10
       }
-    }
+    },
+    changes: (new ChangeSet())
   },
 
   {
@@ -90,7 +101,10 @@ export default [
     },
     after: {
       a: {}
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 'b'])
+      .unset(['a', 'c'])
   },
 
   {
@@ -103,7 +117,9 @@ export default [
     },
     after: {
       a: [0, 10, 20, 30, 40]
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 5])
   },
 
   {
@@ -116,7 +132,10 @@ export default [
     },
     after: {
       a: [0, 10, 20, 50]
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 4])
+      .unset(['a', 3])
   },
 
   {
@@ -129,7 +148,9 @@ export default [
     },
     after: {
       a: [{key: 'two'}],
-    }
+    },
+    changes: (new ChangeSet())
+      .unset(['a', 0])
   }
 
 ]

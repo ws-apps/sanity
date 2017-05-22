@@ -1,4 +1,4 @@
-import {targetsToIndicies} from './util'
+import {targetsToExistingIndicies} from './util'
 
 export default class UnsetPatch {
   path : string
@@ -7,15 +7,20 @@ export default class UnsetPatch {
     this.id = id
     this.path = path
   }
-  apply(targets, accessor) {
+  apply(targets, accessor, rootPath, changeSet) {
     let result = accessor
     switch (accessor.containerType()) {
       case 'array':
-        result = result.unsetIndices(targetsToIndicies(targets, accessor))
+        const indicies = targetsToExistingIndicies(targets, accessor)
+        result = result.unsetIndices(indicies)
+        indicies.slice().reverse().forEach(i => changeSet.unset(rootPath.concat(i)))
         break
       case 'object':
         targets.forEach(target => {
-          result = result.unsetAttribute(target.name())
+          if (result.hasAttribute(target.name())) {
+            result = result.unsetAttribute(target.name())
+            changeSet.unset(rootPath.concat(target.name()))
+          }
         })
         break
       default:

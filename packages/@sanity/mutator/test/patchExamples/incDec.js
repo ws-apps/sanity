@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -21,6 +22,10 @@ export default [
       a: [0, 1, 3, 3, 4],
       b: 6,
       c: 4
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 2], 3)
+      .set(['b'], 6)
+      .set(['c'], 4)
   },
 ]

@@ -14,6 +14,7 @@
 
 import Mutation from './Mutation'
 import {isEqual} from 'lodash'
+import ChangeSet from '../changes/ChangeSet'
 
 import debug from './debug'
 
@@ -188,7 +189,8 @@ export default class Document {
     }
     debug('Applying mutation %s -> %s to rev %s', mut.previousRev, mut.resultRev, this.HEAD && this.HEAD._rev)
 
-    this.HEAD = mut.apply(this.HEAD)
+    const changes = new ChangeSet()
+    this.HEAD = mut.apply(this.HEAD, changes)
 
     // Eliminate from incoming set
     this.incoming = this.incoming.filter(m => m.transactionId != mut.transactionId)
@@ -207,6 +209,7 @@ export default class Document {
     if (this.onMutation) {
       this.onMutation({
         mutation: mut,
+        changes,
         document: this.EDGE,
         remote: true
       })

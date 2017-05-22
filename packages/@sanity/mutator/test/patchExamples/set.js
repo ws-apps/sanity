@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -17,7 +18,8 @@ export default [
       a: {
         b: 10
       }
-    }
+    },
+    changes: (new ChangeSet()).set(['a', 'b'], 10)
   },
 
   {
@@ -36,7 +38,10 @@ export default [
       a: {
         b: [10, 10, 10]
       }
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 'b', 0], 10)
+      .set(['a', 'b', 2], 10)
   },
 
   {
@@ -55,7 +60,10 @@ export default [
       a: {
         b: [10, 10, 20]
       }
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 'b', 0], 10)
+      .set(['a', 'b', 1], 10)
   },
 
   {
@@ -76,7 +84,10 @@ export default [
         b: [0, 10, {c: 'Hello'}],
         d: 'Hello'
       }
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 'b', 2, 'c'], 'Hello')
+      .set(['a', 'd'], 'Hello')
   },
 
   {
@@ -109,7 +120,9 @@ export default [
           cute: true
         }
       ]
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['animals', 1, 'cute'], true)
   },
 
   {
@@ -122,7 +135,9 @@ export default [
     },
     after: {
       a: 'hello'
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a'], 'hello')
   },
 
   {
@@ -137,7 +152,12 @@ export default [
     },
     after: {
       a: [0, 1, 2, 3, -1, -1, -1, -1]
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 4], -1)
+      .set(['a', 5], -1)
+      .set(['a', 6], -1)
+      .set(['a', 7], -1)
   },
 
   {
@@ -154,7 +174,10 @@ export default [
     after: {
       a: [{deep: 'How deep?', b: {deep: 'How deep?'}}],
       deep: 12.3
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 0, 'b', 'deep'], 'How deep?')
+      .set(['a', 0, 'deep'], 'How deep?')
   },
 
   {
@@ -171,7 +194,9 @@ export default [
     after: {
       a: [{deep: 'Hello', b: {deep: 'banana', fnah: 'How deep?'}}],
       deep: 12.3
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 0, 'b', 'fnah'], 'How deep?')
   },
 
   {
@@ -182,6 +207,9 @@ export default [
     patch: [{inc: {a: 1}}, {inc: {a: 2}}],
     after: {
       a: 3
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a'], 1)
+      .set(['a'], 3)
   }
 ]

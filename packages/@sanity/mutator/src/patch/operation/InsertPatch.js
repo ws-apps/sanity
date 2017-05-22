@@ -13,7 +13,7 @@ export default class InsertPatch {
     this.path = path
     this.items = items
   }
-  apply(targets, accessor) {
+  apply(targets, accessor, rootPath, changeSet) {
     let result = accessor
     if (accessor.containerType() !== 'array') {
       throw new Error('Attempt to apply insert patch to non-array value')
@@ -22,11 +22,13 @@ export default class InsertPatch {
       case 'before': {
         const pos = minIndex(targets, accessor)
         result = result.insertItemsAt(pos, this.items)
+        changeSet.insert(rootPath.concat(pos), this.items)
         break
       }
       case 'after': {
         const pos = maxIndex(targets, accessor)
         result = result.insertItemsAt(pos + 1, this.items)
+        changeSet.insert(rootPath.concat(pos + 1), this.items)
         break
       }
       case 'replace': {
@@ -35,6 +37,8 @@ export default class InsertPatch {
         const indicies = targetsToIndicies(targets, accessor)
         result = result.unsetIndices(indicies)
         result = result.insertItemsAt(indicies[0], this.items)
+        indicies.slice().reverse().forEach(i => changeSet.unset(rootPath.concat(i)))
+        changeSet.insert(rootPath.concat(indicies[0]), this.items)
         break
       }
       default: {

@@ -7,6 +7,7 @@ import Document from './Document'
 import Mutation from './Mutation'
 import SquashingBuffer from './SquashingBuffer'
 import debug from './debug'
+import ChangeSet from '../changes/ChangeSet'
 
 class Commit {
   mutations : mutations
@@ -77,11 +78,13 @@ export default class BufferedDocument {
     debug('Staged local mutation')
     this.buffer.add(mutation)
     const oldLocal = this.LOCAL
-    this.LOCAL = mutation.apply(this.LOCAL)
+    const changes = new ChangeSet()
+    this.LOCAL = mutation.apply(this.LOCAL, changes)
     if (this.onMutation && oldLocal !== this.LOCAL) {
       debug('onMutation fired')
       this.onMutation({
         mutation,
+        changes,
         document: this.LOCAL,
         remote: false
       })

@@ -138,17 +138,31 @@ export default class Expression {
     }
     return new Expression(this.expr.term)
   }
-  toIndicies(probe : Probe) : Array<number> {
+  toIndicies(probe : Probe, onlyExisting : bool) : Array<number> {
     if (!this.isIndexReference()) {
       throw new Error('Node cannot be converted to indexes')
     }
     if (this.expr.type == 'index') {
-      return [interpretNegativeIndex(this.expr.value, probe)]
+      const index = interpretNegativeIndex(this.expr.value, probe)
+      if (onlyExisting && (index < 0 || index >= probe.length())) {
+        return []
+      }
+      return [index]
     } else if (this.expr.type == 'range') {
       const result : Array<number> = []
       let {start, end, step} = this.expandRange(probe)
       if (step < 0) {
         [start, end] = [end, start]
+      }
+      // If onlyExisting is set, only indicies existing in the actual underlying array is returned
+      if (onlyExisting) {
+        if (start >= probe.length()) {
+          // Starts after existing ones
+          return []
+        }
+        if (end >= probe.length()) {
+          end = probe.lengt() - 1
+        }
       }
       for (let i = start; i < end; i++) {
         result.push(i)

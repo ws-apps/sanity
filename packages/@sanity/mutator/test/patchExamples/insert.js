@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -14,7 +15,9 @@ export default [
     },
     after: {
       a: [0, 1, -1, -2, 2, 3, 4]
-    }
+    },
+    changes: (new ChangeSet())
+      .insert(['a', 2], [-1, -2])
   },
 
   {
@@ -30,7 +33,9 @@ export default [
     },
     after: {
       a: [0, 1, 2, -1, -2, 3, 4]
-    }
+    },
+    changes: (new ChangeSet())
+      .insert(['a', 3], [-1, -2])
   },
 
   {
@@ -46,7 +51,9 @@ export default [
     },
     after: {
       a: [-1, -2]
-    }
+    },
+    changes: (new ChangeSet())
+      .insert(['a', 0], [-1, -2])
   },
 
   {
@@ -62,7 +69,9 @@ export default [
     },
     after: {
       addresses: [{address: 'Mogata 24'}, {address: '123 Banana Rd.'}]
-    }
+    },
+    changes: (new ChangeSet())
+      .insert(['addresses', 1], [{address: '123 Banana Rd.'}])
   },
 
   {
@@ -73,11 +82,16 @@ export default [
     patch: {
       insert: {
         replace: 'scores[1:4]',
-        items: ["hello", "man"]
+        items: ['hello', 'man']
       }
     },
     after: {
-      scores: [1, "hello", "man", 5]
-    }
+      scores: [1, 'hello', 'man', 5]
+    },
+    changes: (new ChangeSet())
+      .unset(['scores', 3])
+      .unset(['scores', 2])
+      .unset(['scores', 1])
+      .insert(['scores', 1], ['hello', 'man'])
   }
 ]

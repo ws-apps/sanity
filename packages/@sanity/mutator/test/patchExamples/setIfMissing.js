@@ -1,4 +1,5 @@
 /* eslint-disable id-length, quote-props */
+import ChangeSet from '../../src/changes/ChangeSet'
 
 export default [
   {
@@ -17,7 +18,8 @@ export default [
       a: {
         b: 7
       }
-    }
+    },
+    changes: (new ChangeSet())
   },
 
   {
@@ -37,7 +39,9 @@ export default [
         b: 7,
         c: 10
       }
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['a', 'c'], 10)
   },
 
   {
@@ -59,6 +63,8 @@ export default [
         {b: 7, p: 'Thorvald Meyers gt.', zz: {yyy: 55, zzz: 10}}
       ]
     },
+    changes: (new ChangeSet())
+      .set(['z', 0, 'zz', 'zzz'], '100')
   },
 
   // Potentially redundant, added to exactly match a test case from @sanity/form-builder that was failing.
@@ -80,6 +86,8 @@ export default [
         {_type: 'address', street: 'Thorvald Meyers gate', location: {_type: 'latlon', lat: 45, lon: 61}},
         {_type: 'address', street: 'Thorvald Meyers gate', location: {_type: 'latlon', lat: 41, lon: 22}},
       ]
-    }
+    },
+    changes: (new ChangeSet())
+      .set(['addresses', 0, 'location', 'lon'], 61)
   }
 ]

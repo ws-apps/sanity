@@ -28,10 +28,9 @@ export default class Matcher {
   // Moves any recursive descenders onto the recursive track, removing them from
   // the active set
   extractRecursives() {
-    // console.log(JSON.stringify(this.active))
     this.active = this.active.filter(descender => {
       if (descender.isRecursive()) {
-        this.recursives.push(...descender.extractRecursives())
+        this.recursives = this.recursives.concat(...descender.extractRecursives())
         return false
       }
       return true
@@ -111,7 +110,6 @@ export default class Matcher {
         return
       }
       // const newDescenders = descender.descend()
-      // console.log('newDescenders', newDescenders)
       if (descender.tail) {
         // Not arrived yet
         const matcher = new Matcher(descender.descend(), this)
@@ -127,9 +125,9 @@ export default class Matcher {
       }
     })
 
-    // If there are recursive terms, we need to add a lead for every descendant ...
+    // If there are recursive terms and the active set is satisfied, we need to add a lead for every descendant ...
     if (this.hasRecursives()) {
-      // The recustives matcher will have no active set, only inherit recursives from this
+      // The recursive matcher will have no active set, only inherit recursives from this
       const recursivesMatcher = new Matcher([], this)
       if (probe.containerType() == 'array') {
         const length = probe.length()

@@ -3,6 +3,7 @@
 import { Patcher } from '../patch'
 import luid from './luid'
 import debug from './debug'
+import ChangeSet from '../changes/ChangeSet'
 
 // A mutation describing a number of operations on a single document
 // This should be considered an immutable structure. Mutations are compiled
@@ -74,19 +75,40 @@ export default class Mutation {
       if (mutation.create) {
         // TODO: Fail entire patch if document did exist
         operations.push(
-          doc => (doc === null ? Object.assign(mutation.create, {_createdAt: this.params.timestamp}) : doc)
+          (doc, changeSet) => {
+            if (doc === null) {
+              const nextDoc = Object.assign(mutation.create, {_createdAt: this.params.timestamp})
+              changeSet.create(nextDoc)
+              return nextDoc
+            }
+            return doc
+          }
         )
       } else if (mutation.createIfNotExists) {
         operations.push(
-          doc => (doc === null ? Object.assign(mutation.createIfNotExists, {_createdAt: this.params.timestamp}) : doc)
+          (doc, changeSet) => {
+            if (doc === null) {
+              const nextDoc = Object.assign(mutation.create, {_createdAt: this.params.timestamp})
+              changeSet.create(nextDoc)
+              return nextDoc
+            }
+            return doc
+          }
         )
       } else if (mutation.createOrReplace) {
-        operations.push(() => Object.assign(mutation.createOrReplace, {_createdAt: this.params.timestamp}))
+        operations.push((doc, changeSet) => {
+          const nextDoc = Object.assign(mutation.createOrReplace, {_createdAt: this.params.timestamp})
+          changeSet.create(nextDoc)
+          return nextDoc
+        })
       } else if (mutation.delete) {
-        operations.push(() => null)
+        operations.push((doc, changeSet) => {
+          changeSet.delete()
+          return null
+        })
       } else if (mutation.patch) {
         const patch = new Patcher(mutation.patch)
-        operations.push(doc => patch.apply(doc))
+        operations.push((doc, changeSet) => patch.apply(doc, changeSet))
       } else {
         throw new Error(
           `Unsupported mutation ${JSON.stringify(mutation, null, 2)}`
@@ -103,14 +125,14 @@ export default class Mutation {
     }
     const prevRev = this.previousRev
     const rev = this.resultRev || this.transactionId
-    this.compiled = doc => {
+    this.compiled = (doc, changeSet) => {
       if (prevRev && prevRev != doc._rev) {
         throw new Error(
           `Previous revision for this mutation was ${prevRev}, but the document revision is ${doc._rev}`
         )
       }
       const result = operations.reduce(
-        (revision, operation) => operation(revision),
+        (revision, operation) => operation(revision, changeSet),
         doc
       )
       if (result && rev) {
@@ -119,19 +141,20 @@ export default class Mutation {
       return result
     }
   }
-  apply(document: Object): Object {
+  apply(document: Object, changeSet : ChangeSet): Object {
+    const activeChangeSet = changeSet ? changeSet : new ChangeSet()
     debug(
       `Applying mutation ${JSON.stringify(this.mutations)} to document ${JSON.stringify(document)}`
     )
     if (!this.compiled) {
       this.compile()
     }
-    const result = this.compiled(document)
+    const result = this.compiled(document, activeChangeSet)
     debug(`  => ${JSON.stringify(result)}`)
     return result
   }
-  static applyAll(document: Object, mutations: Array<Mutation>): Object {
-    return mutations.reduce((doc, mutation) => mutation.apply(doc), document)
+  static applyAll(document: Object, mutations: Array<Mutation>, changeSet : ChangeSet): Object {
+    return mutations.reduce((doc, mutation) => mutation.apply(doc, changeSet), document)
   }
   // Given a number of yet-to-be-committed mutation objects, collects them into one big mutation
   // any metadata like transactionId is ignored and must be submitted by the client. It is assumed

@@ -1,6 +1,7 @@
 import {test} from 'tap'
 import {Patcher} from '../src/patch'
 import {cloneDeep} from 'lodash'
+import ChangeSet from '../src/changes/ChangeSet'
 
 // Test suites
 import set from './patchExamples/set'
@@ -24,7 +25,10 @@ examples.forEach(example => {
 
     const patcher = new Patcher(example.patch)
     const pristine = cloneDeep(example.before)
-    const patched = patcher.apply(example.before)
+    const changeSet = new ChangeSet()
+    const patched = patcher.apply(example.before, changeSet)
+
+    // console.log(JSON.stringify(changeSet, null, 2))
 
     // Don't care about ids in result
     delete patched._id
@@ -35,6 +39,8 @@ examples.forEach(example => {
     tap.same(patched, example.after, 'patch result must match example')
     // Verify immutability
     tap.same(pristine, example.before, 'original value must not be touched')
+    // Verify changes
+    tap.same(changeSet, example.changes, 'changes must match example')
 
     tap.end()
   })
