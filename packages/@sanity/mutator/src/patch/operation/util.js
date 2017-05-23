@@ -17,18 +17,3 @@ export function targetsToIndicies(targets, accessor) {
 export function targetsToExistingIndicies(targets, accessor) {
   return rawTargetsToIndicies(targets, accessor, true)
 }
-
-// given a simple path array and a number of targets, returns a set of concrete paths
-export function concatAllTargets(rootPath, targets) {
-  const result = []
-  targets.forEach(target => {
-    if (target.isIndexReference()) {
-      target.toIndicies().forEach(i => {
-        result.push(rootPath.concat(i))
-      })
-    } else if (target.isAttributeReference()) {
-      result.push(rootPath.concat(target.name()))
-    }
-  })
-  return result
-}

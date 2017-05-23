@@ -13,7 +13,7 @@ export default class DocumentTester {
     this.doc.onRebase = edge => {
       this.onRebaseCalled = true
     }
-    this.doc.onMutation = (edge, mutation) => {
+    this.doc.onMutation = msg => {
       this.onMutationCalled = true
     }
     this.tap = tap

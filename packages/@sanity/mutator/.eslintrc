@@ -1,13 +1,9 @@
 {
   "env": {
-    "node": true
+    "browser": true
   },
-  "extends": ["sanity"],
+  "extends": "sanity",
   "plugins": [
     "flowtype-errors"
-  ],
-  "parser": "babel-eslint",
-  "rules": {
-    "flowtype-errors/show-errors": 2
-  }
+  ]
 }

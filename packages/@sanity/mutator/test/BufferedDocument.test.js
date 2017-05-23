@@ -15,7 +15,7 @@ test('simple edit cycle', tap => {
   .localPatch({
     id: 'a',
     set: {
-      'title': 'Good bye'
+      title: 'Good bye'
     }
   })
   .onMutationFired()
@@ -25,7 +25,7 @@ test('simple edit cycle', tap => {
   .localPatch({
     id: 'a',
     set: {
-      'body': 'My friend'
+      body: 'My friend'
     }
   })
   .onMutationFired()
@@ -177,8 +177,6 @@ test('document being deleted by remote', tap => {
 
   .end()
 })
-
-
 
 test('document being deleted by local', tap => {
   (new BufferedDocumentTester(tap, {

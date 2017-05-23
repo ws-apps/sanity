@@ -1,4 +1,6 @@
 // @flow
+/* eslint-disable max-depth */
+
 import parse from './parse'
 import Descender from './Descender'
 import Expression from './Expression'

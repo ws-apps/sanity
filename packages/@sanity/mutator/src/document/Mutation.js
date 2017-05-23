@@ -1,6 +1,6 @@
 // @flow
 
-import { Patcher } from '../patch'
+import {Patcher} from '../patch'
 import luid from './luid'
 import debug from './debug'
 import ChangeSet from '../changes/ChangeSet'
@@ -50,7 +50,9 @@ export default class Mutation {
     return undefined
   }
   assignRandomTransactionId() {
-    this.params.resultRev = this.params.transactionId = luid()
+    const txnId = luid()
+    this.params.resultRev = txnId
+    this.params.transactionId = txnId
   }
   appliesToMissingDocument() {
     if (typeof this._appliesToMissingDocument !== 'undefined') {
@@ -59,10 +61,8 @@ export default class Mutation {
     // Only mutations starting with a create operation apply to documents that do not exist ...
     const firstMut = this.mutations[0]
     if (firstMut) {
-      this._appliesToMissingDocument =
-        firstMut.create ||
-        firstMut.createIfNotExists ||
-        firstMut.createOrReplace
+      this._appliesToMissingDocument
+        = firstMut.create || firstMut.createIfNotExists || firstMut.createOrReplace
     } else {
       this._appliesToMissingDocument = true
     }
@@ -165,6 +165,6 @@ export default class Mutation {
       (result, mutation) => result.concat(...mutation.mutations),
       []
     )
-    return new Mutation({ mutations: squashed })
+    return new Mutation({mutations: squashed})
   }
 }

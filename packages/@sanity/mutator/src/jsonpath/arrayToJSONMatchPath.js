@@ -28,7 +28,7 @@ function stringifySegment(segment, hasLeading) {
   return `['${segment}']`
 }
 
-export default function arrayToJSONMatchPath(pathArray : Array<string|number|object>) : string {
+export default function arrayToJSONMatchPath(pathArray : Array<string|number|Object>) : string {
   return pathArray.reduce((acc, segment, index) => {
     return acc + stringifySegment(segment, index === 0)
   }, '')

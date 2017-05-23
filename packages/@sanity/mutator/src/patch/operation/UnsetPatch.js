@@ -10,11 +10,12 @@ export default class UnsetPatch {
   apply(targets, accessor, rootPath, changeSet) {
     let result = accessor
     switch (accessor.containerType()) {
-      case 'array':
+      case 'array': {
         const indicies = targetsToExistingIndicies(targets, accessor)
         result = result.unsetIndices(indicies)
         indicies.slice().reverse().forEach(i => changeSet.unset(rootPath.concat(i)))
         break
+      }
       case 'object':
         targets.forEach(target => {
           if (result.hasAttribute(target.name())) {

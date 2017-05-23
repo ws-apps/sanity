@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable max-depth */
 
 // A utility wrapper class to process parsed jsonpath expressions
 
@@ -150,7 +151,7 @@ export default class Expression {
       return [index]
     } else if (this.expr.type == 'range') {
       const result : Array<number> = []
-      let {start, end, step} = this.expandRange(probe)
+      let {start, end, step} = this.expandRange(probe) // eslint-disable-line prefer-const
       if (step < 0) {
         [start, end] = [end, start]
       }

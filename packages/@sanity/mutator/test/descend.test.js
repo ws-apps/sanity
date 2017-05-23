@@ -1,4 +1,4 @@
-import { test } from 'tap'
+import {test} from 'tap'
 import parse from '../src/jsonpath/parse'
 import toPath from '../src/jsonpath/toPath'
 import descend from '../src/jsonpath/descend'

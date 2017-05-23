@@ -1,7 +1,8 @@
 // Converts a string into an abstract syntax tree representation
+/* eslint-disable max-depth */
 
 import tokenize from './tokenize'
-import {uniq} from 'lodash'
+// import {uniq} from 'lodash'
 
 // TODO: Support '*'
 
@@ -292,43 +293,43 @@ export default function parse(path : string) {
   return new Parser(path).parse()
 }
 
-function unionFromTerms(terms) : Object {
-  let result = {
-    type: 'union'
-  }
-  terms.forEach(term => {
-    switch (term.type) {
-      case 'index':
-        result.indexes = (result.indexes || []).concat(term.value)
-        break
-      case 'range':
-        result.ranges = (result.ranges || []).concat(term)
-        break
-      case 'path':
-        result.paths = (result.paths || []).concat(term)
-        break
-      case 'constraint':
-        result.constraints = (result.constraints || []).concat(term)
-        break
-      case 'union':
-        result = mergeUnions(result, term)
-        break
-      default:
-        throw new Error(`Unexpected union member of type ${term.type}`)
-    }
-  })
-  if (result.indexes) {
-    result.indexes = uniq(result.indexes)
-  }
-  return result
-}
+// function unionFromTerms(terms) : Object {
+//   let result = {
+//     type: 'union'
+//   }
+//   terms.forEach(term => {
+//     switch (term.type) {
+//       case 'index':
+//         result.indexes = (result.indexes || []).concat(term.value)
+//         break
+//       case 'range':
+//         result.ranges = (result.ranges || []).concat(term)
+//         break
+//       case 'path':
+//         result.paths = (result.paths || []).concat(term)
+//         break
+//       case 'constraint':
+//         result.constraints = (result.constraints || []).concat(term)
+//         break
+//       case 'union':
+//         result = mergeUnions(result, term)
+//         break
+//       default:
+//         throw new Error(`Unexpected union member of type ${term.type}`)
+//     }
+//   })
+//   if (result.indexes) {
+//     result.indexes = uniq(result.indexes)
+//   }
+//   return result
+// }
 
-function mergeUnions(union1, union2) : Object {
-  const result = {
-    type: 'union'
-  }
-  uniq(Object.keys(union1).concat(Object.keys(union2))).forEach(key => {
-    result[key] = (union1[key] || []).concat(union2[key] || [])
-  })
-  return result
-}
+// function mergeUnions(union1, union2) : Object {
+//   const result = {
+//     type: 'union'
+//   }
+//   uniq(Object.keys(union1).concat(Object.keys(union2))).forEach(key => {
+//     result[key] = (union1[key] || []).concat(union2[key] || [])
+//   })
+//   return result
+// }

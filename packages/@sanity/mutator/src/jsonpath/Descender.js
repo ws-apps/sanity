@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+
 // @flow
 
 // Descender models the state of one partial jsonpath evaluation. Head is the

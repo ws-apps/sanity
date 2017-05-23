@@ -1,3 +1,5 @@
+/* eslint-disable max-depth */
+
 // @flow
 import Mutation from './Mutation'
 import extractWithPath from '../jsonpath/extractWithPath'
@@ -129,7 +131,7 @@ export default class SquashingBuffer {
     } else if (typeof match.value === 'string' && typeof nextValue === 'string') {
       // console.log("Rewriting to dmp")
       // We are updating a string to another string, so we are making a diffMatchPatch
-      const patch = this.dmp.patch_make(match.value, nextValue).map(patch => patch.toString()).join('')
+      const patch = this.dmp.patch_make(match.value, nextValue).map(dmp => dmp.toString()).join('')
       op = {patch: {id: this.PRESTAGE._id, diffMatchPatch: {[path]: patch}}}
     } else {
       // console.log("Not able to rewrite to dmp, making normal set")
@@ -176,7 +178,8 @@ export default class SquashingBuffer {
     if (newBasis === null) {
       // If document was just deleted, we must throw out local changes
       this.out = null
-      this.PRESTAGE = this.BASIS = newBasis
+      this.PRESTAGE = newBasis
+      this.BASIS = newBasis
     } else {
       this.BASIS = newBasis
       if (this.out) {

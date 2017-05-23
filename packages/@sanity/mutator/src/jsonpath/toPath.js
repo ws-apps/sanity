@@ -1,6 +1,7 @@
 // @flow
 // Converts a parsed expression back into jsonpath2, roughly - mostly for use
 // with tests.
+/* eslint-disable max-depth */
 
 export default function toPath(expr : Object) : string {
   return toPathInner(expr, false)
@@ -39,12 +40,13 @@ function toPathInner(expr : Object, inUnion : bool) : string {
         return `${expr.value}`
       }
       return `[${expr.value}]`
-    case 'constraint':
+    case 'constraint': {
       const inner = `${toPathInner(expr.lhs, false)} ${expr.operator} ${toPathInner(expr.rhs, false)}`
       if (inUnion) {
         return inner
       }
       return `[${inner}]`
+    }
     case 'string':
       return JSON.stringify(expr.value)
     case 'path': {
@@ -60,9 +62,10 @@ function toPathInner(expr : Object, inUnion : bool) : string {
       }
       return result.join('')
     }
-    case 'union':
+    case 'union': {
       const terms = expr.nodes.map(e => toPathInner(e, true))
       return `[${terms.join(',')}]`
+    }
     default:
       throw new Error(`Unknown node type ${expr.type}`)
     case 'recursive':

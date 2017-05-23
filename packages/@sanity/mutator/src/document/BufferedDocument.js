@@ -10,7 +10,7 @@ import debug from './debug'
 import ChangeSet from '../changes/ChangeSet'
 
 class Commit {
-  mutations : mutations
+  mutations : Array<Mutation>
   tries : number
   constructor(mutations) {
     this.mutations = mutations

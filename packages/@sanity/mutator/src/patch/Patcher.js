@@ -2,7 +2,6 @@
 import parse from './operation/parse'
 import ImmutableAccessor from './ImmutableAccessor'
 import {Matcher} from '../jsonpath'
-import {concatAllTargets} from './operation/util'
 import ChangeSet from '../changes/ChangeSet'
 
 export default class Patcher {

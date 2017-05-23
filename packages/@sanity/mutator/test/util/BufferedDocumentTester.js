@@ -16,10 +16,10 @@ export default class BufferedDocumentTester {
     this.doc.onRebase = edge => {
       this.onRebaseCalled = true
     }
-    this.doc.onMutation = (edge, mutation) => {
+    this.doc.onMutation = msg => {
       this.onMutationCalled = true
     }
-    this.doc.onDelete = (local) => {
+    this.doc.onDelete = local => {
       this.onDeleteCalled = true
     }
     this.doc.commitHandler = opts => {
