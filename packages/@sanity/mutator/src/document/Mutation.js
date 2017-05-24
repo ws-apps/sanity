@@ -88,7 +88,7 @@ export default class Mutation {
         operations.push(
           (doc, changeSet) => {
             if (doc === null) {
-              const nextDoc = Object.assign(mutation.create, {_createdAt: this.params.timestamp})
+              const nextDoc = Object.assign(mutation.createIfNotExists, {_createdAt: this.params.timestamp})
               changeSet.create(nextDoc)
               return nextDoc
             }

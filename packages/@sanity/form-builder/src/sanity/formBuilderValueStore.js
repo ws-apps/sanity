@@ -13,7 +13,7 @@ export function checkout(documentId) {
     const patches = event.mutations.map(mut => mut.patch).filter(Boolean)
     return {
       ...event,
-      patches: gradientPatchAdapter.toFormBuilder(event.origin, patches)
+      patches: gradientPatchAdapter.changeSetToFormBuilder(event.origin, event.changes)
     }
   }
 

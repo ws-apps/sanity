@@ -43,11 +43,12 @@ function createBufferedDocument(documentId, server) {
       }).share()
 
       const mutation$ = new Observable(mutationObserver => {
-        bufferedDocument.onMutation = ({mutation, remote}) => {
+        bufferedDocument.onMutation = ({mutation, changes, remote}) => {
           mutationObserver.next({
             type: 'mutation',
             document: bufferedDocument.LOCAL,
             mutations: mutation.mutations,
+            changes: changes,
             origin: remote ? 'remote' : 'local'
           })
         }

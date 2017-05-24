@@ -2,8 +2,10 @@
 
 import {arrayToJSONMatchPath} from '@sanity/mutator'
 import assert from 'assert'
-import {flatten} from 'lodash'
 import type {Patch} from '../../utils/patches'
+import {flatten} from 'lodash'
+import {ChangeSet} from '@sanity/mutator'
+
 type GradientPatch = Object
 
 type Adapter = {
@@ -15,7 +17,8 @@ const adapter: Adapter = {
   fromFormBuilder(patches) {
     return patches.map(fromFormBuilder)
   },
-  toFormBuilder
+  toFormBuilder,
+  changeSetToFormBuilder
 }
 
 export default adapter
@@ -29,7 +32,7 @@ export default adapter
  * to be revised.
  */
 
-function toFormBuilder(origin, patches: Array<GradientPatch>): Array<Patch> {
+function toFormBuilder(origin : string, patches: Array<GradientPatch>) : Array<Patch> {
   return flatten(patches.map(patch => {
     return flatten(Object.keys(patch)
       .filter(key => key !== 'id')
@@ -73,7 +76,40 @@ function toFormBuilder(origin, patches: Array<GradientPatch>): Array<Patch> {
   }))
 }
 
+function changeSetToFormBuilder(origin : string, changeSet: ChangeSet) : Array<Patch> {
+  console.log('changes', JSON.stringify(changeSet.changes, null, 2))
+  return changeSet.changes.map(change => {
+    switch (change.operation) {
+      case 'unset':
+        return {
+          origin,
+          type: 'unset',
+          path: change.path
+        }
+      case 'set':
+        return {
+          origin,
+          type: 'set',
+          path: change.path,
+          value: change.value
+        }
+      case 'insert':
+        return {
+          origin,
+          type: 'insert',
+          path: change.path,
+          items: change.value,
+          position: 'before'
+        }
+      default:
+        throw new Error(`Unsupported change operation ${change.operation}`)
+    }
+  })
+}
+
+
 function fromFormBuilder(patch: Patch): GradientPatch {
+  console.log('out', JSON.stringify(patch, null, 2))
   const matchPath = arrayToJSONMatchPath(patch.path || [])
   if (patch.type === 'insert') {
     const {position, items} = patch

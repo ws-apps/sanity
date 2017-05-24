@@ -105,6 +105,7 @@ export default class WithFormBuilderValue extends React.PureComponent {
     // Note: This is *experimental*
     FormBuilder.receivePatches({
       patches: event.patches,
+      changes: event.changes,
       snapshot: event.document
     })
 

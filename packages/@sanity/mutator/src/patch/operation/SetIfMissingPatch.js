@@ -10,8 +10,12 @@ export default class SetIfMissingPatch {
     let result = accessor
     targets.forEach(target => {
       if (target.isIndexReference()) {
-        // setIfMissing do not apply to arrays, since Gradient will reject nulls in arrays
-        throw new Error('setIfMissing does not apply to array indicies, so this will never happen.')
+        target.toIndicies(accessor).forEach(i => {
+          if (i == accessor.length()) {
+            result = result.setIndex(i, this.value)
+            changeSet.set(rootPath.concat(i), this.value)
+          }
+        })
       } else if (target.isAttributeReference()) {
         if (!result.hasAttribute(target.name())) {
           result = accessor.setAttribute(target.name(), this.value)

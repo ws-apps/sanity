@@ -35,6 +35,9 @@ export default class BufferedDocument {
   commits : Array<Commit>
   // Local mutations that are not scheduled to be committed yet
   buffer : SquashingBuffer
+  // Will be called to notify client about mutations changing the document. The message
+  // contains the resulting document, the mutations that caused the changes and a ChangeSet
+  // describing in simple terms the actual changes that was effected by the mutation
   onMutation : Function
   onRebase : Function
   onDelete : Function

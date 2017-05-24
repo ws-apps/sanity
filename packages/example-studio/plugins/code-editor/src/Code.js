@@ -51,20 +51,14 @@ export default class Code extends React.PureComponent {
   _inputId = uniqueId('Text')
 
   handleCodeChange = code => {
-    const {value} = this.props
-    const newValue = Object.assign({}, value)
-    newValue.code = code
-    if (!value.mode) {
-      newValue.mode = modes[0].value
-    }
-    this.props.onChange(PatchEvent.from(code ? set(newValue) : unset()))
+    this.props.onChange(PatchEvent.from([
+      code ? set(code, ['code']) : unset(['code']),
+      set('code', ['_type'])
+    ]))
   }
 
   handleModeChange = item => {
-    const {value} = this.props
-    const newValue = Object.assign({}, value)
-    newValue.mode = item.value
-    this.props.onChange(PatchEvent.from(item.value ? set(newValue) : unset()))
+    this.props.onChange(PatchEvent.from(item.value ? set(item.value, ['mode']) : unset(['mode'])))
   }
 
   renderEditor = (editorTitle, level, type, mode, value) => {
