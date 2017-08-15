@@ -2,6 +2,7 @@
 
 .toolSwitcher {
   position: relative;
+  padding: var(--medium-padding);
 }
 
 .toolList {
@@ -14,13 +15,13 @@
   display: block;
   position: relative;
   text-align: center;
-  color: var(--selectable-item-color);
+  color: color(var(--white) a(20%));
   margin-bottom: var(--medium-padding);
 }
 
 .activeItem {
   composes: item;
-  color: var(--selected-item-color);
+  color: color(var(--white) a(90%));
 }
 
 .iconContainer {
@@ -39,7 +40,7 @@
   display: block;
 
   @nest &:hover {
-    color: color(var(--selectable-item-color) lightness(-20%));
+    color: color(var(--white) a(50%));
   }
 
   @nest &:active {

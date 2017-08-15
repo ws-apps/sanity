@@ -26,7 +26,6 @@
 }
 
 .defaultLayout {
-  padding: var(--small-padding);
   max-width: 100%;
   width: 100vw;
   overflow: hidden;
@@ -34,11 +33,6 @@
   flex-direction: column;
   box-sizing: border-box;
   height: 100vh;
-
-  @media (--screen-medium) {
-    padding: var(--medium-padding);
-    padding-top: var(--small-padding);
-  }
 }
 
 .toolContainer {
@@ -59,7 +53,8 @@
 
   @media (--screen-medium) {
     display: block;
-    border-bottom: 1px solid var(--component-border-color);
+    background-color: var(--brand-secondary);
+    color: #fff;
   }
 }
 
@@ -79,23 +74,21 @@
 
 .secondaryNavigation {
   display: none;
+  background-color: #444;
 
   @media (--screen-medium) {
     display: block;
     position: relative;
-    width: var(--tool-switcher-width);
-    margin-right: var(--medium-padding);
-    padding-top: var(--medium-padding);
-    padding-right: var(--medium-padding);
     font-size: var(--font-size-xsmall);
   }
 }
 
 .createButton {
   display: block;
-  color: var(--state-danger-color);
+  color: var(--white);
   text-align: center;
-  margin-bottom: var(--medium-padding);
+  padding: var(--medium-padding);
+  background-color: color(var(--brand-secondary) a(50%));
 }
 
 .createButtonIcon {

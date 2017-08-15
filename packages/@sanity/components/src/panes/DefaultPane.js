@@ -59,7 +59,7 @@ export default class Pane extends React.PureComponent {
   }
 
   render() {
-    const {title, children, isSelected, renderFunctions, renderMenu, isCollapsed, isScrollable} = this.props
+    const {className, title, children, isSelected, renderFunctions, renderMenu, isCollapsed, isScrollable} = this.props
 
     return (
       <div
@@ -67,6 +67,7 @@ export default class Pane extends React.PureComponent {
           ${isCollapsed ? styles.isCollapsed : styles.root}
           ${isScrollable ? styles.isScrollable : ''}
           ${isSelected ? styles.isActive : ''}
+          ${className}
         `}
         ref={this.setRootElement}
       >

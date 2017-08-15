@@ -5,7 +5,7 @@
   display: block;
   float: left;
   text-decoration: none;
-  color: var(--text-color);
+  color: var(--white);
   font-weight: 300;
 }
 
@@ -30,11 +30,13 @@
   float: left;
   z-index: 10;
   cursor: pointer;
+  color: inherit;
 
   @nest & svg {
     height: 1rem;
     padding-top: 1rem;
     padding-left: 0.5rem;
     width: auto;
+    fill: currentColor;
   }
 }
