@@ -3,6 +3,9 @@
     "hostname": "0.0.0.0",
     "port": 3010
   },
+  "api": {
+    "projectId": "foo"
+  },
   "plugins": [
     "@sanity/base",
     "@sanity/components"

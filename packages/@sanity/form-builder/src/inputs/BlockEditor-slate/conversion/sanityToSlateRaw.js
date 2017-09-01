@@ -15,7 +15,7 @@ function toRawMark(markName) {
   }
 }
 
-function sanitySpanToRawSlateBlockNode(span) {
+function sanitySpanToRawSlateBlockNode(span, spanType) {
   const {text, _type, marks = [], ...rest} = span
 
   const range = {
@@ -87,7 +87,7 @@ function sanityBlocksArrayToRawNodes(blockArray, type) {
 
 const EMPTY_NODE = {kind: 'block', type: 'contentBlock', data: {style: 'normal'}, nodes: []}
 
-export default function sanityToSlateRaw(array, type) {
+export default function sanityToSlateRaw(array: Array<*>, type: Object) {
   return {
     kind: 'state',
     document: {

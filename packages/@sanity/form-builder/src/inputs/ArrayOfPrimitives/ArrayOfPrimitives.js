@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types'
 // @flow
 /* eslint-disable import/no-extraneous-dependencies */
+import PropTypes from 'prop-types'
 import React from 'react'
 import {get} from 'lodash'
 import {List as DefaultList, Item as DefaultItem} from 'part:@sanity/components/lists/default'
@@ -25,7 +25,7 @@ function move(arr, from, to) {
   return copy
 }
 
-export default class ArrayOfPrimitivesInput extends React.PureComponent {
+export default class ArrayOfPrimitivesInput extends React.PureComponent<*> {
   static propTypes = {
     type: FormBuilderPropTypes.type,
     value: PropTypes.arrayOf(PropTypes.oneOfType([
@@ -37,7 +37,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent {
     onChange: PropTypes.func
   }
 
-  set (nextValue: any[]) {
+  set(nextValue: any[]) {
     const patch = nextValue.length === 0 ? unset() : set(nextValue)
     this.props.onChange(PatchEvent.from(patch))
   }
@@ -46,7 +46,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent {
     this.set(this.props.value.filter((_, i) => i !== index))
   }
 
-  append(type) {
+  append(type: any) {
     this.set((this.props.value || []).concat(getEmptyValue(type)))
   }
 
@@ -54,7 +54,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent {
     this.removeAt(index)
   }
 
-  handleDropDownAction = action => {
+  handleDropDownAction = (action: any) => {
     this.append(action.type)
   }
 
@@ -62,22 +62,22 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent {
     this.append(this.props.type.of[0])
   }
 
-  handleItemChange = event => {
+  handleItemChange = (event: any) => {
     this.props.onChange(event)
   }
 
-  handleSort = event => {
+  handleSort = (event: any) => {
     const {value} = this.props
     const {oldIndex, newIndex} = event
     this.set(move(value, oldIndex, newIndex))
   }
 
-  getMemberType(typeName) {
+  getMemberType(typeName: string) {
     const {type} = this.props
     return type.of.find(memberType => memberType.name === typeName)
   }
 
-  renderItem = (item, index) => {
+  renderItem = (item: any, index: number) => {
     const {type, level, value, onChange} = this.props
 
     const typeName = resolveTypeName(item)
@@ -111,7 +111,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent {
     )
   }
 
-  renderList(value) {
+  renderList(value: any) {
     const {type} = this.props
     const sortable = get(type, 'options.sortable') !== false
 

@@ -62,7 +62,7 @@ type SubscriberArg = {
 type Subscriber = (SubscriberArg) => void
 
 export default function withPatchSubscriber(ComposedComponent: any) {
-  return class SubscribePatch extends React.Component {
+  return class SubscribePatch extends React.Component<*> {
     static displayName = `withPatches(${ComposedComponent.displayName || ComposedComponent.name})`
 
     static contextTypes = {

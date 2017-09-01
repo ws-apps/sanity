@@ -1,6 +1,13 @@
 [include]
 ./src
-[libs]
-defs
+
 [ignore]
 .*/examples/.*
+.*/test/.*
+.*date-input/node_modules/jss/.*
+.*mutator/.*
+.*state-router/.*
+.*components/.*
+
+[options]
+module.name_mapper='.*:.*' -> 'empty/object'

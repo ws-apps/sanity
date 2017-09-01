@@ -1,9 +1,12 @@
+// @flow
 import hasOwn from '../utils/hasOwn'
 import {findIndex} from 'lodash'
 import applyPatch from './applyPatch'
 import insert from './arrayInsert'
+import type {Patch} from '../utils/patches'
+import {setPath} from '../utils/patches'
 
-function move(arr, from, to) {
+function move<T: Array<any>>(arr: T, from: number, to: number) : T {
   const nextValue = arr.slice()
   const val = nextValue[from]
   nextValue.splice(from, 1)
@@ -18,7 +21,7 @@ function findTargetIndex(array, pathSegment) {
   return findIndex(array, pathSegment)
 }
 
-export default function apply(value, patch) {
+export default function apply<T: Array<any>>(value: T, patch: Patch) : ?T {
   const nextValue = value.slice() // make a copy for internal mutation
 
   if (patch.path.length === 0) {
@@ -62,9 +65,6 @@ export default function apply(value, patch) {
   }
 
   // The patch is not directed to me
-  nextValue[index] = applyPatch(nextValue[index], {
-    ...patch,
-    path: tail
-  })
+  nextValue[index] = applyPatch(nextValue[index], setPath(patch, tail))
   return nextValue
 }

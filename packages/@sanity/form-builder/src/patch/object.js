@@ -1,7 +1,10 @@
+// @flow
 import {omit, clone, isObject} from 'lodash'
 import applyPatch from './applyPatch'
+import type {Patch} from '../utils/patches'
+import {setPath} from '../utils/patches'
 
-export default function apply(value, patch) {
+export default function apply(value: Object, patch: Patch) : ?any {
   const nextValue = clone(value)
   if (patch.path.length === 0) {
     // its directed to me
@@ -20,18 +23,15 @@ export default function apply(value, patch) {
   }
 
   // The patch is not directed to me
-  const [head, ...tail] = patch.path
+  const [head, ...tail] = (patch.path || [])
   if (typeof head !== 'string') {
-    throw new Error(`Expected field name to be a string, instad got: ${head}`)
+    throw new Error(`Expected field name to be a string, instad got: ${JSON.stringify(head)}`)
   }
 
   if (tail.length === 0 && patch.type === 'unset') {
     return omit(nextValue, head)
   }
 
-  nextValue[head] = applyPatch(nextValue[head], {
-    ...patch,
-    path: tail
-  })
+  nextValue[head] = applyPatch(nextValue[head], setPath(patch, tail))
   return nextValue
 }

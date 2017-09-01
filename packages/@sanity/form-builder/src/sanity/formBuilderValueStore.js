@@ -1,8 +1,9 @@
-// @flow weak
+// @flow
 import documentStore from 'part:@sanity/base/datastore/document'
 import gradientPatchAdapter from './utils/gradientPatchAdapter'
+import type {Patch} from '../utils/patches'
 
-export function checkout(documentId) {
+export function checkout(documentId: string) {
 
   const document = documentStore.checkout(documentId)
 

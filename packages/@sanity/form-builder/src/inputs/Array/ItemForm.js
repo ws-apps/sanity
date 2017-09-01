@@ -2,14 +2,15 @@
 import React from 'react'
 import {FormBuilderInput} from '../../FormBuilderInput'
 import PatchEvent from '../../PatchEvent'
+type Props = {
+  value: Object,
+  type: any,
+  level: number,
+  onChange: (event: PatchEvent, value: Object) => void
+}
 
-export default class ItemForm extends React.Component<*, *, *> {
-  props: {
-    value: Object,
-    type: any,
-    level: number,
-    onChange: (event: PatchEvent, value: Object) => void
-  }
+export default class ItemForm extends React.Component<Props> {
+  props: Props
 
   handleChange = (event : PatchEvent) => {
     const {value, onChange} = this.props

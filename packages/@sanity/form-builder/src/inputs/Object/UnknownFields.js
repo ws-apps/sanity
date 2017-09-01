@@ -6,14 +6,16 @@ import PatchEvent, {unset} from '../../PatchEvent'
 import styles from './styles/UnknownFields.css'
 import ActivateOnFocus from 'part:@sanity/components/utilities/activate-on-focus'
 
-export default class UnknownFields extends React.Component {
+type Props = any
+
+export default class UnknownFields extends React.Component<Props> {
   props: {
     fieldNames: string[],
     value: Object,
     onChange: (PatchEvent) => void
   }
 
-  handleUnsetClick = fieldName => {
+  handleUnsetClick = (fieldName: string) => {
     this.props.onChange(PatchEvent.from(unset([fieldName])))
   }
 

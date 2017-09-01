@@ -5,7 +5,7 @@ import FormField from 'part:@sanity/components/formfields/default'
 import TagInput from 'part:@sanity/components/tags/textfield'
 import PatchEvent, {set, unset} from '../../PatchEvent'
 
-export default class TagsInput extends React.PureComponent {
+export default class TagsInput extends React.PureComponent<*> {
   static propTypes = {
     type: PropTypes.object,
     value: PropTypes.arrayOf(PropTypes.string),
@@ -18,7 +18,7 @@ export default class TagsInput extends React.PureComponent {
     this.props.onChange(PatchEvent.from(patch))
   }
 
-  handleAddItem = itemValue => {
+  handleAddItem = (itemValue: string) => {
     this.set((this.props.value || []).concat(itemValue))
   }
 
@@ -36,7 +36,7 @@ export default class TagsInput extends React.PureComponent {
         label={type.title}
         description={type.description}
       >
-      <TagInput
+        <TagInput
           label={type.title}
           level={level}
           description={type.description}

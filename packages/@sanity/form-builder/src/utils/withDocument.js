@@ -2,18 +2,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+type State = {
+  document: Object
+}
 export default function withDocument(ComposedComponent: any) {
 
-  return class withDocument extends React.PureComponent {
+  return class WithDocument extends React.PureComponent<*, State> {
     static displayName = `withDocument(${ComposedComponent.displayName || ComposedComponent.name})`
-
     static contextTypes = {
       formBuilder: PropTypes.any,
     }
 
-    state: {
-      document: Object
-    }
+    state: State
     unsubscribe: () => void
 
     constructor(props : any, context: any) {
@@ -31,7 +31,7 @@ export default function withDocument(ComposedComponent: any) {
       this.unsubscribe()
     }
     render() {
-      return <ComposedComponent document={this.state.document} {...this.props}/>
+      return <ComposedComponent document={this.state.document} {...this.props} />
     }
   }
 }

@@ -2,12 +2,10 @@
 import AnchorButton from 'part:@sanity/components/buttons/anchor'
 import Button from 'part:@sanity/components/buttons/default'
 import FileInputButton from 'part:@sanity/components/fileinput/button'
-import {get, uniqueId, omit} from 'lodash'
+import {groupBy, get, uniqueId, omit} from 'lodash'
 import FormField from 'part:@sanity/components/formfields/default'
 import ProgressBar from 'part:@sanity/components/progress/bar'
-import PropTypes from 'prop-types'
 import React from 'react'
-import {groupBy} from 'lodash'
 import PatchEvent, {set, setIfMissing, unset} from '../../PatchEvent'
 import styles from './styles/FileInput.css'
 import subscriptionManager from '../../utils/subscriptionManager'
@@ -15,7 +13,25 @@ import Dialog from 'part:@sanity/components/dialogs/fullscreen'
 import Field from '../Object/Field'
 import EditIcon from 'part:@sanity/base/edit-icon'
 
-function getInitialState() {
+type State = {
+  status: string,
+  error: ?Error,
+  progress: ?any,
+  uploadingFile: ?any,
+  materializedFile: ?any,
+  isAdvancedEditOpen: boolean
+}
+type Props = {
+  value: Object,
+  type: Object,
+  level: number,
+  onChange: Function,
+  materializeReference: Function,
+  upload: Function,
+  validation: any
+}
+
+function getInitialState(): State {
   return {
     status: 'ready',
     error: null,
@@ -26,21 +42,14 @@ function getInitialState() {
   }
 }
 
-export default class FileInput extends React.PureComponent {
+export default class FileInput extends React.PureComponent<Props, State> {
+  props: Props
+  state: State
   _unmounted: boolean
-  static propTypes = {
-    value: PropTypes.object,
-    type: PropTypes.object.isRequired,
-    level: PropTypes.number,
-    onChange: PropTypes.func,
-    materializeReference: PropTypes.func.isRequired,
-    upload: PropTypes.func.isRequired,
-  }
+  subscriptions: any
 
   state = getInitialState()
-
   subscriptions = subscriptionManager('upload', 'materialize')
-
   _inputId = uniqueId('FileInput')
 
   componentDidMount() {
@@ -56,7 +65,7 @@ export default class FileInput extends React.PureComponent {
     this._unmounted = true
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     const currentRef = get(this.props, 'value.asset')
     const nextRef = get(nextProps, 'value.asset')
 
@@ -69,21 +78,21 @@ export default class FileInput extends React.PureComponent {
     }
   }
 
-  upload(file) {
+  upload(file: File) {
     this.cancelCurrent()
     this.setState({uploadingFile: file})
 
-    this.subscription = this.props.upload(file).subscribe({
+    this.subscriptions.replace('upload', this.props.upload(file).subscribe({
       next: this.handleUploadProgress,
       error: this.handleUploadError
-    })
+    }))
   }
 
   cancelCurrent() {
     this.subscriptions.unsubscribe('upload')
   }
 
-  syncFileRef(reference) {
+  syncFileRef(reference: any) {
     if (!reference) {
       this.setState({materializedFile: null})
       return
@@ -97,7 +106,7 @@ export default class FileInput extends React.PureComponent {
     }))
   }
 
-  setRef(id) {
+  setRef(id: string) {
     this.props.onChange(PatchEvent.from(
       setIfMissing({
         _type: this.props.type.name,
@@ -107,7 +116,7 @@ export default class FileInput extends React.PureComponent {
     ))
   }
 
-  handleUploadProgress = event => {
+  handleUploadProgress = (event: any) => {
     if (event.type === 'progress' && event.stage === 'upload') {
       this.setState({
         status: 'pending',
@@ -124,7 +133,7 @@ export default class FileInput extends React.PureComponent {
     }
   }
 
-  handleUploadError = error => {
+  handleUploadError = (error: Error) => {
     this.setState({
       status: 'error',
       error: error
@@ -137,7 +146,7 @@ export default class FileInput extends React.PureComponent {
     })
   }
 
-  handleSelect = files => {
+  handleSelect = (files: Array<File>) => {
     this.upload(files[0])
   }
 
@@ -153,11 +162,11 @@ export default class FileInput extends React.PureComponent {
   handleStartAdvancedEdit = () => {
     this.setState({isAdvancedEditOpen: true})
   }
-  handleStopAdvancedEdit = event => {
+  handleStopAdvancedEdit = () => {
     this.setState({isAdvancedEditOpen: false})
   }
 
-  handleFieldChange = (event: PatchEvent, field) => {
+  handleFieldChange = (event: PatchEvent, field: any) => {
     const {onChange, type} = this.props
 
     onChange(event
@@ -168,13 +177,13 @@ export default class FileInput extends React.PureComponent {
       })))
   }
 
-  handleRemoveButtonClick = event => {
+  handleRemoveButtonClick = () => {
     this.props.onChange(
       PatchEvent.from(unset())
     )
   }
 
-  renderAdvancedEdit(fields) {
+  renderAdvancedEdit(fields: Array<any>) {
     return (
       <Dialog title="Edit details" onClose={this.handleStopAdvancedEdit} isOpen>
         <div>
@@ -185,7 +194,7 @@ export default class FileInput extends React.PureComponent {
     )
   }
 
-  renderFields(fields) {
+  renderFields(fields: Array<any>) {
     return (
       <div className={styles.fields}>
         {fields.map(field => this.renderField(field))}
@@ -193,7 +202,7 @@ export default class FileInput extends React.PureComponent {
     )
   }
 
-  renderField(field) {
+  renderField(field: any) {
     const {value, validation, level} = this.props
     const fieldValidation = validation && validation.fields[field.name]
 
@@ -248,8 +257,8 @@ export default class FileInput extends React.PureComponent {
             {
               ((progress && uploadingFile) || (status === 'complete')) && (
                 <ProgressBar
-                  percent={status === 'complete' ? 100 : progress.percent}
-                  text={status === 'complete' ? 'Complete' : `Uploading "${uploadingFile.name}"`}
+                  percent={status === 'complete' ? 100 : (progress || {}).percent}
+                  text={status === 'complete' ? 'Complete' : `Uploading "${(uploadingFile || {}).name}"`}
                   showPercent
                   animation
                   completed={status === 'complete'}

@@ -22,17 +22,18 @@ type Props = {
   type: Type,
   value: ItemValue,
   level: number,
-  layout: 'media' | 'default',
+  layout?: 'media' | 'default',
+  level: number,
   onRemove: (ItemValue) => void,
   onChange: (PatchEvent, ItemValue) => void,
   onEditStart: (ItemValue) => void,
   onEditStop: (ItemValue) => void,
   isEditing: boolean
 }
-export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
+export default class Item extends React.Component<Props> {
   props: Props
 
-  domElement: HTMLElement
+  domElement: ?HTMLElement
 
   handleRemove = () => {
     const {onRemove, value} = this.props
@@ -49,7 +50,7 @@ export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
     onEditStop(value)
   }
 
-  handleKeyPress = event => {
+  handleKeyPress = (event: KeyboardEvent) => {
     const {value, onEditStart} = this.props
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault()
@@ -63,7 +64,7 @@ export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
     return type.of.find(memberType => memberType.name === itemTypeName)
   }
 
-  renderEditItemForm(item: any): ?React.Element<any> {
+  renderEditItemForm(item: any): any {
     const {type, onChange, onRemove} = this.props
     const options = type.options || {}
 
@@ -114,12 +115,12 @@ export default class Item<T: ItemValue> extends React.Component<*, Props, *> {
   }
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.isEditing && !this.props.isEditing) {
+    if (prevProps.isEditing && !this.props.isEditing && this.domElement) {
       this.domElement.focus()
     }
   }
 
-  setElement = (el: HTMLElement) => {
+  setElement = (el: ?HTMLElement) => {
     this.domElement = el
   }
 

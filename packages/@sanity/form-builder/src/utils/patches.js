@@ -1,4 +1,5 @@
 // @flow
+import {clone} from 'lodash'
 
 type KeyedSegment = {
   _key: string
@@ -8,31 +9,36 @@ export type PathSegment = string | number | KeyedSegment
 
 type Path = Array<PathSegment>
 
-type HasPath = {
-  path: Path
-}
-type HasOrigin = {
-  origin?: 'remote' | 'local'
-}
-type SetPatch = HasPath & HasOrigin & {
+type Origin = 'remote' | 'local'
+
+type SetPatch = {
   type: 'set',
-  value: any
+  value: any,
+  path: Path,
+  origin?: Origin
 }
 
-type SetIfMissingPatch = HasPath & HasOrigin & {
+type SetIfMissingPatch = {
   type: 'setIfMissing',
-  value: any
+  value: any,
+  path: Path,
+  origin?: Origin
 }
 
-type UnsetPatch = HasPath & HasOrigin & {
+type UnsetPatch = {
   type: 'unset',
+  path: Path,
+  origin?: Origin
 }
 
 type InsertPosition = 'before' | 'after'
-type InsertPatch = HasPath & HasOrigin & {
+
+type InsertPatch = {
   type: 'insert',
   position: InsertPosition,
-  items: any[]
+  items: any[],
+  path: Path,
+  origin?: Origin
 }
 
 export type Patch = SetPatch | SetIfMissingPatch | UnsetPatch | InsertPatch
@@ -62,9 +68,12 @@ export function unset(path : Path = []) : UnsetPatch {
   return {type: 'unset', path}
 }
 
-export function prefixPath<T: HasPath>(patch : T, segment : PathSegment) : T {
-  return {
-    ...patch,
-    path: [segment, ...patch.path]
-  }
+export function setPath(patch: Patch, nextPath: Path) : Patch {
+  const result = clone(patch)
+  result.path = nextPath
+  return result
+}
+
+export function prefixPath(patch : Patch, segment : PathSegment) : Patch {
+  return setPath(patch, [segment, ...patch.path])
 }

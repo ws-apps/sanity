@@ -4,11 +4,13 @@ import {arrayToJSONMatchPath} from '@sanity/mutator'
 import assert from 'assert'
 import {flatten} from 'lodash'
 import type {Patch} from '../../utils/patches'
+
 type GradientPatch = Object
+type Origin = 'local' | 'remote'
 
 type Adapter = {
   fromFormBuilder: (patches: Array<Patch>) => Array<GradientPatch>,
-  toFormBuilder: (origin: string, patches: Array<GradientPatch>) => Array<Patch>
+  toFormBuilder: (origin: Origin, patches: Array<GradientPatch>) => Array<Patch>
 }
 
 const adapter: Adapter = {
@@ -20,7 +22,6 @@ const adapter: Adapter = {
 
 export default adapter
 
-
 /**
  *
  * *** WARNING ***
@@ -29,47 +30,63 @@ export default adapter
  * to be revised.
  */
 
-function toFormBuilder(origin, patches: Array<GradientPatch>): Array<Patch> {
+function toFormBuilder(origin: Origin, patches: Array<GradientPatch>): Array<Patch> {
   return flatten(patches.map(patch => {
-    return flatten(Object.keys(patch)
-      .filter(key => key !== 'id')
-      .map((type): Array<Patch> => {
-        if (type === 'unset') {
-          return patch.unset.map(path => {
-            return {
-              type: 'unset',
-              path: path.split('.'),
-              origin
+    return flatten(
+      Object.keys(patch)
+        .filter(key => key !== 'id')
+        .map((type): Array<Patch> => {
+          if (type === 'unset') {
+            return patch.unset.map(path => {
+              return {
+                type: 'unset',
+                path: path.split('.'),
+                origin
+              }
+            })
+          }
+          return Object.keys(patch[type]).map(path => {
+            const formBuilderPath = path
+            switch (type) {
+              case 'insert': {
+                const position = 'before' in patch.insert ? 'before' : 'after'
+                return {
+                  type: 'insert',
+                  position: position,
+                  path: formBuilderPath,
+                  items: patch[type][path],
+                  origin
+                }
+              }
+              case 'set': {
+                return {
+                  type: 'set',
+                  path: formBuilderPath,
+                  value: patch[type][path],
+                  origin
+                }
+              }
+              case 'unset':
+                return {
+                  type: 'unset',
+                  path: formBuilderPath,
+                  origin
+                }
+              case 'setIfMissing': {
+                return {
+                  type: 'setIfMissing',
+                  path: formBuilderPath,
+                  value: patch[type][path],
+                  origin
+                }
+              }
+              default: {
+                throw new Error(`Unknown patch type: ${type}`)
+              }
             }
           })
-        }
-        return Object.keys(patch[type]).map(path => {
-          if (type === 'insert') {
-            const position = 'before' in patch.insert ? 'before' : 'after'
-            return {
-              type: 'insert',
-              position: position,
-              path: path.split('.'),
-              items: patch[type][path],
-              origin
-            }
-          }
-          if (type === 'set') {
-            return {
-              type: 'set',
-              path: path.split('.'),
-              value: patch[type][path],
-              origin
-            }
-          }
-          return {
-            type,
-            path: path.split('.'),
-            value: patch[type][path],
-            origin
-          }
         })
-      }))
+    )
   }))
 }
 

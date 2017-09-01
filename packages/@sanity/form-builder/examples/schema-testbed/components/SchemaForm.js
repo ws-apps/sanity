@@ -68,8 +68,8 @@ function resolveInputComponent(type) {
   return type.inputComponent || undefined // signal to use default
 }
 
-function resolveValidationComponent() {
-  return MyCustomValidationList
+function createEmpty(typeName) {
+  return {_type: typeName}
 }
 
 export default class Main extends React.Component {
@@ -92,7 +92,10 @@ export default class Main extends React.Component {
   }
 
   receivePatches(patches) {
-    const nextValue = patches.reduce((prev, patch) => applyPatch(prev, patch), this.state.value)
+    const nextValue = patches.reduce(
+      (prev, patch) => applyPatch(prev, patch),
+      (this.state.value || createEmpty(params.typeName))
+    )
     this.patchChannel.receivePatches({patches, snapshot: nextValue})
 
     this.setState({
@@ -199,6 +202,7 @@ export default class Main extends React.Component {
               patchChannel={this.patchChannel}
               resolveInputComponent={resolveInputComponent}
               resolvePreviewComponent={resolvePreviewComponent}
+              schema={schema}
               value={value}
               type={schemaType}
               validation={validation}

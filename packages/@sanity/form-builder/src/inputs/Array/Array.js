@@ -39,15 +39,16 @@ function createProtoValue(type): ItemValue {
     _key: randomKey(12)
   }
 }
+type Props<T> = {
+  type: Type,
+  value: Array<T>,
+  level: number,
+  onChange: (event: PatchEvent) => void
 
-export default class ArrayInput<T: ItemValue> extends React.Component<*, *, State> {
-  props: {
-    type: Type,
-    value: Array<T>,
-    level: number,
-    onChange: (event: PatchEvent) => void
-  }
-
+}
+export default class ArrayInput<T: ItemValue> extends React.Component<Props<T>, State> {
+  props: Props<T>
+  state: State
   state = {
     selectType: false,
     editItemKey: null,
@@ -200,7 +201,7 @@ export default class ArrayInput<T: ItemValue> extends React.Component<*, *, Stat
   }
 
   renderList() {
-    const {type, value} = this.props
+    const {type, value, level} = this.props
 
     const {List, Item} = resolveListComponents(type)
 
@@ -216,6 +217,7 @@ export default class ArrayInput<T: ItemValue> extends React.Component<*, *, Stat
               <RenderItemValue
                 type={type}
                 value={item}
+                level={level + 1}
                 onRemove={this.handleRemoveItem}
                 onChange={this.handleItemChange}
                 onEditStart={this.handleItemEditStart}

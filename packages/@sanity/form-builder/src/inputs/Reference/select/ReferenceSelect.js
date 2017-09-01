@@ -1,5 +1,5 @@
+// @flow
 import PropTypes from 'prop-types'
-// @flow weak
 import React from 'react'
 import FormBuilderPropTypes from '../../../FormBuilderPropTypes'
 import Select from 'part:@sanity/components/selects/default'
@@ -8,9 +8,11 @@ import subscriptionManager from '../../../utils/subscriptionManager'
 import PatchEvent, {set, setIfMissing, unset} from '../../../PatchEvent'
 
 const EMPTY = {}
-
-export default class ReferenceSelect extends React.Component {
-
+type State = Object
+type Props = Object
+export default class ReferenceSelect extends React.Component<Props, State> {
+  props: Props
+  state: State
   static propTypes = {
     type: FormBuilderPropTypes.type,
     value: PropTypes.object,
@@ -47,13 +49,13 @@ export default class ReferenceSelect extends React.Component {
     this.subscriptions.unsubscribeAll()
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (this.props.value !== nextProps.value) {
       this.syncValue(nextProps.value)
     }
   }
 
-  syncValue(value) {
+  syncValue(value: any) {
     const {fetchValueFn, type} = this.props
 
     if (!value || !value._ref) {
@@ -88,7 +90,7 @@ export default class ReferenceSelect extends React.Component {
     )
   }
 
-  handleChange = item => {
+  handleChange = (item: any) => {
     const {onChange} = this.props
 
     onChange(PatchEvent.from(item === EMPTY
@@ -118,7 +120,6 @@ export default class ReferenceSelect extends React.Component {
           value={selected}
         />
       </FormField>
-
     )
   }
 }

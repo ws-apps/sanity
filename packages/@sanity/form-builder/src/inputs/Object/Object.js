@@ -1,5 +1,5 @@
+//@flow
 import PropTypes from 'prop-types'
-//@flow weak
 import React from 'react'
 import FormBuilderPropTypes from '../../FormBuilderPropTypes'
 import Field from './Field'
@@ -9,7 +9,11 @@ import isEmpty from '../../utils/isEmpty'
 import UnknownFields from './UnknownFields'
 import fieldStyles from './styles/Field.css'
 
-export default class ObjectInput extends React.PureComponent {
+type Props = Object
+type FieldT = Object
+type FieldsetT = Object
+
+export default class ObjectInput extends React.PureComponent<Props> {
 
   static propTypes = {
     type: FormBuilderPropTypes.type,
@@ -17,7 +21,8 @@ export default class ObjectInput extends React.PureComponent {
     value: PropTypes.object,
     onChange: PropTypes.func,
     level: PropTypes.number,
-    isRoot: PropTypes.bool
+    isRoot: PropTypes.bool,
+    autoFocus: PropTypes.bool
   }
 
   static defaultProps = {
@@ -33,7 +38,7 @@ export default class ObjectInput extends React.PureComponent {
     }
   }
 
-  handleFieldChange = (fieldEvent: PatchEvent, field) => {
+  handleFieldChange = (fieldEvent: PatchEvent, field: Field) => {
     const {onChange, type, value, isRoot} = this.props
 
     let event = fieldEvent.prefixAll(field.name)
@@ -59,7 +64,7 @@ export default class ObjectInput extends React.PureComponent {
     onChange(event)
   }
 
-  renderField(field, level, index) {
+  renderField(field: FieldT, level: number, index: number) {
     const {value, validation, autoFocus} = this.props
     const fieldValidation = validation && validation.fields[field.name]
 
@@ -78,7 +83,7 @@ export default class ObjectInput extends React.PureComponent {
     )
   }
 
-  renderFieldset(fieldset, fieldsetIndex) {
+  renderFieldset(fieldset: FieldsetT, fieldsetIndex: number) {
     const {level} = this.props
     const columns = fieldset.options && fieldset.options.columns
     const collapsable = fieldset.options && fieldset.options.collapsable

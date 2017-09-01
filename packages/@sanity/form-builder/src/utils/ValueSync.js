@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
 // @flow
+import PropTypes from 'prop-types'
 import React from 'react'
 import type {Patch} from '../utils/patches'
 import {debounce} from 'lodash'
@@ -20,21 +20,19 @@ type Props = {
   applyPatch: (patch: Patch) => Deserialized,
   children: (ChildProps) => ?React$Element<any>
 }
+type State = {
+  value?: Deserialized
+}
 
-
-export default withPatchSubscriber(class ValueSync extends React.Component {
+export default withPatchSubscriber(class ValueSync extends React.Component<Props, State> {
   props: Props
+  state: State
+  unsubscribe: () => void
 
   static contextTypes = {
     getValuePath: PropTypes.func,
     formBuilder: PropTypes.any,
   }
-
-  state: {
-    value: Deserialized
-  }
-
-  unsubscribe: () => void
 
   constructor(props: Props) {
     super()

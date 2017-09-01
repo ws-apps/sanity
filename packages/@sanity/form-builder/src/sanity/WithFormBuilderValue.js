@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types'
-// @flow weak
+// @flow
 // Connects the FormBuilder with various sanity roles
+import PropTypes from 'prop-types'
 import React from 'react'
 import FormBuilder from 'part:@sanity/form-builder'
 import {throttle} from 'lodash'
@@ -9,22 +9,32 @@ import schema from 'part:@sanity/base/schema'
 import PatchEvent from '../PatchEvent'
 import {checkout} from './formBuilderValueStore'
 
-function getInitialState() {
+type State = {
+  isLoading: boolean,
+  isSaving: boolean,
+  deletedSnapshot: ?Object,
+  value: ?any
+}
+
+type Props = {
+  documentId: string,
+  typeName: string,
+  children: Function
+}
+
+function getInitialState(): State {
   return {
     isLoading: true,
     isSaving: false,
-    value: null
+    value: null,
+    deletedSnapshot: null
   }
 }
 
-export default class WithFormBuilderValue extends React.PureComponent {
+export default class WithFormBuilderValue extends React.PureComponent<Props, State> {
   document: Object
-
-  static propTypes = {
-    documentId: PropTypes.string,
-    typeName: PropTypes.string,
-    children: PropTypes.func
-  };
+  props: Props
+  state: State
 
   static childContextTypes = {
     formBuilder: PropTypes.object
@@ -40,7 +50,7 @@ export default class WithFormBuilderValue extends React.PureComponent {
     }
   }
 
-  checkoutDocument(documentId) {
+  checkoutDocument(documentId: string) {
     this.document = checkout(documentId)
 
     this.subscriptions.replace('documentEvents', this.document.events
@@ -51,7 +61,7 @@ export default class WithFormBuilderValue extends React.PureComponent {
     )
   }
 
-  handleDocumentEvent = event => {
+  handleDocumentEvent = (event: any) => {
     switch (event.type) {
       case 'snapshot': {
         this.setState({
@@ -91,14 +101,14 @@ export default class WithFormBuilderValue extends React.PureComponent {
     this.checkoutDocument(this.props.documentId)
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.documentId !== this.props.documentId) {
       this.setState(getInitialState())
       this.checkoutDocument(nextProps.documentId)
     }
   }
 
-  handleIncomingMutationEvent(event) {
+  handleIncomingMutationEvent(event: any) {
     // Broadcast incoming patches to input components that applies patches on their own
     // Note: This is *experimental* and likely to change in the near future
     FormBuilder.receivePatches({
@@ -142,7 +152,7 @@ export default class WithFormBuilderValue extends React.PureComponent {
     this.commit()
   }
 
-  handleCreate = document => {
+  handleCreate = (document: Object) => {
     this.document.create(document)
     this.commit()
   }

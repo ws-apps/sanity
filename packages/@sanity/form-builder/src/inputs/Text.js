@@ -1,18 +1,19 @@
+// @flow
 import PropTypes from 'prop-types'
-// @flow weak
 import React from 'react'
 import FormBuilderPropTypes from '../FormBuilderPropTypes'
 import FormField from 'part:@sanity/components/formfields/default'
 import TextArea from 'part:@sanity/components/textareas/default'
 import PatchEvent, {set, unset} from '../PatchEvent'
 
-export default class TextInput extends React.PureComponent {
+export default class TextInput extends React.PureComponent<*> {
 
   static propTypes = {
     type: FormBuilderPropTypes.type.isRequired,
     level: PropTypes.number.isRequired,
     value: PropTypes.string,
-    onChange: PropTypes.func
+    onChange: PropTypes.func,
+    validation: PropTypes.object
   };
 
   static defaultProps = {
@@ -20,7 +21,7 @@ export default class TextInput extends React.PureComponent {
     onChange() {}
   };
 
-  handleChange = event => {
+  handleChange = (event: any) => {
     const value = event.target.value || undefined
     this.props.onChange(PatchEvent.from(value ? set(value) : unset()))
   }
