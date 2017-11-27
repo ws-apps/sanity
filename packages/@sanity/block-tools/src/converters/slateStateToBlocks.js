@@ -5,7 +5,7 @@ import randomKey from '../util/randomKey'
 
 function toSanitySpan(node, sanityBlock, spanIndex) {
   if (node.kind === 'text') {
-    return node.ranges
+    return node.leaves
       .map(range => {
         return {
           _type: 'span',
@@ -36,7 +36,7 @@ function toSanitySpan(node, sanityBlock, spanIndex) {
           }
         })
       }
-      return nodesNode.ranges
+      return nodesNode.leaves
         .map(range => ({
           _type: 'span',
           _key: `${sanityBlock._key}${spanIndex()}`,
