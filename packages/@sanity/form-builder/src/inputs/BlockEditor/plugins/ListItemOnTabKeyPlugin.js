@@ -9,8 +9,11 @@ export default function ListItemOnTabKeyPlugin(options: Options = {}) {
   return {
     // eslint-disable-next-line complexity
     onKeyDown(event: SyntheticKeyboardEvent<*>, change: Change) {
-      const {key, shiftKey} = event
+      const {key, shiftKey, altKey} = event
       if (key !== 'Tab') {
+        return undefined
+      }
+      if (altKey) {
         return undefined
       }
       const {value} = change
