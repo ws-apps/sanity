@@ -87,6 +87,7 @@ class DefaultPreview extends React.PureComponent {
             </div>
           )
         }
+
         <div className={styles.heading}>
           <h2 className={styles.title}>
             {

@@ -205,11 +205,23 @@ export default withRouterHOC(class DocumentsPane extends React.PureComponent {
   renderDocumentPaneItem = (item, index, options = {}) => {
     const {selectedType, selectedDocumentId} = this.props
     const {settings} = this.state
+    const type = schema.get(selectedType)
+
+    if (options.isPlaceholder) {
+      return (
+        <div className={styles.item}>
+          <Preview
+            layout={settings.listLayout}
+            isPlaceholder
+            type={type}
+          />
+        </div>
+      )
+    }
 
     const ordering = this.getOrderingOptions(selectedType)
       .find(option => option.name === settings.ordering)
 
-    const type = schema.get(selectedType)
     const linkState = {
       selectedDocumentId: getPublishedId(item._id),
       selectedType: type.name,

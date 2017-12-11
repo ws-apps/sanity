@@ -23,6 +23,7 @@ export default enhanceWithAvailHeight(class InfiniteList extends React.PureCompo
   }
 
   state = {
+    scrollTop: 0,
     triggerUpdate: 0,
     itemHeight: 56,
     itemSize: undefined
@@ -30,13 +31,13 @@ export default enhanceWithAvailHeight(class InfiniteList extends React.PureCompo
 
   componentWillReceiveProps(prevProps) {
 
-    if (prevProps.items !== this.props.items) {
-      /* This is needed to break equality checks
-       in VirtualList's sCU in cases where itemCount has not changed,
-       but an elements has been removed or added
-       */
-      this.setState({triggerUpdate: Math.random()})
-    }
+    // if (prevProps.items !== this.props.items) {
+    //   /* This is needed to break equality checks
+    //    in VirtualList's sCU in cases where itemCount has not changed,
+    //    but an elements has been removed or added
+    //    */
+    //   this.setState({triggerUpdate: Math.random()})
+    // }
 
     if (prevProps.layout !== this.props.layout) {
       this.setState({
@@ -56,20 +57,31 @@ export default enhanceWithAvailHeight(class InfiniteList extends React.PureCompo
       })
     }
   }
+  handleScroll = scrollTop => {
+    this.setState({
+      scrollTop: scrollTop
+    })
+    this.props.onScroll(scrollTop)
+  }
 
   renderItem = ({index, style}) => {
-    const {renderItem, getItemKey, items} = this.props
+    const {renderItem, items} = this.props
     const item = items[index]
+
     return (
-      <div key={getItemKey(item)} style={style}>
-        {renderItem(item, index)}
+      <div key={index} style={style}>
+        {
+          style.top >= this.state.scrollTop && style.top < this.state.scrollTop + (this.props.height * 2)
+            ? renderItem(item, index, {isPlaceholder: false})
+            : renderItem(item, index, {isPlaceholder: true})
+        }
       </div>
     )
   }
 
   render() {
-    const {layout, height, items, className, renderItem} = this.props
-    const {triggerUpdate, itemSize} = this.state
+    const {height, items, className, renderItem} = this.props
+    const {itemSize} = this.state
 
     if (!items || items.length === 0) {
       return (
@@ -87,15 +99,12 @@ export default enhanceWithAvailHeight(class InfiniteList extends React.PureCompo
 
     return (
       <VirtualList
-        onScroll={this.props.onScroll}
-        key={layout /* forcefully re-render the whole list when layout changes */}
+        onScroll={this.handleScroll}
         className={className || ''}
         height={height}
         itemCount={items.length}
         itemSize={itemSize}
         renderItem={this.renderItem}
-        overscanCount={50}
-        data-trigger-update-hack={triggerUpdate} /* see componentWillReceiveProps above */
       />
     )
   }
