@@ -8,10 +8,16 @@ import PreviewComponentDetail from 'part:@sanity/components/previews/detail'
 import PreviewComponentInline from 'part:@sanity/components/previews/inline'
 import PreviewComponentMedia from 'part:@sanity/components/previews/media'
 import PreviewComponentBlock from 'part:@sanity/components/previews/block'
+import client from 'part:@sanity/base/client'
 
-import sanityClient from 'part:@sanity/base/client'
+let imageBuilder
+const getImageBuilder = () => {
+  if (!imageBuilder) {
+    imageBuilder = imageUrlBuilder(client.config())
+  }
 
-const imageBuilder = imageUrlBuilder(sanityClient)
+  return imageBuilder
+}
 
 const previewComponentMap = {
   default: PreviewComponentDefault,
@@ -67,7 +73,7 @@ export default class SanityDefaultPreview extends React.PureComponent {
       return (
         <img
           src={
-            imageBuilder.image(media)
+            getImageBuilder().image(media)
               .width(dimensions.width || 100)
               .height(dimensions.height || 100)
               .fit(dimensions.fit)
