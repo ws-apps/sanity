@@ -39,7 +39,7 @@ export default class InlinePreview extends React.PureComponent {
     return (
       <span className={styles.root}>
         {
-          media && (
+          media && typeof media !== 'string' && (
             <span className={styles.media}>
               {
                 typeof media === 'function' && (
