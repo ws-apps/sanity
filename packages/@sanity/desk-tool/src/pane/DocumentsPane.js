@@ -121,6 +121,18 @@ export default withRouterHOC(class DocumentsPane extends React.PureComponent {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.selectedType !== this.props.selectedType) {
+      const settings = readSettings()
+      this.setState({
+        settings: (settings && settings[nextProps.selectedType]) || {
+          listLayout: 'default',
+          ordering: DEFAULT_SELECTED_ORDERING_OPTION
+        }
+      })
+    }
+  }
+
   handleSetOrdering = ordering => {
     this.setState(prevState => ({
       settings: {
