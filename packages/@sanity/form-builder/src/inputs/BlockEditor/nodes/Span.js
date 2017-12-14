@@ -1,5 +1,5 @@
 // @flow
-import type {SlateValue, Type, SlateChange} from '../typeDefs'
+import type {BlockContentFeatures, SlateValue, Type, SlateChange} from '../typeDefs'
 import type {Node} from 'react'
 
 import React from 'react'
@@ -27,16 +27,20 @@ function isEmpty(object, ignoreKeys) {
 
 type Props = {
   attributes: {},
+  blockContentFeatures: BlockContentFeatures,
   children: Node,
   editorValue: SlateValue,
   node: Inline,
-  onChange: SlateChange,
-  type: Type
+  onChange: (change: SlateChange) => void,
+  onFormBuilderInputBlur: (nextPath: []) => void,
+  onFormBuilderInputFocus: (nextPath: []) => void,
+  type: ?Type
 }
 
 type State = {
   focusedAnnotationName: ?string,
-  isEditing: boolean
+  isEditing: boolean,
+  rootElement: ?HTMLSpanElement
 }
 
 export default class Span extends React.Component<Props, State> {
@@ -49,7 +53,8 @@ export default class Span extends React.Component<Props, State> {
     const focusedAnnotationName = this.props.node.data.get('focusedAnnotationName')
     this.state = {
       isEditing: !!focusedAnnotationName,
-      focusedAnnotationName: focusedAnnotationName
+      focusedAnnotationName: focusedAnnotationName,
+      rootElement: null
     }
   }
 
@@ -57,6 +62,7 @@ export default class Span extends React.Component<Props, State> {
     const {editorValue} = nextProps
     return nextState.isEditing !== this.state.isEditing
       || nextState.focusedAnnotationName !== this.state.focusedAnnotationName
+      || nextState.rootElement !== this.state.rootElement
       || editorValue.focusOffset !== this.props.editorValue.focusOffset
       || nextProps.node.data !== this.props.node.data
   }
@@ -161,6 +167,9 @@ export default class Span extends React.Component<Props, State> {
 
   handleClick = () => {
     const {type} = this.props
+    if (!type) {
+      return
+    }
     // Don't do anyting if this type doesn't support any annotations.
     if (!type.annotations || type.annotations.length === 0) {
       return
@@ -200,9 +209,13 @@ export default class Span extends React.Component<Props, State> {
   }
 
   renderFormBuilderInput() {
+    const {onFormBuilderInputBlur, onFormBuilderInputFocus} = this.props
     const annotations = this.getAnnotations()
+    if (!this.props.type) {
+      return null
+    }
     const annotationTypes = this.props.type.annotations
-    const {focusedAnnotationName} = this.state
+    const {focusedAnnotationName, rootElement} = this.state
 
     const annotationTypeInFocus = annotationTypes && annotationTypes.find(type => {
       return type.name === focusedAnnotationName
@@ -212,8 +225,15 @@ export default class Span extends React.Component<Props, State> {
     })
     const annotationValue = focusedAnnotationKey
       && annotations && annotations[focusedAnnotationKey]
+
+    const style = {}
+    if (rootElement) {
+      const {width} = rootElement.getBoundingClientRect()
+      style.marginLeft = `-${width / 2}px`
+    }
+
     return (
-      <span className={styles.editSpanContainer}>
+      <span className={styles.editSpanContainer} style={style}>
         <EditItemPopOver
           onClose={this.handleCloseInput}
         >
@@ -251,6 +271,8 @@ export default class Span extends React.Component<Props, State> {
                 value={annotationValue}
                 type={annotationTypeInFocus}
                 level={0}
+                onBlur={onFormBuilderInputBlur}
+                onFocus={onFormBuilderInputFocus}
                 onChange={this.handleChange}
               />
             </div>
@@ -260,9 +282,26 @@ export default class Span extends React.Component<Props, State> {
     )
   }
 
+  refSpan = (span: ?HTMLSpanElement) => {
+    this.setState({rootElement: span})
+  }
+
   render() {
     const {isEditing} = this.state
-    const {attributes} = this.props
+    const {attributes, blockContentFeatures} = this.props
+    let children = this.props.children
+    if (!this.isUnannotated()) {
+      const annotations = this.getAnnotations()
+      const annotationTypes = blockContentFeatures.annotations.filter(item => Object.keys(annotations).includes(item.value))
+      annotationTypes.forEach(annotation => {
+        const CustomComponent = (annotation && annotation.blockEditor && annotation.blockEditor.render)
+          ? annotation.blockEditor.render
+          : null
+        if (CustomComponent) {
+          children = <CustomComponent {...annotations[annotation.value]}>{children}</CustomComponent>
+        }
+      })
+    }
     return (
       <span
         {...attributes}
@@ -270,8 +309,9 @@ export default class Span extends React.Component<Props, State> {
         onMouseUp={this.handleMouseUp}
         onClick={this.handleClick}
         className={styles.root}
+        ref={this.refSpan}
       >
-        {this.props.children}
+        {children}
 
         {isEditing && this.renderFormBuilderInput()}
 

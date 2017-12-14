@@ -15,14 +15,16 @@ import changeToPatches from './utils/changeToPatches'
 import PatchEvent from '../../PatchEvent'
 import styles from './styles/SyncWrapper.css'
 
-const EMPTY_VALUE = Value.fromJSON(deserialize([]))
-
 function deserialize(value, type) {
   return Value.fromJSON(blocksToEditorValue(value, type))
 }
 
+function findBlockType(type) {
+  return type.of.find(ofType => ofType.name === 'block')
+}
+
 function isDeprecatedBlockSchema(type) {
-  const blockType = type.of.find(ofType => ofType.name === 'block')
+  const blockType = findBlockType(type)
   if (blockType.span !== undefined) {
     return true
   }
@@ -61,7 +63,8 @@ export default withPatchSubscriber(class SyncWrapper extends React.PureComponent
       deprecatedSchema,
       deprecatedBlockValue,
       editorValue: (deprecatedSchema || deprecatedBlockValue)
-        ? EMPTY_VALUE : deserialize(props.value, props.type)
+        ? deserialize([], props.type)
+        : deserialize(props.value, props.type)
     }
     this.unsubscribe = props.subscribe(this.receivePatches)
   }

@@ -19,7 +19,8 @@
     left: 0;
     right: 0;
     z-index: 1;
-    background-color: color(var(--gray-lighter) a(90%));
+    box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.2);
+    background-color: color(var(--white) a(95%));
     padding: var(--small-padding);
     height: 4rem;
 
@@ -44,14 +45,17 @@
 .formatButtonsContainer {
   display: flex;
   flex-wrap: nowrap;
+  vertical-align: center;
 }
 
 .decoratorButtonsContainer {
   padding-left: 0.5em;
+  padding-right: 0.5em;
+  border-right: 1px solid #ccc;
 }
 
 .annotationButtonsContainer {
-  display: block;
+  padding-left: 0.5em;
 }
 
 .fullscreenButtonContainer {

@@ -41,14 +41,33 @@ export function setBlockStyle(change, styleName) {
   change.value.blocks.forEach(blk => {
     const newData = {...blk.data.toObject(), style: styleName}
     if (blk.type === 'contentBlock') {
-      change = change
-        .setNodeByKey(blk.key, {data: newData})
+      change.setNodeByKey(blk.key, {data: newData})
     }
   })
+  return change
 }
 
 export function toggleMark(change, mark) {
-  change.toggleMark(mark).focus()
+  return change.toggleMark(mark).focus()
+}
+
+export function toggleListItem(change, listItemName) {
+  const {blocks} = change.value
+  if (blocks.length === 0) {
+    return change
+  }
+  const active = blocks.some(block => block.data.get('listItem') === listItemName)
+  blocks.forEach(block => {
+    const data = block.data ? block.data.toObject() : {}
+    if (active) {
+      delete data.listItem
+    } else {
+      data.listItem = listItemName
+      data.level = data.level || 1
+    }
+    change.setNodeByKey(block.key, {data: data})
+  })
+  return change
 }
 
 export function expandToFocusedWord(change) {

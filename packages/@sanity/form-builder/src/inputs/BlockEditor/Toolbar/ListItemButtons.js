@@ -4,20 +4,17 @@ import type {BlockContentFeature, BlockContentFeatures, SlateChange, SlateValue}
 
 import React from 'react'
 
-import {toggleMark} from '../utils/changes'
+import {toggleListItem} from '../utils/changes'
 
 import CustomIcon from './CustomIcon'
-import FormatBoldIcon from 'part:@sanity/base/format-bold-icon'
-import FormatItalicIcon from 'part:@sanity/base/format-italic-icon'
-import FormatStrikethroughIcon from 'part:@sanity/base/format-strikethrough-icon'
-import FormatUnderlinedIcon from 'part:@sanity/base/format-underlined-icon'
-import FormatCodeIcon from 'part:@sanity/base/format-code-icon'
+import FormatListBulletedIcon from 'part:@sanity/base/format-list-bulleted-icon'
+import FormatListNumberedIcon from 'part:@sanity/base/format-list-numbered-icon'
 import SanityLogoIcon from 'part:@sanity/base/sanity-logo-icon'
 import ToggleButton from 'part:@sanity/components/toggles/button'
 
 import styles from './styles/DecoratorButtons.css'
 
-type DecoratorItem = (BlockContentFeature & {active: boolean})
+type ListItem = (BlockContentFeature & {active: boolean})
 
 type Props = {
   blockContentFeatures: BlockContentFeatures,
@@ -27,46 +24,42 @@ type Props = {
 
 function getIcon(type: string) {
   switch (type) {
-    case 'strong':
-      return FormatBoldIcon
-    case 'em':
-      return FormatItalicIcon
-    case 'underline':
-      return FormatUnderlinedIcon
-    case 'strike-through':
-      return FormatStrikethroughIcon
-    case 'code':
-      return FormatCodeIcon
+    case 'number':
+      return FormatListNumberedIcon
+    case 'bullet':
+      return FormatListBulletedIcon
     default:
       return SanityLogoIcon
   }
 }
 
-export default class DecoratorButtons extends React.Component<Props> {
+export default class ListItemButtons extends React.Component<Props> {
 
-  hasDecorator(decoratorName: string) {
+  hasListItem(listItemName: string) {
     const {editorValue} = this.props
-    return editorValue.marks.some(mark => mark.type === decoratorName)
+    return editorValue.blocks.some(block => {
+      return block.data.get('listItem') === listItemName
+    })
   }
 
   getItems() {
     const {blockContentFeatures} = this.props
-    return blockContentFeatures.decorators.map((decorator: BlockContentFeature) => {
+    return blockContentFeatures.lists.map((listItem: BlockContentFeature) => {
       return {
-        ...decorator,
-        active: this.hasDecorator(decorator.value)
+        ...listItem,
+        active: this.hasListItem(listItem.value)
       }
     })
   }
 
-  handleClick = (item: DecoratorItem) => {
+  handleClick = (item: ListItem) => {
     const {onChange, editorValue} = this.props
     const change = editorValue.change()
-    change.call(toggleMark, item.value)
+    change.call(toggleListItem, item.value)
     onChange(change)
   }
 
-  renderDecoratorButton = (item: DecoratorItem) => {
+  renderListItemButton = (item: ListItem) => {
     let Icon
     const icon = item.blockEditor ? item.blockEditor.icon : null
     if (icon) {
@@ -80,7 +73,7 @@ export default class DecoratorButtons extends React.Component<Props> {
     const onClick = () => this.handleClick(item)
     return (
       <ToggleButton
-        key={`decoratorButton${item.value}`}
+        key={`listItemButton${item.value}`}
         selected={!!item.active}
         onClick={onClick}
         title={item.title}
@@ -97,7 +90,7 @@ export default class DecoratorButtons extends React.Component<Props> {
     const items = this.getItems()
     return (
       <div className={styles.root}>
-        {items.map(this.renderDecoratorButton)}
+        {items.map(this.renderListItemButton)}
       </div>
     )
   }

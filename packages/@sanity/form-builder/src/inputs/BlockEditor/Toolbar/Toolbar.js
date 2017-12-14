@@ -1,7 +1,6 @@
 // @flow
 import type {
   BlockContentFeatures,
-  ToolbarStyle,
   SlateValue,
   SlateChange
 } from '../typeDefs'
@@ -11,9 +10,11 @@ import React from 'react'
 import AnnotationButtons from './AnnotationButtons'
 import BlockStyle from './BlockStyle'
 import Button from 'part:@sanity/components/buttons/default'
+import CloseIcon from 'part:@sanity/base/close-icon'
 import DecoratorButtons from './DecoratorButtons'
 import FullscreenIcon from 'part:@sanity/base/fullscreen-icon'
-import CloseIcon from 'part:@sanity/base/close-icon'
+import ListItemButtons from './ListItemButtons'
+
 
 import styles from './styles/Toolbar.css'
 
@@ -22,8 +23,7 @@ type Props = {
   editorValue: SlateValue,
   fullscreen: boolean,
   onChange: (change: SlateChange) => void,
-  onToggleFullScreen: void => void,
-  style: ToolbarStyle
+  onToggleFullScreen: void => void
 }
 
 export default class Toolbar extends React.PureComponent<Props> {
@@ -34,13 +34,12 @@ export default class Toolbar extends React.PureComponent<Props> {
       fullscreen,
       editorValue,
       onChange,
-      onToggleFullScreen,
-      style
+      onToggleFullScreen
     } = this.props
     const className = `${styles.root}${fullscreen ? ` ${styles.fullscreen}` : ''}`
 
     return (
-      <div className={className} style={style}>
+      <div className={className}>
 
         <div className={styles.blockFormatContainer}>
           <BlockStyle
@@ -53,11 +52,24 @@ export default class Toolbar extends React.PureComponent<Props> {
         <div className={styles.canBeMinimized}>
 
           <div className={styles.formatButtonsContainer}>
-            <DecoratorButtons
-              editorValue={editorValue}
-              onChange={onChange}
-              blockContentFeatures={blockContentFeatures}
-            />
+
+            <div className={styles.decoratorButtonsContainer}>
+              <DecoratorButtons
+                editorValue={editorValue}
+                onChange={onChange}
+                blockContentFeatures={blockContentFeatures}
+              />
+            </div>
+
+            { blockContentFeatures.lists.length > 0 && (
+              <div className={styles.decoratorButtonsContainer}>
+                <ListItemButtons
+                  editorValue={editorValue}
+                  onChange={onChange}
+                  blockContentFeatures={blockContentFeatures}
+                />
+              </div>
+            )}
 
           </div>
 

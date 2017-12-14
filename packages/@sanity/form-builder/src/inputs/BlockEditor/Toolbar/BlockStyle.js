@@ -41,7 +41,10 @@ export default class BlockStyle extends React.Component<Props> {
         data: {style: style.value}
       })
       const preview = (
-        <ContentBlock node={block}>
+        <ContentBlock
+          node={block}
+          blockContentFeatures={blockContentFeatures}
+        >
           {style.title}
         </ContentBlock>
       )

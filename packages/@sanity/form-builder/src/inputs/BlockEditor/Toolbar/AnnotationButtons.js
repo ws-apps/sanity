@@ -7,14 +7,14 @@ import {Change, Value as SlateValue} from 'slate'
 
 import {createFormBuilderSpan, removeAnnotationFromSpan} from '../utils/changes'
 
-import ToggleButton from 'part:@sanity/components/toggles/button'
+import CustomIcon from './CustomIcon'
 import LinkIcon from 'part:@sanity/base/link-icon'
+import SanityLogoIcon from 'part:@sanity/base/sanity-logo-icon'
+import ToggleButton from 'part:@sanity/components/toggles/button'
 
 import styles from './styles/AnnotationButtons.css'
 
-type AnnotationItem = {
-  title: string,
-  value: string,
+type AnnotationItem = BlockContentFeature & {
   active: boolean,
   disabled: boolean
 }
@@ -27,8 +27,10 @@ type Props = {
 
 function getIcon(type: string) {
   switch (type) {
-    default:
+    case 'link':
       return LinkIcon
+    default:
+      return SanityLogoIcon
   }
 }
 
@@ -72,7 +74,16 @@ export default class AnnotationButtons extends React.Component<Props> {
   }
 
   renderAnnotationButton = (item: AnnotationItem) => {
-    const Icon = getIcon(item.value)
+    let Icon
+    const icon = item.blockEditor ? item.blockEditor.icon : null
+    if (icon) {
+      if (typeof icon === 'string') {
+        Icon = () => <CustomIcon icon={icon} active={!!item.active} />
+      } else if (typeof icon === 'function') {
+        Icon = icon
+      }
+    }
+    Icon = Icon || getIcon(item.value)
     const onClick = () => this.handleClick(item)
     return (
       <ToggleButton

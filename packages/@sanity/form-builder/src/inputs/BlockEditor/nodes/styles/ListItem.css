@@ -5,9 +5,9 @@
   /* Last 1.1 is important for the cursor to show properly
      because of the &:before content-rules
   */
-  padding: 0 0 0 1.1em;
+  padding: 0 0 0.5em 1.1em;
 
-  /* Important in order to force refresh the ::before and ::after rules
+  /* Important 'transform' in order to force refresh the ::before and ::after rules
      in Webkit: https://stackoverflow.com/a/21947628/831480
   */
   transform: translateZ(0);

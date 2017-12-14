@@ -11,13 +11,12 @@ import {uniqueId} from 'lodash'
 
 import React from 'react'
 import blockTools from '@sanity/block-tools'
+import {trimLeft} from '../../utils/pathUtils'
 
 import Editor from './Editor'
 import FormField from 'part:@sanity/components/formfields/default'
 
 import BlockEditor from './BlockEditor'
-
-import styles from './styles/Input.css'
 
 type Props = {
   editorValue: SlateValue,
@@ -25,14 +24,27 @@ type Props = {
   onBlur: (nextPath: []) => void,
   onChange: (change: SlateChange) => void,
   onFocus: (nextPath: []) => void,
+  focusKey: ?string,
   type: BlockArrayType,
   value: Block[]
 }
 
+type Focus = {
+  block: ?string,
+  span: ?string,
+  current: ?{
+    path?: string[],
+    key?: string
+  }
+}
+
 type State = {
   fullscreen: boolean,
-  isFocused: boolean
+  editorIsFocused: boolean,
+  focus: Focus
 }
+
+const emptyFocus = {block: null, span: null, current: null}
 
 export default class BlockEditorInput extends React.Component<Props, State> {
 
@@ -42,7 +54,8 @@ export default class BlockEditorInput extends React.Component<Props, State> {
 
   state = {
     fullscreen: false,
-    isFocused: false
+    editorIsFocused: false,
+    focus: emptyFocus
   }
 
   blockContentFeatures = {
@@ -59,43 +72,73 @@ export default class BlockEditorInput extends React.Component<Props, State> {
   handleToggleFullScreen = () => {
     const fullscreen = !this.state.fullscreen
     this.setState({fullscreen})
-    if (!fullscreen) {
-      this.handleFocus()
-    }
+    this.focus()
   }
 
   refEditor = (editor: ?Editor) => {
     this._editor = editor
   }
 
-  focus() {
+  focus = () => {
     if (this._editor) {
       this._editor.focus()
     }
   }
 
-  handleFakeFocus = (event?: SyntheticEvent<*>) => {
-    if (event) {
-      event.preventDefault()
-    }
+  handleEditorFocus = () => {
+    this.setState({editorIsFocused: true})
     this.focus()
   }
 
-  handleFocus = (event: SyntheticFocusEvent) => {
-    this.setState({isFocused: true})
-    this.props.onFocus(event)
+  handleEditorBlur = () => {
+    this.setState({editorIsFocused: false})
   }
 
-  handleBlur = (event: SyntheticBlurEvent) => {
-    this.setState({isFocused: false})
-    this.props.onBlur(event)
+  handleFormBuilderInputFocus = (nextPath: []) => {
+    console.log('handleFormBuilderInputFocus', nextPath)
+    this.props.onFocus(nextPath)
+  }
+
+  handleFormBuilderInputBlur = (nextPath: []) => {
+    console.log('handleFormBuilderInputBlur', nextPath)
+    this.props.onBlur(nextPath)
   }
 
   handleCanvasClick = () => {
-    this.focus()
+    this.setState({editorIsFocused: true})
+  }
+
+  setEditorFocusState(props: Props) {
+    const {editorValue} = props || this.props
+    const focusKey = editorValue.selection.focusKey
+    const current = {
+      key: focusKey
+    }
+    const focus = {
+      block: editorValue.focusBlock.key,
+      span: editorValue.focusText ? editorValue.focusText.key : null,
+      current: current
+    }
+    this.setState({focus})
+  }
+
+  componentWillReceiveProps(nextProps: Props) {
+    const {editorValue} = nextProps
+    if (!editorValue) {
+      return
+    }
+    const focusKey = editorValue.selection.focusKey
+    const currentFocusKey = this.state.focus.current
+    if (focusKey !== currentFocusKey) {
+      this.setEditorFocusState(nextProps)
+    }
   }
 
   renderEditor(): ReactElement<typeof Editor> {
+    const {
+      fullscreen,
+      editorIsFocused
+    } = this.state
     const {
       editorValue,
       onChange,
@@ -106,6 +149,12 @@ export default class BlockEditorInput extends React.Component<Props, State> {
       <Editor
         blockContentFeatures={this.blockContentFeatures}
         editorValue={editorValue}
+        fullscreen={fullscreen}
+        isFocused={editorIsFocused}
+        onBlur={this.handleEditorBlur}
+        onFocus={this.handleEditorFocus}
+        onFormBuilderInputBlur={this.handleFormBuilderInputBlur}
+        onFormBuilderInputFocus={this.handleFormBuilderInputFocus}
         onChange={onChange}
         ref={this.refEditor}
         value={value}
@@ -124,7 +173,7 @@ export default class BlockEditorInput extends React.Component<Props, State> {
 
     const {
       fullscreen,
-      isFocused
+      editorIsFocused
     } = this.state
 
     const editor = this.renderEditor()
@@ -137,25 +186,26 @@ export default class BlockEditorInput extends React.Component<Props, State> {
         level={level}
       >
         {/* Make label click work */ }
-        <div style={{position: 'absolute', width: '0px', overflow: 'hidden'}}>
-          <input tabIndex={0} type="text" id={this._inputId} onFocus={this.handleFakeFocus} />
-        </div>
-
-        <div
-          onBlur={this.handleBlur}
-          onFocus={this.handleFocus}
-        >
-          <BlockEditor
-            blockContentFeatures={this.blockContentFeatures}
-            editor={editor}
-            editorValue={editorValue}
-            fullscreen={fullscreen}
-            isFocused={isFocused}
-            onCanvasClick={this.handleCanvasClick}
-            onChange={onChange}
-            onToggleFullScreen={this.handleToggleFullScreen}
-          />
-        </div>
+        { false && (
+          <div style={{position: 'absolute', width: '0px', overflow: 'hidden'}}>
+            <input
+              tabIndex={0}
+              type="text"
+              id={this._inputId}
+              onFocus={this.handleFakeFocus}
+            />
+          </div>
+        )}
+        {false && JSON.stringify(this.state.focus)}
+        <BlockEditor
+          blockContentFeatures={this.blockContentFeatures}
+          editor={editor}
+          editorValue={editorValue}
+          fullscreen={fullscreen}
+          editorIsFocused={editorIsFocused}
+          onChange={onChange}
+          onToggleFullScreen={this.handleToggleFullScreen}
+        />
       </FormField>
     )
   }
