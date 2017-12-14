@@ -1,9 +1,8 @@
 // @flow
-
 import type {Map, List} from 'immutable'
-import type {Node} from 'react'
+import type {Node, ComponentType} from 'react'
 import type {Patch as _Patch} from '../../utils/patches'
-import {Change, Block as SlateBlock, Value as _SlateValue, Operation as _SlateOperation} from 'slate'
+import {Change, Block as SlateBlock, Mark, Inline, Text, Value as _SlateValue, Operation as _SlateOperation} from 'slate'
 
 export type Patch = _Patch
 
@@ -39,12 +38,7 @@ export type Block = {
   children?: Span[]
 }
 
-export type SlateNode = {
-  type: string,
-  nodes?: any[],
-  data?: Map<any, any>,
-  key?: string
-}
+export type SlateNode = SlateBlock | Inline | Text | Mark
 
 export type SlateMarkProps = {
   attributes: {},
@@ -54,25 +48,8 @@ export type SlateMarkProps = {
   children: Node[],
 }
 
-export type SlateComponentProps = {
-  attributes?: {},
-  children: Node[],
-  editor?: Node,
-  isSelected?: boolean,
-  key?: string,
-  node: SlateNode,
-  parent?: any,
-  readOnly?: boolean
-}
-
 export type BlockItem = {
   type: Type,
-  title: string
-}
-
-export type ListItem = {
-  active: boolean,
-  type: string,
   title: string
 }
 
@@ -85,16 +62,28 @@ export type Annotation = any
 
 export type BlockContentFeature = {
   title: string,
-  value: string
+  value: string,
+  blockEditor?: {
+    icon?: string | ComponentType<*>,
+    render?: ComponentType<*>
+  }
 }
 
 export type BlockContentFeatures = {
   decorators: BlockContentFeature[],
   styles: BlockContentFeature[],
-  annotations: BlockContentFeature[]
+  annotations: BlockContentFeature[],
+  lists: BlockContentFeature[]
 }
 
-export type ToolbarStyle = {
-  backgroundColor?: string,
-  boxShadow? : string
+export type SlateComponentProps = {
+  attributes?: {},
+  children: Node[],
+  editor?: Node,
+  isSelected?: boolean,
+  key?: string,
+  node: SlateNode,
+  parent?: any,
+  readOnly?: boolean,
+  blockContentFeatures?: BlockContentFeatures
 }
