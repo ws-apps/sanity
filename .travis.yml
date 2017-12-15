@@ -1,5 +1,5 @@
 addon:
-  chrome: stable
+  chrome: beta
 language: node_js
 node_js:
   - '6'

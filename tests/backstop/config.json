@@ -191,7 +191,7 @@
     "html_report": "tests/backstop/htmlReport",
     "ci_report": "tests/backstop/ciReport"
   },
-  "report": ["browser", "CI"],
+  "report": ["browser"],
   "engine": "chrome",
   "engineFlags": [],
   "asyncCaptureLimit": 3,

@@ -146,23 +146,32 @@ gulp.task('dev', ['watch-js', 'watch-assets'], cb => {
 gulp.task('backstop', cb => {
   backstop('test', {
     config: require(backstopConfig)
-  }).then(() => {
-    console.log('Backstop success')
-  }).catch(() => {
-    // test failed
-    console.error('Backstop failed')
   })
 })
 
 gulp.task('backstop:reference', cb => {
   backstop('reference', {
     config: require(backstopConfig)
+  }).then(() => {
+    gutil.log(gutil.colors.green('Backstop references success'))
+  }).catch(() => {
+    throw new gutil.PluginError({
+      plugin: 'backstop reference',
+      message: 'Bulding references failed'
+    })
   })
 })
 
 gulp.task('backstop:approve', cb => {
   backstop('approve', {
     config: require(backstopConfig)
+  }).then(() => {
+    gutil.log(gutil.colors.green('New references approves. Remember to push them'))
+  }).catch(() => {
+    throw new gutil.PluginError({
+      plugin: 'backstop reference',
+      message: 'Approving test failed'
+    })
   })
 })
 
