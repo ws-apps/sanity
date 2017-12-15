@@ -7,14 +7,15 @@ node_js:
   - '8'
 cache: yarn
 before_script:
+  # Build CLI to a single file
+  - cd packages/@sanity/cli
+  - npm run pack
+  - cd $TRAVIS_BUILD_DIR
   - travis_wait yarn run bootstrap
   - yarn run build
   - gulp backstopServer &
   - sleep 10
 script:
-  # Build CLI to a single file
-  - cd packages/@sanity/cli
-  - npm run pack
 
   # Remove source and dependencies from CLI to ensure it works standalone
   - rm -rf packages/@sanity/cli/node_modules
