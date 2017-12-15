@@ -8,10 +8,11 @@ node_js:
 cache: yarn
 before_script:
   # Build CLI to a single file
-  - cd packages/@sanity/cli
-  - npm run pack
+  - yarn
   - cd $TRAVIS_BUILD_DIR
   - travis_wait yarn run bootstrap
+  - cd packages/@sanity/cli
+  - yarn run pack
   - yarn run build
   - gulp backstopServer &
   - sleep 10
