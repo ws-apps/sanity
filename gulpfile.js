@@ -149,6 +149,7 @@ gulp.task('backstop', cb => {
   }).then(() => {
     gutil.log(gutil.colors.green('Backstop test success'))
   }).catch(() => {
+    process.exit(1)
     throw new gutil.PluginError({
       plugin: 'backstop',
       message: 'Tests failed'
