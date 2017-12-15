@@ -1,0 +1,201 @@
+{
+  "id": "Content Studio",
+  "viewports": [
+    {
+      "label": "desktop",
+      "width": 1200,
+      "height": 960
+    },
+    {
+      "label": "phone",
+      "width": 320,
+      "height": 480
+    },
+    {
+      "label": "tablet",
+      "width": 1024,
+      "height": 768
+    }
+  ],
+  "onBeforeScript": "chromy/onBefore.js",
+  "onReadyScript": "chromy/onReady.js",
+  "scenarios": [
+    {
+      "label": "Login",
+      "url": "http://localhost:5000",
+      "readySelector": "[class^=\"LoginDialog_root\"]",
+      "selectors": ["viewport"],
+      "delay": 1500,
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Front",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000",
+      "delay": 1500,
+      "readySelector": "[class^=\"TypePaneItem_item\"]",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book",
+      "delay": 1500,
+      "readySelector": "[class^=\"TypePaneItem_item\"]",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Detail",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book",
+      "delay": 1500,
+      "readySelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"]",
+      "clickSelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"] button",
+      "clickSelector2": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuContainer\"] [class^=\"DefaultMenu_item\"]:nth-child(6) a",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Thumbnails",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book",
+      "delay": 1500,
+      "readySelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"]",
+      "clickSelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"] button",
+      "clickSelector2": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuContainer\"] [class^=\"DefaultMenu_item\"]:nth-child(7) a",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Cards",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book",
+      "delay": 1500,
+      "readySelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"]",
+      "clickSelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"] button",
+      "clickSelector2": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuContainer\"] [class^=\"DefaultMenu_item\"]:nth-child(8) a",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Menu",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book",
+      "delay": 1500,
+      "readySelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"]",
+      "clickSelector": "[data-pane-name^=\"documents\"] [class^=\"DefaultPane_menuButton\"] button",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Edit",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book/edit/c6b1208f-cd89-4a55-88f1-0b979e005f0a",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"]",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Edit - Focus Author",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book/edit/c6b1208f-cd89-4a55-88f1-0b979e005f0a",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"] [data-field-name=\"author\"]",
+      "clickSelector": "[data-pane-name=\"DeskTool__Editor\"] [data-field-name=\"author\"] input",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Book - Edit - Select Author",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/book/edit/c6b1208f-cd89-4a55-88f1-0b979e005f0a",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"]",
+      "clickSelector": "[data-pane-name=\"DeskTool__Editor\"] [data-field-name=\"author\"] [class^=\"SearchableSelect_arrow\"]",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Boolean - Unhecked",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/booleansTest/edit/5ca2ebd3-1446-404e-8ec1-cab66badb7c8",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"]",
+      "selectors": ["[data-pane-name=\"DeskTool__Editor\"]"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Boolean - Checked",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/booleansTest/edit/3d11c8a6-5cb1-428c-b71e-8cd71796908a",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"]",
+      "selectors": ["[data-pane-name=\"DeskTool__Editor\"]"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Datepicker",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/richDateTest/edit/831f636c-73cf-4f74-b57f-4833a899b2c9",
+      "delay": 1500,
+      "readySelector": "[data-pane-name=\"DeskTool__Editor\"] [data-field-name=\"myUtcDateField\"]",
+      "clickSelector": "[data-pane-name=\"DeskTool__Editor\"] [data-field-name=\"myUtcDateField\"] input",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    },
+    {
+      "label": "Color Picker",
+      "cookiePath": "tests/backstop/engineScripts/cookies.json",
+      "url": "http://localhost:5000/desk/colorTest/edit/c6139fcb-0028-491f-ae78-ec31261de5fe",
+      "delay": 1500,
+      "readySelector": "[class^=\"TypePaneItem_item\"]",
+      "selectors": ["viewport"],
+      "selectorExpansion": true,
+      "misMatchThreshold" : 0.1,
+      "requireSameDimensions": true
+    }
+  ],
+  "paths": {
+    "bitmaps_reference": "tests/backstop/bitmapsReference",
+    "bitmaps_test": "tests/backstop/bitmapsTest",
+    "engine_scripts": "tests/backstop/engineScripts",
+    "html_report": "tests/backstop/htmlReport",
+    "ci_report": "tests/backstop/ciReport"
+  },
+  "report": ["browser", "CI"],
+  "engine": "chrome",
+  "engineFlags": [],
+  "asyncCaptureLimit": 3,
+  "asyncCompareLimit": 50,
+  "debug": false,
+  "debugWindow": false
+}

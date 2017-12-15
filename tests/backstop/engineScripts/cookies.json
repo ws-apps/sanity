@@ -1,0 +1,14 @@
+[
+  {
+    "domain": ".ppsg7ml5.api.sanity.io",
+    "path": "/v1/users/me",
+    "name": "sanitySession",
+    "value": "skHf9uNgf1DsBWN5LHyA3YN5Rir0x1rW132WmVQkVIbaTUPkCQpQgjNWa9Kn658a7qwLe4kIvuE16c1j",
+    "expirationDate": 2143588996000,
+    "hostOnly": true,
+    "httpOnly": true,
+    "secure": false,
+    "session": true,
+    "sameSite": "no_restriction"
+  }
+]

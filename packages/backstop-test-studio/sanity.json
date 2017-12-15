@@ -1,39 +1,11 @@
 {
   "root": true,
   "project": {
-    "name": "Test studio"
+    "name": "Backstop studio"
   },
-  "__experimental_spaces": [
-    {
-      "name": "production",
-      "title": "Prod",
-      "default": true,
-      "api": {
-        "projectId": "ppsg7ml5",
-        "dataset": "test"
-      }
-    },
-    {
-      "name": "staging",
-      "title": "Staging",
-      "api": {
-        "projectId": "ppsg7ml5",
-        "dataset": "staging"
-      }
-    },
-    {
-      "name": "backstop",
-      "title": "Backstop test",
-      "default": true,
-      "api": {
-        "projectId": "ppsg7ml5",
-        "dataset": "backstop-test"
-      }
-    }
-  ],
   "api": {
     "projectId": "ppsg7ml5",
-    "dataset": "test"
+    "dataset": "backstop-test"
   },
   "plugins": [
     "@sanity/base",
@@ -51,7 +23,7 @@
   "parts": [
     {
       "name": "part:@sanity/base/schema",
-      "path": "./schemas/schema.js"
+      "path": "../test-studio/schemas/schema.js"
     },
     {
       "implements": "part:@sanity/base/brand-logo",
@@ -59,11 +31,11 @@
     },
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "src/components/PertEstimateSchema.js"
+      "path": "../test-studio/src/components/PertEstimateSchema.js"
     },
     {
       "implements": "part:@sanity/base/tool",
-      "path": "src/test-intent-tool"
+      "path": "../test-studio/src/test-intent-tool"
     }
   ],
   "env": {

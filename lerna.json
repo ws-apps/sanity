@@ -6,6 +6,7 @@
   ],
   "packages": [
     "packages/@sanity/*",
+    "packages/backstop-test-studio",
     "packages/example-studio",
     "packages/test-studio",
     "packages/sanity-plugin-vision",

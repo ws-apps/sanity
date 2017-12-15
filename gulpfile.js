@@ -19,6 +19,9 @@ const scripts = ['./packages/@sanity/*/src/**/*.js', './packages/sanity-plugin-*
 const assets = ['./packages/@sanity/*/src/**/*', './packages/sanity-plugin-*/src/**/*']
 const srcOpts = {base: 'packages'}
 
+const backstop = require('backstopjs')
+const backstopConfig = './tests/backstop/config.json'
+
 const getProjectEnv = projectPath => {
   const npmPath = path.join(projectPath, 'node_modules', '.bin')
   /* eslint-disable no-process-env */
@@ -136,6 +139,40 @@ gulp.task('dev', ['watch-js', 'watch-assets'], cb => {
     env: getProjectEnv(projectPath)
   })
 
+  proc.stdout.pipe(process.stdout)
+  proc.stderr.pipe(process.stderr)
+})
+
+gulp.task('backstop', cb => {
+  backstop('test', {
+    config: require(backstopConfig)
+  }).then(() => {
+    console.log('Backstop success')
+  }).catch(() => {
+    // test failed
+    console.error('Backstop failed')
+  })
+})
+
+gulp.task('backstop:reference', cb => {
+  backstop('reference', {
+    config: require(backstopConfig)
+  })
+})
+
+gulp.task('backstop:approve', cb => {
+  backstop('approve', {
+    config: require(backstopConfig)
+  })
+})
+
+gulp.task('backstopServer', cb => {
+  const projectPath = path.join(__dirname, 'packages', 'backstop-test-studio')
+  const proc = childProcess.spawn('sanity', ['start', '--host', '0.0.0.0', '--port', '5000'], {
+    shell: isWindows,
+    cwd: projectPath,
+    env: getProjectEnv(projectPath)
+  })
   proc.stdout.pipe(process.stdout)
   proc.stderr.pipe(process.stderr)
 })

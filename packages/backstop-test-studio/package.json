@@ -1,0 +1,57 @@
+{
+  "name": "backstop-test-studio",
+  "private": true,
+  "version": "0.123.0",
+  "description": "A bloated, ugly Sanity studio with a contrived schema for edge case testing and development",
+  "author": "Sanity.io <hello@sanity.io>",
+  "license": "MIT",
+  "scripts": {
+    "start": "sanity start",
+    "test": "sanity check",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "test-studio"
+  ],
+  "dependencies": {
+    "@sanity/base": "^0.123.0",
+    "@sanity/cli": "^0.123.0",
+    "@sanity/code-input": "^0.123.0",
+    "@sanity/color-input": "^0.123.0",
+    "@sanity/components": "^0.123.0",
+    "@sanity/core": "^0.123.0",
+    "@sanity/default-layout": "^0.123.0",
+    "@sanity/default-login": "^0.121.1",
+    "@sanity/desk-tool": "^0.123.0",
+    "@sanity/form-builder": "^0.123.0",
+    "@sanity/google-maps-input": "^0.123.0",
+    "@sanity/rich-date-input": "^0.123.0",
+    "@sanity/storybook": "^0.123.0",
+    "bio-pv": "^1.8.1",
+    "date-fns": "^1.29.0",
+    "fetch": "^1.1.0",
+    "get-video-id": "^2.1.4",
+    "humanize-list": "^1.0.1",
+    "prop-types": "^15.6.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-icons": "^2.2.5",
+    "sanity-plugin-vision": "^0.116.2"
+  },
+  "devDependencies": {
+    "rimraf": "^2.6.2"
+  },
+  "bugs": {
+    "url": "https://github.com/sanity-io/sanity/issues"
+  },
+  "homepage": "https://www.sanity.io/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanity-io/sanity.git"
+  }
+}

@@ -1,0 +1,27 @@
+/* eslint-disable no-console */
+const fs = require('fs')
+
+module.exports = function (chromy, scenario) {
+  let cookies = []
+  const {cookiePath} = scenario
+
+  // READ COOKIES FROM FILE IF EXISTS
+  if (fs.existsSync(cookiePath)) {
+    cookies = JSON.parse(fs.readFileSync(cookiePath))
+  }
+
+  // MUNGE COOKIE DOMAIN FOR CHROMY USAGE
+  cookies = cookies.map(cookie => {
+    cookie.url = `https://${cookie.domain}`
+    delete cookie.domain
+    return cookie
+  })
+
+  // SET COOKIES VIA CHROMY
+  if (cookies && cookies.length > 0) {
+    chromy.setCookie(cookies)
+    console.log('Cookie state restored with:', JSON.stringify(cookies, null, 2))
+  } else {
+    console.log('No cookies')
+  }
+}
