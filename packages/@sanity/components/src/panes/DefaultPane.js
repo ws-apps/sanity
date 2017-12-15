@@ -22,7 +22,8 @@ class Pane extends React.PureComponent {
     onMenuToggle: PropTypes.func,
     className: PropTypes.string,
     styles: PropTypes.object,
-    scrollTop: PropTypes.number
+    scrollTop: PropTypes.number,
+    name: PropTypes.string
   }
 
   static defaultProps = {
@@ -110,7 +111,7 @@ class Pane extends React.PureComponent {
   }
 
   render() {
-    const {title, children, isSelected, renderFunctions, renderMenu, isCollapsed, isScrollable, styles} = this.props
+    const {title, children, name, isSelected, renderFunctions, renderMenu, isCollapsed, isScrollable, styles} = this.props
 
     return (
       <div
@@ -120,6 +121,7 @@ class Pane extends React.PureComponent {
           ${isSelected ? styles.isActive : ''}
         `}
         ref={this.setRootElement}
+        data-pane-name={name || 'no name'}
       >
         <div
           className={styles.header}

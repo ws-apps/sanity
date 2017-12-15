@@ -291,6 +291,7 @@ export default withRouterHOC(class DocumentsPane extends React.PureComponent {
         isCollapsed={isCollapsed}
         onMenuToggle={this.handleToggleMenu}
         scrollTop={this.state.scrollTop}
+        name="documents"
       >
         <QueryContainer
           query={query}

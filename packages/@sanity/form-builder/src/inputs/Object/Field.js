@@ -54,7 +54,7 @@ export default class Field extends React.Component {
 
       if (expectedType !== actualType && !isCompatible) {
         return (
-          <div className={styles.root}>
+          <div data-field-name={field.name} className={styles.root}>
             <Fieldset legend={field.type.title} level={level}>
               <InvalidValue
                 value={value}
@@ -69,7 +69,7 @@ export default class Field extends React.Component {
     }
 
     return (
-      <div className={styles.root}>
+      <div data-field-name={field.name} className={styles.root}>
         <FormBuilderInput
           value={value}
           type={field.type}

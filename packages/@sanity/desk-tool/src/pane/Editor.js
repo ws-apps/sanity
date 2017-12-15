@@ -410,6 +410,7 @@ export default withRouterHOC(class Editor extends React.PureComponent {
     return (
       <Pane
         title={this.getTitle(value)}
+        name="DeskTool__Editor"
         renderMenu={this.renderMenu}
         renderFunctions={this.renderFunctions}
         onMenuToggle={this.handleMenuToggle}
@@ -435,7 +436,7 @@ export default withRouterHOC(class Editor extends React.PureComponent {
               }
             </div>
           </div>
-          <form className={styles.editor} onSubmit={preventDefault} id="Sanity_Default_DeskTool_Editor_ScrollContainer">
+          <form className={styles.editor} onSubmit={preventDefault}>
             <FormBuilder
               schema={schema}
               patchChannel={patchChannel}
