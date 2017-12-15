@@ -20,6 +20,7 @@ class StyleSelect extends React.Component {
     renderItem: PropTypes.func,
     className: PropTypes.string,
     transparent: PropTypes.bool,
+    disabled: PropTypes.bool,
     items: PropTypes.arrayOf(
       PropTypes.shape({
         title: PropTypes.string,
@@ -30,6 +31,7 @@ class StyleSelect extends React.Component {
 
   static defaultProps = {
     className: '',
+    disabled: false,
     onChange() {},
     onOpen() {},
     onClose() {},
@@ -83,10 +85,13 @@ class StyleSelect extends React.Component {
   }
 
   handleOpenList = () => {
-    this.setState({
-      showList: true,
-    })
-    this.props.onOpen()
+    const {disabled} = this.props
+    if (!disabled) {
+      this.setState({
+        showList: true,
+      })
+      this.props.onOpen()
+    }
   }
 
   handleCloseList = () => {
@@ -148,20 +153,28 @@ class StyleSelect extends React.Component {
   }
 
   render() {
-    const {error, value, items, className, transparent} = this.props
+    const {
+      className,
+      disabled,
+      error,
+      items,
+      transparent,
+      value
+    } = this.props
+
     const {hasFocus, showList} = this.state
 
     return (
       <div
         className={`
           ${styles.root}
-          ${hasFocus ? styles.focused : ''}
+          ${hasFocus && !disabled ? styles.focused : ''}
           ${error ? styles.error : ''}
           ${transparent ? styles.transparent : ''}
+          ${disabled ? styles.disabled : ''}
           ${className || ''}
         `}
       >
-
         <div style={{position: 'absolute', width: '0px', overflow: 'hidden'}}>
           <input type="text" onFocus={this.handleFocus} onBlur={this.handleBlur} />
         </div>
@@ -190,7 +203,11 @@ class StyleSelect extends React.Component {
                 isSelected ? styles.itemSelected : null
               ].filter(Boolean)
               return (
-                <a className={classNames.join(' ')} key={item.key} title={item.title} onClick={() => this.handleSelect(item)}>
+                <a
+                  className={classNames.join(' ')}
+                  key={item.key} title={item.title}
+                  onClick={() => this.handleSelect(item)}
+                >
                   <div className={styles.itemIcon}>
                     {
                       isActive && <CircleCheckIcon />

@@ -123,3 +123,7 @@
   border: 1px solid var(--input-border-color-focus);
   box-shadow: 0 0 8px color(var(--input-border-color-focus) a(35%));
 }
+
+.disabled {
+  opacity: 0.2;
+}
