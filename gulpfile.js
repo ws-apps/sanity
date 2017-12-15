@@ -146,6 +146,13 @@ gulp.task('dev', ['watch-js', 'watch-assets'], cb => {
 gulp.task('backstop', cb => {
   backstop('test', {
     config: require(backstopConfig)
+  }).then(() => {
+    gutil.log(gutil.colors.green('Backstop test success'))
+  }).catch(() => {
+    throw new gutil.PluginError({
+      plugin: 'backstop',
+      message: 'Tests failed'
+    })
   })
 })
 
