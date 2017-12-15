@@ -26,7 +26,7 @@ type Props = {
   onChange: (change: SlateChange) => void
 }
 
-export default class BlockStyle extends React.Component<Props> {
+export default class BlockStyleSelect extends React.Component<Props> {
 
   hasStyle(styleName: string) {
     const {editorValue} = this.props
@@ -89,12 +89,16 @@ export default class BlockStyle extends React.Component<Props> {
     if (!items || items.length === 0) {
       return null
     }
+    const {editorValue} = this.props
+    const {focusBlock} = editorValue
+    const disabled = focusBlock ? focusBlock.isVoid : false
     return (
       <label className={styles.root}>
         <span style={{display: 'none'}}>Text</span>
         <StyleSelect
           items={items}
           value={value}
+          disabled={disabled}
           onChange={this.handleChange}
           renderItem={this.renderItem}
           transparent
