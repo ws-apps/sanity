@@ -35,4 +35,4 @@ script:
 
   # Backstop regression testing
   - cd $TRAVIS_BUILD_DIR
-  - gulp backstop
+  - node node_modules/backstopjs/cli/index.js test --config=./tests/backstop/config.json
