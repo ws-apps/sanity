@@ -1,3 +1,5 @@
+addon:
+  chrome: stable
 language: node_js
 node_js:
   - '6'
@@ -6,6 +8,8 @@ cache: yarn
 before_script:
   - travis_wait yarn run bootstrap
   - yarn run build
+  - gulp backstopServer &
+  - sleep 10
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
@@ -28,3 +32,7 @@ script:
 
   # Test building the project with latest dependencies
   - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
+
+  # Backstop regression testing
+  - cd $TRAVIS_BUILD_DIR
+  - gulp backstop
