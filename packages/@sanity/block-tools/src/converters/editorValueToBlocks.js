@@ -93,8 +93,8 @@ function isEmpty(blocks) {
   return firstChild.text.length === 0
 }
 
-export default function slateStateToBlocks(json) {
-  const nodes = get(json, 'document.nodes')
+export default function slateStateToBlocks(value: {}) {
+  const nodes = get(value, 'document.nodes')
   if (!nodes || nodes.length === 0) {
     return undefined
   }

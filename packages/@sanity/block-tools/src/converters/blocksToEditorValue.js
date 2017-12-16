@@ -2,6 +2,7 @@
 
 import randomKey from '../util/randomKey'
 import resolveJsType from '../util/resolveJsType'
+import blockContentTypeToOptions from '../util/blockContentTypeToOptions'
 
 import {SLATE_DEFAULT_BLOCK} from '../constants'
 
@@ -24,7 +25,7 @@ function toRawMark(markName) {
   }
 }
 
-function sanitySpanToRawSlateBlockNode(span, sanityBlock) {
+function sanitySpanToRawSlateBlockNode(span, sanityBlock, blockContentFeatures) {
 
   if (!span._key) {
     span._key = randomKey(12)
@@ -51,7 +52,9 @@ function sanitySpanToRawSlateBlockNode(span, sanityBlock) {
     annotations = {}
     annotationKeys.forEach(key => {
       const annotation = sanityBlock.markDefs.find(def => def._key === key)
-      annotations[annotation._type] = annotation
+      if (annotations && annotation) {
+        annotations[annotation._type] = annotation
+      }
     })
   }
 
@@ -76,11 +79,28 @@ function sanitySpanToRawSlateBlockNode(span, sanityBlock) {
 }
 
 // Block type object
-function sanityBlockToRawNode(sanityBlock, type) {
-  // eslint-disable-next-line no-unused-vars
+function sanityBlockToRawNode(sanityBlock, type, blockContentFeatures) {
   const {children, _type, markDefs, ...rest} = sanityBlock
-
-  const restData = hasKeys(rest) ? {data: {_type, ...rest}} : {}
+  let restData = {}
+  if (hasKeys(rest)) {
+    restData = {data: {_type, ...rest}}
+    // Check if we should allow listItem if present
+    const {listItem} = restData.data
+    if (listItem
+      && !blockContentFeatures.lists
+        .find(list => list.value === listItem)
+    ) {
+      delete restData.data.listItem
+    }
+    // Check if we should allow style if present
+    const {style} = restData.data
+    if (style
+      && !blockContentFeatures.styles
+        .find(_style => _style.value === style)
+    ) {
+      restData.data.style = 'normal'
+    }
+  }
 
   if (!sanityBlock._key) {
     sanityBlock._key = randomKey(12)
@@ -92,7 +112,11 @@ function sanityBlockToRawNode(sanityBlock, type) {
     isVoid: false,
     type: 'contentBlock',
     ...restData,
-    nodes: children.map(child => sanitySpanToRawSlateBlockNode(child, sanityBlock))
+    nodes: children
+      .map(child => sanitySpanToRawSlateBlockNode(
+        child,
+        sanityBlock, blockContentFeatures
+      ))
   }
 }
 
@@ -104,37 +128,40 @@ function sanityBlockItemToRaw(blockItem, type) {
   return {
     kind: 'block',
     key: blockItem._key,
-    type: type ? type.name : '__unknown', // __unknown is needed to map to component in slate schema, see prepareSlateForBlockEditor.js
+    type: type ? type.name : '__unknown',
     isVoid: true,
     data: {value: blockItem},
     nodes: []
   }
 }
 
-function sanityBlockItemToRawNode(blockItem, type) {
+function sanityBlockItemToRawNode(blockItem, type, blockContentFeatures) {
   const blockItemType = resolveTypeName(blockItem)
 
   const memberType = type.of.find(ofType => ofType.name === blockItemType)
 
   return blockItemType === 'block'
-    ? sanityBlockToRawNode(blockItem, memberType)
+    ? sanityBlockToRawNode(blockItem, memberType, blockContentFeatures)
     : sanityBlockItemToRaw(blockItem, memberType)
 }
 
-function sanityBlocksArrayToRawNodes(blockArray, type) {
+function sanityBlocksArrayToRawNodes(blockArray, type, blockContentFeatures) {
   return blockArray
     .filter(Boolean) // this is a temporary guard against null values, @todo: remove
-    .map(item => sanityBlockItemToRawNode(item, type))
+    .map(item => sanityBlockItemToRawNode(item, type, blockContentFeatures))
 }
 
-export default function blocksToSlateState(array, type) {
+export default function blocksToSlateState(array: [], type: any) {
   const defaultNodes = [{...SLATE_DEFAULT_BLOCK, nodes: [{kind: 'text', text: ''}]}]
+  const blockContentFeatures = blockContentTypeToOptions(type)
   return {
     kind: 'state',
     document: {
       kind: 'document',
       data: {},
-      nodes: (array && array.length > 0) ? sanityBlocksArrayToRawNodes(array, type) : defaultNodes
+      nodes: (array && array.length > 0)
+        ? sanityBlocksArrayToRawNodes(array, type, blockContentFeatures)
+        : defaultNodes
     }
   }
 }
