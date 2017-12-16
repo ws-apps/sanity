@@ -1,9 +1,3 @@
-import {
-  DEFAULT_SUPPORTED_STYLES,
-  DEFAULT_SUPPORTED_DECORATORS,
-  DEFAULT_SUPPORTED_ANNOTATIONS
-} from '../constants'
-
 
 function resolveEnabledStyles(blockType) {
   const styleField = blockType.fields.find(btField => btField.name === 'style')
@@ -23,13 +17,27 @@ function resolveEnabledAnnotationTypes(spanType) {
   return spanType.annotations.map(annotation => {
     return {
       title: annotation.title,
-      value: annotation.name
+      value: annotation.name,
+      blockEditor: annotation.blockEditor
     }
   })
 }
 
 function resolveEnabledDecorators(spanType) {
   return spanType.decorators
+}
+
+function resolveEnabledListItems(blockType) {
+  const listField = blockType.fields.find(btField => btField.name === 'list')
+  if (!listField) {
+    throw new Error("A field with name 'list' is not defined in the block type (required).")
+  }
+  const listItems = listField.type.options.list
+    && listField.type.options.list.filter(list => list.value)
+  if (!listItems) {
+    throw new Error('The list field need at least to be an empty array')
+  }
+  return listItems
 }
 
 export default function blockContentTypeToOptions(blockContentType) {
@@ -45,6 +53,7 @@ export default function blockContentTypeToOptions(blockContentType) {
   return {
     styles: resolveEnabledStyles(blockType),
     decorators: resolveEnabledDecorators(spanType),
-    annotations: resolveEnabledAnnotationTypes(spanType)
+    annotations: resolveEnabledAnnotationTypes(spanType),
+    lists: resolveEnabledListItems(blockType)
   }
 }
