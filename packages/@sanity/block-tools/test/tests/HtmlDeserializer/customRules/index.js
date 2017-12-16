@@ -44,10 +44,21 @@ const rules = [
       if (el.tagName.toLowerCase() !== 'img') {
         return undefined
       }
-      return {
-        _type: 'image',
-        src: el.getAttribute('src')
+      const result = [
+        {
+          _type: 'image',
+          src: el.getAttribute('src')
+        }
+      ]
+      if (el.parentNode.tagName.toLowerCase() === 'a') {
+        result.push(
+          {
+            _type: 'span',
+            text: 'Image link'
+          }
+        )
       }
+      return result
     }
   }
 ]
