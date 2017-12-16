@@ -240,7 +240,7 @@ export default class Span extends React.Component<Props, State> {
     }
 
     return (
-      <span className={styles.editSpanContainer} style={style}>
+      <span className={styles.editAnnotationContainer} style={style}>
         <EditItemPopOver
           onClose={this.handleCloseInput}
         >

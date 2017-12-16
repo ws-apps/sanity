@@ -73,7 +73,6 @@ export default class Toolbar extends React.PureComponent<Props> {
                 />
               </div>
             )}
-
           </div>
 
           { blockContentFeatures.annotations.length > 0 && (
