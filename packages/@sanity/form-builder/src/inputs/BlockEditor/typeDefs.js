@@ -9,6 +9,7 @@ export type Patch = _Patch
 export type Type = {
   type: Type,
   name: string,
+  title: string,
   options?: Object,
   of?: [],
   annotations?: {title: string, name: string}[]
@@ -73,7 +74,8 @@ export type BlockContentFeatures = {
   decorators: BlockContentFeature[],
   styles: BlockContentFeature[],
   annotations: BlockContentFeature[],
-  lists: BlockContentFeature[]
+  lists: BlockContentFeature[],
+  blockObjectTypes: Type[]
 }
 
 export type SlateComponentProps = {
