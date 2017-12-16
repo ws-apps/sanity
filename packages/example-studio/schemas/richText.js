@@ -2,7 +2,7 @@ import icon from 'react-icons/lib/fa/font'
 import Highlight from '../parts/blockEditor/Highlight'
 import AuthorIcon from 'react-icons/lib/fa/user'
 import AuthorAnnotation from '../parts/blockEditor/AuthorAnnotation'
-import TitleStyle from '../parts/blockEditor/titleStyle'
+import TitleStyle from '../parts/blockEditor/TitleStyle'
 
 export default {
   name: 'richText',
