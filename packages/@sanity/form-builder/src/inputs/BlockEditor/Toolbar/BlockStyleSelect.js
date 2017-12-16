@@ -10,7 +10,7 @@ import {setBlockStyle} from '../utils/changes'
 import ContentBlock from '../nodes/ContentBlock'
 import StyleSelect from 'part:@sanity/components/selects/style'
 
-import styles from './styles/BlockStyle.css'
+import styles from './styles/BlockStyleSelect.css'
 
 export type BlockStyleItem = {
   key: string,
@@ -77,6 +77,7 @@ export default class BlockStyleSelect extends React.Component<Props> {
     const {onChange, editorValue} = this.props
     const change = editorValue.change()
     change.call(setBlockStyle, item.style)
+    change.focus()
     onChange(change)
   }
 

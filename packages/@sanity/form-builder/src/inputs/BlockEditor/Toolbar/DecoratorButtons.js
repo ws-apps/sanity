@@ -4,6 +4,7 @@ import type {BlockContentFeature, BlockContentFeatures, SlateChange, SlateValue}
 
 import React from 'react'
 
+import {keyMaps} from '../plugins/SetMarksOnKeyComboPlugin'
 import {toggleMark} from '../utils/changes'
 
 import CustomIcon from './CustomIcon'
@@ -14,10 +15,11 @@ import FormatUnderlinedIcon from 'part:@sanity/base/format-underlined-icon'
 import FormatCodeIcon from 'part:@sanity/base/format-code-icon'
 import SanityLogoIcon from 'part:@sanity/base/sanity-logo-icon'
 import ToggleButton from 'part:@sanity/components/toggles/button'
+import ToolbarClickAction from './ToolbarClickAction'
 
 import styles from './styles/DecoratorButtons.css'
 
-type DecoratorItem = (BlockContentFeature & {active: boolean})
+type DecoratorItem = (BlockContentFeature & {active: boolean, disabled: boolean})
 
 type Props = {
   blockContentFeatures: BlockContentFeatures,
@@ -42,6 +44,8 @@ function getIcon(type: string) {
   }
 }
 
+const NOOP = () => {}
+
 export default class DecoratorButtons extends React.Component<Props> {
 
   hasDecorator(decoratorName: string) {
@@ -50,11 +54,14 @@ export default class DecoratorButtons extends React.Component<Props> {
   }
 
   getItems() {
-    const {blockContentFeatures} = this.props
+    const {blockContentFeatures, editorValue} = this.props
+    const {focusBlock} = editorValue
+    const disabled = focusBlock ? focusBlock.isVoid : false
     return blockContentFeatures.decorators.map((decorator: BlockContentFeature) => {
       return {
         ...decorator,
-        active: this.hasDecorator(decorator.value)
+        active: this.hasDecorator(decorator.value),
+        disabled
       }
     })
   }
@@ -67,6 +74,7 @@ export default class DecoratorButtons extends React.Component<Props> {
   }
 
   renderDecoratorButton = (item: DecoratorItem) => {
+    const {editorValue} = this.props
     let Icon
     const icon = item.blockEditor ? item.blockEditor.icon : null
     if (icon) {
@@ -77,19 +85,30 @@ export default class DecoratorButtons extends React.Component<Props> {
       }
     }
     Icon = Icon || getIcon(item.value)
-    const onClick = () => this.handleClick(item)
+    // We must not do a click-event here, because that messes with the editor focus!
+    const onAction = () => {
+      this.handleClick(item)
+    }
+    const shortCut = keyMaps[item.value] ? `(${keyMaps[item.value]})` : ''
+    const title = `${item.title} ${shortCut}`
     return (
-      <ToggleButton
+      <ToolbarClickAction
+        onAction={onAction}
+        editorValue={editorValue}
         key={`decoratorButton${item.value}`}
-        selected={!!item.active}
-        onClick={onClick}
-        title={item.title}
-        className={styles.button}
       >
-        <div className={styles.iconContainer}>
-          <Icon />
-        </div>
-      </ToggleButton>
+        <ToggleButton
+          selected={!!item.active}
+          disabled={item.disabled}
+          onClick={NOOP}
+          title={title}
+          className={styles.button}
+        >
+          <div className={styles.iconContainer}>
+            <Icon />
+          </div>
+        </ToggleButton>
+      </ToolbarClickAction>
     )
   }
 

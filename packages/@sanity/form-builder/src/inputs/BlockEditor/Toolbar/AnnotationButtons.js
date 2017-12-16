@@ -3,7 +3,7 @@
 import type {BlockContentFeature, BlockContentFeatures} from '../typeDefs'
 
 import React from 'react'
-import {Change, Value as SlateValue} from 'slate'
+import {Change, Value as SlateValue, Range} from 'slate'
 
 import {createFormBuilderSpan, removeAnnotationFromSpan} from '../utils/changes'
 
@@ -11,6 +11,7 @@ import CustomIcon from './CustomIcon'
 import LinkIcon from 'part:@sanity/base/link-icon'
 import SanityLogoIcon from 'part:@sanity/base/sanity-logo-icon'
 import ToggleButton from 'part:@sanity/components/toggles/button'
+import ToolbarClickAction from './ToolbarClickAction'
 
 import styles from './styles/AnnotationButtons.css'
 
@@ -34,6 +35,8 @@ function getIcon(type: string) {
   }
 }
 
+const NOOP = () => {}
+
 export default class AnnotationButtons extends React.Component<Props> {
 
   hasAnnotation(annotationName: string) {
@@ -46,20 +49,22 @@ export default class AnnotationButtons extends React.Component<Props> {
   }
 
   getItems() {
-    const {blockContentFeatures} = this.props
+    const {blockContentFeatures, editorValue} = this.props
+    const {inlines, focusBlock} = editorValue
+    const disabled = inlines.some(inline => inline.type !== 'span')
+      || (focusBlock ? (focusBlock.isVoid || focusBlock.text === '') : false)
     return blockContentFeatures.annotations.map((annotation: BlockContentFeature) => {
       return {
         ...annotation,
         active: this.hasAnnotation(annotation.value),
-        disabled: false
+        disabled
       }
     })
   }
 
-  handleClick = (item: AnnotationItem) => {
+  handleClick = (item: AnnotationItem, originalSelection: Range) => {
     const {onChange, editorValue} = this.props
     const change = editorValue.change()
-    change.focus()
     if (item.active) {
       const spans = editorValue.inlines.filter(inline => inline.type === 'span')
       spans.forEach(span => {
@@ -68,12 +73,12 @@ export default class AnnotationButtons extends React.Component<Props> {
       onChange(change)
       return
     }
-    change.call(createFormBuilderSpan, item.value)
-    change.blur()
+    change.call(createFormBuilderSpan, item.value, originalSelection)
     onChange(change)
   }
 
   renderAnnotationButton = (item: AnnotationItem) => {
+    const {editorValue} = this.props
     let Icon
     const icon = item.blockEditor ? item.blockEditor.icon : null
     if (icon) {
@@ -84,20 +89,28 @@ export default class AnnotationButtons extends React.Component<Props> {
       }
     }
     Icon = Icon || getIcon(item.value)
-    const onClick = () => this.handleClick(item)
+    // We must not do a click-event here, because that messes with the editor focus!
+    const onAction = (originalSelection: Range) => {
+      this.handleClick(item, originalSelection)
+    }
     return (
-      <ToggleButton
-        key={`decoratorButton${item.value}`}
-        selected={!!item.active}
-        disabled={item.disabled}
-        onClick={onClick}
-        title={item.title}
-        className={styles.button}
+      <ToolbarClickAction
+        onAction={onAction}
+        editorValue={editorValue}
+        key={`annotationButton${item.value}`}
       >
-        <div className={styles.iconContainer}>
-          <Icon />
-        </div>
-      </ToggleButton>
+        <ToggleButton
+          selected={!!item.active}
+          disabled={item.disabled}
+          onClick={NOOP}
+          title={item.title}
+          className={styles.button}
+        >
+          <div className={styles.iconContainer}>
+            <Icon />
+          </div>
+        </ToggleButton>
+      </ToolbarClickAction>
     )
   }
 

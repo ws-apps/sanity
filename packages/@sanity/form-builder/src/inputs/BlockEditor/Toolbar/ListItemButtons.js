@@ -11,10 +11,11 @@ import FormatListBulletedIcon from 'part:@sanity/base/format-list-bulleted-icon'
 import FormatListNumberedIcon from 'part:@sanity/base/format-list-numbered-icon'
 import SanityLogoIcon from 'part:@sanity/base/sanity-logo-icon'
 import ToggleButton from 'part:@sanity/components/toggles/button'
+import ToolbarClickAction from './ToolbarClickAction'
 
-import styles from './styles/DecoratorButtons.css'
+import styles from './styles/ListItemButtons.css'
 
-type ListItem = (BlockContentFeature & {active: boolean})
+type ListItem = (BlockContentFeature & {active: boolean, disabled: boolean})
 
 type Props = {
   blockContentFeatures: BlockContentFeatures,
@@ -33,6 +34,8 @@ function getIcon(type: string) {
   }
 }
 
+const NOOP = () => {}
+
 export default class ListItemButtons extends React.Component<Props> {
 
   hasListItem(listItemName: string) {
@@ -43,11 +46,14 @@ export default class ListItemButtons extends React.Component<Props> {
   }
 
   getItems() {
-    const {blockContentFeatures} = this.props
+    const {blockContentFeatures, editorValue} = this.props
+    const {focusBlock} = editorValue
+    const disabled = focusBlock ? focusBlock.isVoid : false
     return blockContentFeatures.lists.map((listItem: BlockContentFeature) => {
       return {
         ...listItem,
-        active: this.hasListItem(listItem.value)
+        active: this.hasListItem(listItem.value),
+        disabled
       }
     })
   }
@@ -60,6 +66,7 @@ export default class ListItemButtons extends React.Component<Props> {
   }
 
   renderListItemButton = (item: ListItem) => {
+    const {editorValue} = this.props
     let Icon
     const icon = item.blockEditor ? item.blockEditor.icon : null
     if (icon) {
@@ -70,19 +77,25 @@ export default class ListItemButtons extends React.Component<Props> {
       }
     }
     Icon = Icon || getIcon(item.value)
-    const onClick = () => this.handleClick(item)
+    const onAction = () => this.handleClick(item)
     return (
-      <ToggleButton
+      <ToolbarClickAction
+        onAction={onAction}
+        editorValue={editorValue}
         key={`listItemButton${item.value}`}
-        selected={!!item.active}
-        onClick={onClick}
-        title={item.title}
-        className={styles.button}
       >
-        <div className={styles.iconContainer}>
-          <Icon />
-        </div>
-      </ToggleButton>
+        <ToggleButton
+          selected={item.active}
+          disabled={item.disabled}
+          onClick={NOOP}
+          title={item.title}
+          className={styles.button}
+        >
+          <div className={styles.iconContainer}>
+            <Icon />
+          </div>
+        </ToggleButton>
+      </ToolbarClickAction>
     )
   }
 

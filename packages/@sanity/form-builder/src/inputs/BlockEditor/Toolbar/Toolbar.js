@@ -8,7 +8,8 @@ import type {
 import React from 'react'
 
 import AnnotationButtons from './AnnotationButtons'
-import BlockStyle from './BlockStyle'
+import BlockStyleSelect from './BlockStyleSelect'
+import BlockObjectsMenu from './BlockObjectsMenu'
 import Button from 'part:@sanity/components/buttons/default'
 import CloseIcon from 'part:@sanity/base/close-icon'
 import DecoratorButtons from './DecoratorButtons'
@@ -42,7 +43,7 @@ export default class Toolbar extends React.PureComponent<Props> {
       <div className={className}>
 
         <div className={styles.blockFormatContainer}>
-          <BlockStyle
+          <BlockStyleSelect
             editorValue={editorValue}
             onChange={onChange}
             blockContentFeatures={blockContentFeatures}
@@ -53,13 +54,15 @@ export default class Toolbar extends React.PureComponent<Props> {
 
           <div className={styles.formatButtonsContainer}>
 
-            <div className={styles.decoratorButtonsContainer}>
-              <DecoratorButtons
-                editorValue={editorValue}
-                onChange={onChange}
-                blockContentFeatures={blockContentFeatures}
-              />
-            </div>
+            { blockContentFeatures.decorators.length > 0 && (
+              <div className={styles.decoratorButtonsContainer}>
+                <DecoratorButtons
+                  editorValue={editorValue}
+                  onChange={onChange}
+                  blockContentFeatures={blockContentFeatures}
+                />
+              </div>
+            )}
 
             { blockContentFeatures.lists.length > 0 && (
               <div className={styles.decoratorButtonsContainer}>
@@ -73,15 +76,27 @@ export default class Toolbar extends React.PureComponent<Props> {
 
           </div>
 
-          <div className={styles.annotationButtonsContainer}>
-            <AnnotationButtons
-              editorValue={editorValue}
-              onChange={onChange}
-              blockContentFeatures={blockContentFeatures}
-            />
-          </div>
+          { blockContentFeatures.annotations.length > 0 && (
+            <div className={styles.annotationButtonsContainer}>
+              <AnnotationButtons
+                editorValue={editorValue}
+                onChange={onChange}
+                blockContentFeatures={blockContentFeatures}
+              />
+            </div>
+          )}
 
         </div>
+
+        { blockContentFeatures.blockObjectTypes.length > 0 && (
+          <div className={styles.insertContainer}>
+            <BlockObjectsMenu
+              types={blockContentFeatures.blockObjectTypes}
+              editorValue={editorValue}
+              onChange={onChange}
+            />
+          </div>
+        )}
 
         <div className={styles.fullscreenButtonContainer}>
           <Button
