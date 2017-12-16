@@ -13,7 +13,7 @@ import type {
   BlockContentFeatures,
   SlateChange,
   SlateValue,
-  ToolbarStyle
+  Type
 } from './typeDefs'
 
 type Props = {
@@ -23,7 +23,8 @@ type Props = {
   fullscreen: boolean,
   editorIsFocused: boolean,
   onChange: (change: SlateChange) => void,
-  onToggleFullScreen: void => void
+  onToggleFullScreen: void => void,
+  type: Type
 }
 
 export default class BlockEditor extends React.Component<Props> {
@@ -51,7 +52,8 @@ export default class BlockEditor extends React.Component<Props> {
       editor,
       fullscreen,
       onChange,
-      onToggleFullScreen
+      onToggleFullScreen,
+      type
     } = this.props
     const classNames = [styles.editor]
     if (fullscreen) {
@@ -65,6 +67,7 @@ export default class BlockEditor extends React.Component<Props> {
           fullscreen={fullscreen}
           onChange={onChange}
           onToggleFullScreen={onToggleFullScreen}
+          type={type}
         />
         {editor}
       </div>

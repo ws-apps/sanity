@@ -12,6 +12,7 @@ import {uniqueId} from 'lodash'
 import React from 'react'
 import blockTools from '@sanity/block-tools'
 import {trimLeft} from '../../utils/pathUtils'
+import {getBlockObjectTypes} from './utils/resolveSchemaType'
 
 import Editor from './Editor'
 import FormField from 'part:@sanity/components/formfields/default'
@@ -61,12 +62,14 @@ export default class BlockEditorInput extends React.Component<Props, State> {
   blockContentFeatures = {
     decorators: [],
     styles: [],
-    annotations: []
+    annotations: [],
+    blockObjectTypes: []
   }
 
   constructor(props: Props) {
     super(props)
     this.blockContentFeatures = blockTools.getBlockContentFeatures(props.type)
+    this.blockContentFeatures.blockObjectTypes = getBlockObjectTypes(props.type)
   }
 
   handleToggleFullScreen = () => {
@@ -165,10 +168,10 @@ export default class BlockEditorInput extends React.Component<Props, State> {
 
   render() {
     const {
-      type,
-      level,
       editorValue,
-      onChange
+      level,
+      onChange,
+      type
     } = this.props
 
     const {
@@ -205,6 +208,7 @@ export default class BlockEditorInput extends React.Component<Props, State> {
           editorIsFocused={editorIsFocused}
           onChange={onChange}
           onToggleFullScreen={this.handleToggleFullScreen}
+          type={type}
         />
       </FormField>
     )

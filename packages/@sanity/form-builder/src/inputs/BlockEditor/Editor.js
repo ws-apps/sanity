@@ -23,6 +23,7 @@ import ListItemOnTabKeyPlugin from './plugins/ListItemOnTabKeyPlugin'
 import SetMarksOnKeyComboPlugin from './plugins/SetMarksOnKeyComboPlugin'
 import TextBlockOnEnterKeyPlugin from './plugins/TextBlockOnEnterKeyPlugin'
 
+import BlockObject from './nodes/BlockObject'
 import ContentBlock from './nodes/ContentBlock'
 import Decorator from './nodes/Decorator'
 import Span from './nodes/Span'
@@ -137,7 +138,20 @@ export default class Editor extends React.Component<Props> {
           </Span>
         )
       default:
-        throw new Error(`Uknown node type ${nodeType}`)
+        return (
+          <BlockObject
+            attributes={props.attributes}
+            blockContentFeatures={blockContentFeatures}
+            editorValue={editorValue}
+            node={props.node}
+            onChange={onChange}
+            onFormBuilderInputBlur={onFormBuilderInputBlur}
+            onFormBuilderInputFocus={onFormBuilderInputFocus}
+            type={resolveSchemaType(type, nodeType)}
+          >
+            {props.children}
+          </BlockObject>
+        )
     }
   }
 
