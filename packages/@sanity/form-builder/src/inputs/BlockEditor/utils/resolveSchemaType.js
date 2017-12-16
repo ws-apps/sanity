@@ -1,22 +1,49 @@
-export function getSpanType(blockArrayType) {
-  return getSpansField(blockArrayType)
-    .type.of.find(type => type.name === 'span')
+// @flow
+
+import type {Type} from '../typeDefs'
+
+export function getSpanType(blockArrayType: Type) {
+  const spanField = getSpansField(blockArrayType)
+  if (spanField) {
+    return spanField
+      .type.of.find(type => type.name === 'span')
+  }
+  return null
 }
 
-export function getSpansField(blockArrayType) {
-  return getBlockField(blockArrayType)
-    .fields.find(field => field.name === 'spans')
+export function getSpansField(blockArrayType: Type) {
+  const blockField = getBlockField(blockArrayType)
+  if (blockField) {
+    return blockField.fields.find(field => field.name === 'spans')
+  }
+  return null
 }
 
-export function getBlockField(blockArrayType) {
-  return blockArrayType.of.find(ofType => ofType.type.name === 'block')
+export function getBlockField(blockArrayType: Type) {
+  const of = blockArrayType.of
+  if (of) {
+    return of.find((ofType: Type) => ofType.type.name === 'block')
+  }
+  return null
 }
 
-export default function resolveSchemaType(blockArrayType, nodeType) {
+export function getBlockObjectTypes(type: Type) {
+  if (!type.of) {
+    return []
+  }
+  return type.of.filter(ofType => ofType.name !== 'block')
+}
+
+export function getBlockObjectType(type: Type, name: string) {
+  return getBlockObjectTypes(type).find(oType => oType.name === name)
+}
+
+export default function resolveSchemaType(
+  blockArrayType: Type, nodeType: string
+): ?Type {
   switch (nodeType) {
     case 'span':
       return getSpanType(blockArrayType)
-    default:
-      throw new Error(`Unknown node type ${nodeType}`)
+    default: return getBlockObjectType(blockArrayType, nodeType)
   }
 }

@@ -36,7 +36,6 @@ export function setBlockStyle(change, styleName) {
         .select(selection)
     }
   }
-  change.focus()
   // Do the actual style transform, only acting on type contentBlock
   change.value.blocks.forEach(blk => {
     const newData = {...blk.data.toObject(), style: styleName}
@@ -44,11 +43,14 @@ export function setBlockStyle(change, styleName) {
       change.setNodeByKey(blk.key, {data: newData})
     }
   })
+  change.focus()
   return change
 }
 
-export function toggleMark(change, mark) {
-  return change.toggleMark(mark).focus()
+export function toggleMark(change, mark, editor) {
+  change.toggleMark(mark)
+  change.focus()
+  return change
 }
 
 export function toggleListItem(change, listItemName) {
@@ -67,6 +69,7 @@ export function toggleListItem(change, listItemName) {
     }
     change.setNodeByKey(block.key, {data: data})
   })
+  change.focus()
   return change
 }
 
@@ -120,7 +123,7 @@ export function removeSpan(change, spanNode) {
   return change
 }
 
-export function createFormBuilderSpan(change, annotationName) {
+export function createFormBuilderSpan(change, annotationName, originalSelection) {
   const {value} = change
   const {selection} = value
   if (!selection.isExpanded) {
@@ -144,13 +147,15 @@ export function createFormBuilderSpan(change, annotationName) {
 
   const data = {
     annotations: currentSpan ? currentSpan.data.get('annotations') || {} : {},
-    focusedAnnotationName: annotationName
+    focusedAnnotationName: annotationName,
+    originalSelection: originalSelection
   }
   data.annotations[annotationName] = {
     _type: annotationName,
     _key: key
   }
-  return change.setInline({data: data})
+  change.setInline({data: data})
+  return change
 }
 
 export function removeAnnotationFromSpan(change, spanNode, annotationType) {
@@ -160,7 +165,12 @@ export function removeAnnotationFromSpan(change, spanNode, annotationType) {
   }
   // Remove the whole span if this annotation is the only one left
   if (Object.keys(annotations).length === 1 && annotations[annotationType]) {
+    const originalSelection = spanNode.data.get('originalSelection')
     change.call(removeSpan, spanNode)
+    if (originalSelection) {
+      change.select(originalSelection)
+    }
+    change.focus()
     return change
   }
   // If several annotations, remove only this one and leave the span node intact
@@ -172,8 +182,24 @@ export function removeAnnotationFromSpan(change, spanNode, annotationType) {
   const data = {
     ...spanNode.data.toObject(),
     focusedAnnotationName: undefined,
-    annotations: annotations
+    annotations: annotations,
+    originalSelection: undefined
   }
   change.setNodeByKey(spanNode.key, {data})
+  return change
+}
+
+export function insertBlock(change, type) {
+  const key = randomKey(12)
+  const block = {
+    type: type.name,
+    isVoid: true,
+    key: key,
+    data: {
+      value: {_type: type.name, key}
+    }
+  }
+  change.insertBlock(block)
+  change.focus()
   return change
 }
