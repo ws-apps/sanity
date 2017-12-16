@@ -266,6 +266,7 @@ storiesOf('Selects')
               label={text('label (prop)', 'This is the label')}
               placeholder={text('placeholder (prop)', 'This is the placeholder')}
               transparent={boolean('transparent (prop)', false)}
+              disabled={boolean('disabled (prop)', false)}
               onChange={action('onChange')}
               onFocus={action('onFocus')}
               onOpen={action('onOpen')}
@@ -290,6 +291,7 @@ storiesOf('Selects')
               label={text('label (prop)', 'This is the label')}
               placeholder={text('placeholder (prop)', 'This is the placeholder')}
               transparent={boolean('transparent (prop)', false)}
+              disabled={boolean('disabled (prop)', false)}
               onChange={action('onChange')}
               onFocus={action('onFocus')}
               onOpen={action('onOpen')}
@@ -314,6 +316,7 @@ storiesOf('Selects')
               label={text('label (prop)', 'This is the label')}
               placeholder={text('placeholder (prop)', 'This is the placeholder')}
               transparent={boolean('transparent (prop)', false)}
+              disabled={boolean('disabled (prop)', false)}
               onChange={action('onChange')}
               onFocus={action('onFocus')}
               onOpen={action('onOpen')}
