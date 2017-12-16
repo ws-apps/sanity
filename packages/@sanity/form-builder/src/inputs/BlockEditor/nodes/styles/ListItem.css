@@ -1,10 +1,6 @@
 .root {
   margin: 0;
   width: auto;
-
-  /* Last 1.1 is important for the cursor to show properly
-     because of the &:before content-rules
-  */
   padding: 0 0 0.5em 1.1em;
 
   /* Important 'transform' in order to force refresh the ::before and ::after rules
@@ -54,9 +50,13 @@
   margin: 0 0 1em 0;
   padding: 0;
 
+  @nest &:after {
+    content: ' ';
+  }
+
   @nest &:before {
-    min-width: 1em;
     display: table-cell;
+    vertical-align: top;
   }
 }
 
@@ -107,10 +107,7 @@
 .bullet > * {
   @nest &:before {
     font-size: 1.9em;
-    position: relative;
-    line-height: 0;
-    top: 0.2em;
-    max-width: 1em;
+    line-height: 0.8em;
     content: '\2022 ';
   }
 }
@@ -228,6 +225,7 @@
 
 .number > * {
   @nest &:before {
+    min-width: 1.6em;
     content: counter(listItemNumber) ". ";
   }
 }
