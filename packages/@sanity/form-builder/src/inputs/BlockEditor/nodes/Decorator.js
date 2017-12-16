@@ -12,7 +12,10 @@ type Props = {
 
 export default function Decorator(props: Props) {
   return (
-    <span {...props.attributes} className={styles[props.mark.type]}>
+    <span
+      className={`${styles.root} ${styles[props.mark.type]}`}
+      {...props.attributes}
+    >
       {props.children}
     </span>
   )

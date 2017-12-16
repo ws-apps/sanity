@@ -122,6 +122,8 @@ export default class Span extends React.Component<Props, State> {
         delete nextAnnotations[key]
       }
     })
+    const originalSelection = node.data.get('originalSelection')
+
     const data = {
       ...node.data.toObject(),
       focusedAnnotationName: undefined,
@@ -130,9 +132,14 @@ export default class Span extends React.Component<Props, State> {
         : nextAnnotations
     }
     const change = editorValue.change()
-    change
-      .setNodeByKey(node.key, {data})
-      .focus()
+    change.setNodeByKey(node.key, {data})
+    if (Object.keys(nextAnnotations).length === 0) {
+      change.unwrapInlineByKey(node.key)
+      if (originalSelection) {
+        change.select(originalSelection)
+      }
+    }
+    change.focus()
     onChange(change)
   }
 
