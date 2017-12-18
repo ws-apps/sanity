@@ -9,7 +9,6 @@ cache: yarn
 before_script:
   - yarn run lerna bootstrap --loglevel verbose
   - yarn run package-yarn
-  - yarn run install-husky
   - yarn run build
   # Build CLI to a single file
   - cd packages/@sanity/cli
@@ -17,7 +16,7 @@ before_script:
   # Start sanity-backstop-studio
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
-  - sleep 10
+  - sleep 250
 script:
 
   # Remove source and dependencies from CLI to ensure it works standalone
