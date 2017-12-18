@@ -7,7 +7,7 @@ node_js:
   - '8'
 cache: yarn
 before_script:
-  - lerna bootstrap
+  - lerna bootstrap --ignore
   - yarn run package-yarn
   - yarn run install-husky
   - yarn run build
