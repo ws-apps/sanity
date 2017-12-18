@@ -7,9 +7,9 @@ node_js:
   - '8'
 cache: yarn
 before_script:
-  - lerna bootstrap --ignore
+  - yarn run lerna bootstrap --no-optional
   - yarn run package-yarn
-  - yarn run install-husky
+  - yarn run install-huskyx1
   - yarn run build
   # Build CLI to a single file
   - cd packages/@sanity/cli
