@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`string returns errors on max length constraint 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be at most 5 characters long],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`string returns errors on min length constraint 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be at least 1 characters long,],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`string returns no warnings/errors on valid string 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
