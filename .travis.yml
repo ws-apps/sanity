@@ -20,15 +20,15 @@ script:
   - rm -rf packages/@sanity/cli/src && rm -rf packages/@sanity/cli/lib
 
   # Test building the test studio with all customizations
-  - cd $TRAVIS_BUILD_DIR/packages/test-studio
-  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
+  #- cd $TRAVIS_BUILD_DIR/packages/test-studio
+  #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
 
   # Test initializing a project in unattended mode
-  - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
+  #- sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
 
   # Use the newly commited changes instead of the latest dependencies from NPM
-  - cd /tmp/test-project
-  - $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
+  #- cd /tmp/test-project
+  #- $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
 
   # Backstop test
   - cd $TRAVIS_BUILD_DIR

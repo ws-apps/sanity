@@ -16,7 +16,6 @@
     "@sanity/code-input",
     "@sanity/color-input",
     "@sanity/desk-tool",
-    "@sanity/storybook",
     "@sanity/google-maps-input",
     "vision"
   ],

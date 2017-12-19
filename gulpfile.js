@@ -207,7 +207,7 @@ gulp.task('example', ['watch-js', 'watch-assets'], cb => {
   const proc = childProcess.spawn('sanity', ['start', '--host', '0.0.0.0'], {
     shell: isWindows,
     cwd: projectPath,
-    env: getProjectEnv(projectPath)
+    env: 'PRODUCTION'
   })
 
   proc.stdout.pipe(process.stdout)
