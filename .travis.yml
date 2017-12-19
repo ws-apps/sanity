@@ -3,19 +3,20 @@ addon:
 language: node_js
 node_js:
   - '8'
-cache: npm
+cache: yarn
 before_script:
-  - npm run lerna bootstrap --loglevel verbose
-  - npm run package-yarn
-  - npm run build
+  - yarn run lerna bootstrap --loglevel verbose
+  - yarn run package-yarn
+  - yarn run build
   # Build CLI to a single file
   - cd packages/@sanity/cli
-  - npm run pack
+  - yarn run pack
   # Start sanity-backstop-studio
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
   - sleep 60
 script:
+
   # Remove source and dependencies from CLI to ensure it works standalone
   # cd $TRAVIS_BUILD_DIR
   # rm -rf packages/@sanity/cli/node_modules
