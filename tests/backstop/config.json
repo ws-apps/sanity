@@ -193,7 +193,9 @@
   },
   "report": ["browser", "CI"],
   "engine": "chrome",
-  "engineFlags": [],
+  "engineOptions": {
+    "waitTimeout": 120000
+  },
   "asyncCaptureLimit": 1,
   "asyncCompareLimit": 10,
   "debug": false,

@@ -2,20 +2,14 @@ addon:
   chrome: stable
 language: node_js
 node_js:
-  - '6'
   - '8'
 cache: yarn
-after_install:
-  - export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"
-  - echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-  - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
-  - sudo apt-get update && sudo apt-get install google-cloud-sdk
 before_script:
   - travis_wait yarn run bootstrap
   - yarn run build
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
-  - sleep 120
+  - sleep 220
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
@@ -41,4 +35,4 @@ script:
   - node node_modules/backstopjs/cli/index.js test --config=./tests/backstop/config.json
 
   # Test building the project with latest dependencies
-  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
+  #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
