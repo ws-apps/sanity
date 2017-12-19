@@ -1,5 +1,4 @@
 const {Rule} = require('../src')
-const ArrayRule = require('../src/ArrayRule')
 
 describe('generics', () => {
   test('should be able to construct an empty rule', () => {
@@ -8,7 +7,7 @@ describe('generics', () => {
   })
 
   test('should be able to construct a new typed rule', () => {
-    expect(Rule.array()).toBeInstanceOf(ArrayRule)
+    expect(Rule.string()).toBeInstanceOf(Rule)
   })
 
   test('clones rule when changing generics', () => {
@@ -23,7 +22,44 @@ describe('generics', () => {
     expect(baseRule).not.toBe(specific)
   })
 
-  test('throws validation error on non-matching types', () => {
-    expect(() => Rule.string().validate(123)).toThrowErrorMatchingSnapshot()
+  test('returns arrays of errors/warnings by default', () => {
+    expect(Rule.string().validate(123)).toMatchSnapshot()
+  })
+
+  test('throws validation errors if told to', () => {
+    expect(() => Rule.string().validate(123, {throwOnError: true})).toThrowErrorMatchingSnapshot()
+  })
+
+  test('can override earlier defined rules', () => {
+    expect(
+      Rule.string()
+        .max(1)
+        .max(2)
+        .validate('hei')
+    ).toMatchSnapshot()
+  })
+
+  test('can demote errors to warnings', () => {
+    const result = Rule.string()
+      .warning()
+      .validate(123)
+
+    expect(result).toMatchSnapshot()
+  })
+
+  test('can customize error messages', () => {
+    const result = Rule.string()
+      .error('Dude it needs to be a string')
+      .validate(123)
+
+    expect(result).toMatchSnapshot()
+  })
+
+  test('can customize warning messages', () => {
+    const result = Rule.string()
+      .warning('Dude it should probably be a string')
+      .validate(123)
+
+    expect(result).toMatchSnapshot()
   })
 })

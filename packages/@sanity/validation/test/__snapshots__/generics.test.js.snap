@@ -1,3 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`generics throws validation error on non-matching types 1`] = `"Expected type \\"String\\", got \\"Number\\""`;
+exports[`generics can customize error messages 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Dude it needs to be a string],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`generics can customize warning messages 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [
+    [ValidationError: Dude it should probably be a string],
+  ],
+}
+`;
+
+exports[`generics can demote errors to warnings 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [
+    [ValidationError: Expected type "String", got "Number"],
+  ],
+}
+`;
+
+exports[`generics can override earlier defined rules 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be at most 2 characters long],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`generics returns arrays of errors/warnings by default 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Expected type "String", got "Number"],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`generics throws validation errors if told to 1`] = `"Expected type \\"String\\", got \\"Number\\""`;
