@@ -10,7 +10,7 @@ before_script:
   - yarn run build
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
-  - sleep 30
+  - sleep 120
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
