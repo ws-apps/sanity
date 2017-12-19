@@ -62,4 +62,17 @@ describe('generics', () => {
 
     expect(result).toMatchSnapshot()
   })
+
+  test('can merge rules', () => {
+    const rule = new Rule().required()
+    const stringRule = Rule.string().min(5)
+    const newRule = rule.merge(stringRule)
+
+    expect(rule).not.toBe(stringRule)
+    expect(newRule).not.toBe(stringRule)
+    expect(rule).not.toBe(newRule)
+
+    const result = newRule.validate('Hei')
+    expect(result).toMatchSnapshot()
+  })
 })

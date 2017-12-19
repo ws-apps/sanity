@@ -44,12 +44,21 @@ class Rule {
 
   cloneWithRules(rules) {
     const rule = this.clone()
-    const flags = rule._rules.map(curr => curr.flag)
-    rule._rules = rule._rules.filter(curr => !flags.includes(curr.flag)).concat(rules)
+    const newRules = new Set()
+
+    rules.forEach(curr => {
+      if (curr.flag === 'type') {
+        rule._type = curr.constraint
+      }
+
+      newRules.add(curr.flag)
+    })
+
+    rule._rules = rule._rules.filter(curr => !newRules.has(curr.flag)).concat(rules)
     return rule
   }
 
-  concat(rule) {
+  merge(rule) {
     if (this._type && rule._type && this._type !== rule._type) {
       throw new Error('concat() failed: conflicting types')
     }
@@ -68,7 +77,8 @@ class Rule {
 
         const validator = validators[rule.flag]
         if (!validator) {
-          throw new Error(`Validator for flag "${rule.flag}" not found for type "${type}"`)
+          const forType = type ? `type "${type}"` : 'rule without declared type'
+          throw new Error(`Validator for flag "${rule.flag}" not found for ${forType}`)
         }
 
         // If we encounter any "errors", push it to the `errors` or `warnings` based on the
@@ -103,6 +113,10 @@ class Rule {
     const rule = this.cloneWithRules([{flag: 'type', constraint: type}])
     rule._type = type
     return rule
+  }
+
+  all(children) {
+    return this.cloneWithRules([{flag: 'all', constraint: children}])
   }
 
   required() {
