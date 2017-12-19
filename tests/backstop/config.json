@@ -5,16 +5,6 @@
       "label": "desktop",
       "width": 1200,
       "height": 960
-    },
-    {
-      "label": "phone",
-      "width": 320,
-      "height": 480
-    },
-    {
-      "label": "tablet",
-      "width": 1024,
-      "height": 768
     }
   ],
   "onBeforeScript": "chromy/onBefore.js",

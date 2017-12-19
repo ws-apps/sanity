@@ -11,14 +11,12 @@ module.exports = function (chromy, scenario) {
   }
 
   if (clickSelector) {
-    console.log('click', clickSelector)
     chromy
       .wait(clickSelector)
       .click(clickSelector)
   }
 
   if (clickSelector2) {
-    console.log('click', clickSelector2)
     chromy
       .wait(500)
       .wait(clickSelector2)
