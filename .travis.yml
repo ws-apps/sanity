@@ -1,41 +1,39 @@
 addon:
-  chrome: beta
+  chrome: stable
 language: node_js
 node_js:
+  - '6'
   - '8'
 cache: yarn
 before_script:
-  - yarn run lerna bootstrap --loglevel verbose
-  - yarn run package-yarn
+  - travis_wait yarn run bootstrap
   - yarn run build
-  # Build CLI to a single file
-  - cd packages/@sanity/cli
-  - yarn run pack
-  # Start sanity-backstop-studio
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
-  - sleep 60
+  - sleep 30
 script:
+  # Build CLI to a single file
+  - cd packages/@sanity/cli
+  - npm run pack
 
   # Remove source and dependencies from CLI to ensure it works standalone
-  # cd $TRAVIS_BUILD_DIR
-  # rm -rf packages/@sanity/cli/node_modules
-  # rm -rf packages/@sanity/cli/src && rm -rf packages/@sanity/cli/lib
+  - rm -rf packages/@sanity/cli/node_modules
+  - rm -rf packages/@sanity/cli/src && rm -rf packages/@sanity/cli/lib
 
   # Test building the test studio with all customizations
-  # cd $TRAVIS_BUILD_DIR/packages/test-studio
-  # $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
+  - cd $TRAVIS_BUILD_DIR/packages/test-studio
+  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
 
   # Test initializing a project in unattended mode
-  #- sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
+  - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
 
   # Use the newly commited changes instead of the latest dependencies from NPM
-  #- cd /tmp/test-project
-  # $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
+  - cd /tmp/test-project
+  - $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
 
-  # Test building the project with latest dependencies
-  # $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
-
-  # Backstop regression testing
+  # Backstop test
   - cd $TRAVIS_BUILD_DIR
   - node node_modules/backstopjs/cli/index.js test --config=./tests/backstop/config.json
+
+  # Test building the project with latest dependencies
+  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
