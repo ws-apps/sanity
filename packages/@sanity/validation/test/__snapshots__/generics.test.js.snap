@@ -27,6 +27,15 @@ Object {
 }
 `;
 
+exports[`generics can merge rules 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be at least 5 characters long,],
+  ],
+  "warnings": Array [],
+}
+`;
+
 exports[`generics can override earlier defined rules 1`] = `
 Object {
   "errors": Array [

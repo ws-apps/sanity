@@ -11,6 +11,15 @@ const type = (expected, value, message) => {
   return true
 }
 
+const presence = (expected, value, message) => {
+  if (typeof value === 'undefined' && expected === 'required') {
+    return new ValidationError(message || 'Value is required')
+  }
+
+  return true
+}
+
 module.exports = {
-  type
+  type,
+  presence
 }
