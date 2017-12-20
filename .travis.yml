@@ -9,7 +9,6 @@ before_install:
   - echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
   - gcloud auth activate-service-account --key-file tests/travis-gcloud-service-account.json
 before_script:
-  - gsutil -m -q rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/build-$TRAVIS_BUILD_NUMBER/tests/backstop
   - travis_wait yarn run bootstrap
   - yarn run build
   - cd $TRAVIS_BUILD_DIR
@@ -42,5 +41,6 @@ script:
   # Test building the project with latest dependencies
   #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
 
-#after_script:
-  #- gsutil -m rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER/tests/backstop
+after_script:
+  # Put Backstop artifacts in Google Cloud Storage
+  - gsutil -m -q rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/build-$TRAVIS_BUILD_NUMBER/tests/backstop
