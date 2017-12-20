@@ -4,12 +4,20 @@ language: node_js
 node_js:
   - '8'
 cache: yarn
+before_install:
+  - openssl aes-256-cbc -K $encrypted_95539a63b022_key -iv $encrypted_95539a63b022_iv -in tests/travis-gcloud-service-account.json.enc -out tests/travis-gcloud-service-account.json -d
+  - echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+  - curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+after_install:
+  - sudo apt-get install google-cloud-sdk
+  - gcloud auth activate-service-account --key-file tests/travis-gcloud-service-account.json
 before_script:
+  - gsutil -m rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER/tests/backstop
   - travis_wait yarn run bootstrap
   - yarn run build
   - cd $TRAVIS_BUILD_DIR
   - gulp backstopServer &
-  - sleep 220
+  - sleep 60
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
@@ -36,3 +44,6 @@ script:
 
   # Test building the project with latest dependencies
   #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
+
+#after_script:
+  #- gsutil -m rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$TRAVIS_BUILD_NUMBER/tests/backstop
