@@ -6,7 +6,7 @@ const min = (minLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `String must be at least ${minLength} characters long,`)
+  return new ValidationError(message || `String must be at least ${minLength} characters long`)
 }
 
 const max = (maxLength, value, message) => {

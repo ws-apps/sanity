@@ -30,7 +30,7 @@ Object {
 exports[`generics can merge rules 1`] = `
 Object {
   "errors": Array [
-    [ValidationError: String must be at least 5 characters long,],
+    [ValidationError: String must be at least 5 characters long],
   ],
   "warnings": Array [],
 }
