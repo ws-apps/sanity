@@ -130,6 +130,16 @@ class Rule {
   max(len) {
     return this.cloneWithRules([{flag: 'max', constraint: len}])
   }
+
+  uppercase() {
+    this._assertIsType(['String'], 'uppercase')
+    return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
+  }
+
+  lowercase() {
+    this._assertIsType(['String'], 'lowercase')
+    return this.cloneWithRules([{flag: 'stringCasing', constraint: 'lowercase'}])
+  }
 }
 
 module.exports = Rule

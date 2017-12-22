@@ -1,6 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`string returns errors on max length constraint 1`] = `
+exports[`lowercase: all uppercase 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all lowercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`lowercase: locale characters 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all lowercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`lowercase: some uppercase 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all lowercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`lowercase: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`max length: too long 1`] = `
 Object {
   "errors": Array [
     [ValidationError: String must be at most 5 characters long],
@@ -9,16 +43,101 @@ Object {
 }
 `;
 
-exports[`string returns errors on min length constraint 1`] = `
+exports[`max length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`min length: too short 1`] = `
 Object {
   "errors": Array [
-    [ValidationError: String must be at least 1 characters long,],
+    [ValidationError: String must be at least 2 characters long],
   ],
   "warnings": Array [],
 }
 `;
 
-exports[`string returns no warnings/errors on valid string 1`] = `
+exports[`min length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: empty string 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: This field is required],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: null 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Expected type "String", got "null"],
+    [ValidationError: This field is required],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: undefined 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: This field is required],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`uppercase: all lowercase 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all uppercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`uppercase: locale characters 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all uppercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`uppercase: some lowercase 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all uppercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`uppercase: some lowercase 2`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be all uppercase letters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`uppercase: valid 1`] = `
 Object {
   "errors": Array [],
   "warnings": Array [],
