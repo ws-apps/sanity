@@ -37,4 +37,28 @@ describe('string', () => {
     expect(rule.validate('sÄnity')).toMatchSnapshot('lowercase: locale characters')
     expect(rule.validate('sanity')).toMatchSnapshot('lowercase: valid')
   })
+
+  test('regex constraint', () => {
+    const rule = Rule.string().regex(/^[A-Z][a-z]+$/)
+    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match')
+    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match')
+  })
+
+  test('regex constraint (inverted)', () => {
+    const rule = Rule.string().regex(/^[A-Z][a-z]+$/, {invert: true})
+    expect(rule.validate('SANITY')).toMatchSnapshot('regex: inverted non-match')
+    expect(rule.validate('Sanity')).toMatchSnapshot('regex: inverted match')
+  })
+
+  test('regex constraint (custom pattern name)', () => {
+    const rule = Rule.string().regex(/^[A-Z][a-z]+$/, 'PascalCase')
+    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match w/ custom pattern name')
+    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match w/ custom pattern name')
+  })
+
+  test('regex constraint (custom pattern name, as options)', () => {
+    const rule = Rule.string().regex(/^[A-Z][a-z]+$/, {name: 'PascalCase'})
+    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match w/ custom pattern name (opt)')
+    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match w/ custom pattern name (opt)')
+  })
 })

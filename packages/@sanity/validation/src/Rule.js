@@ -15,6 +15,7 @@ class Rule {
   constructor() {
     this._type = null
     this._message = null
+    this._required = false
     this._rules = []
     this._level = 'error'
   }
@@ -69,6 +70,13 @@ class Rule {
   validate(value, options = {}) {
     const type = this._type
     const validators = typeValidators[type] || genericValidator
+    const initial = {warnings: [], errors: []}
+
+    // Short-circuit on optional fields
+    if (!this._required && (value === null || typeof value === 'undefined')) {
+      return initial
+    }
+
     return this._rules.reduce(
       (results, rule) => {
         if (typeof rule.flag === 'undefined') {
@@ -99,7 +107,7 @@ class Rule {
 
         return results
       },
-      {warnings: [], errors: []}
+      initial
     )
   }
 
@@ -119,8 +127,16 @@ class Rule {
     return this.cloneWithRules([{flag: 'all', constraint: children}])
   }
 
+  optional() {
+    const rule = this.cloneWithRules([{flag: 'presence', constraint: 'required'}])
+    rule._required = false
+    return rule
+  }
+
   required() {
-    return this.cloneWithRules([{flag: 'presence', constraint: 'required'}])
+    const rule = this.cloneWithRules([{flag: 'presence', constraint: 'required'}])
+    rule._required = true
+    return rule
   }
 
   min(len) {
@@ -131,6 +147,7 @@ class Rule {
     return this.cloneWithRules([{flag: 'max', constraint: len}])
   }
 
+  // String only
   uppercase() {
     this._assertIsType(['String'], 'uppercase')
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
@@ -139,6 +156,17 @@ class Rule {
   lowercase() {
     this._assertIsType(['String'], 'lowercase')
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'lowercase'}])
+  }
+
+  regex(pattern, name, opts) {
+    let options = opts || {name}
+    if (!opts && name && (name.name || name.invert)) {
+      options = name
+    }
+
+    const constraint = Object.assign({}, options, {pattern})
+    this._assertIsType(['String'], 'regex')
+    return this.cloneWithRules([{flag: 'regex', constraint}])
   }
 }
 
