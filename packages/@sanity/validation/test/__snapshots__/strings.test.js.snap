@@ -66,6 +66,70 @@ Object {
 }
 `;
 
+exports[`regex: inverted match 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Value should not match "/^[A-Z][a-z]+$/"-pattern],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: inverted non-match 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: match 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: match w/ custom pattern name (opt) 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: match w/ custom pattern name 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: non-match 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Value does not match "/^[A-Z][a-z]+$/"-pattern],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: non-match w/ custom pattern name (opt) 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Value does not match PascalCase-pattern],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`regex: non-match w/ custom pattern name 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Value does not match PascalCase-pattern],
+  ],
+  "warnings": Array [],
+}
+`;
+
 exports[`required: empty string 1`] = `
 Object {
   "errors": Array [
