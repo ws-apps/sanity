@@ -1,5 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`exact length: too long 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be exactly 5 characters long],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`exact length: too short 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: String must be exactly 5 characters long],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`exact length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
 exports[`lowercase: all uppercase 1`] = `
 Object {
   "errors": Array [

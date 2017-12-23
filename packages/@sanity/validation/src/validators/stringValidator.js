@@ -17,6 +17,15 @@ const max = (maxLength, value, message) => {
   return new ValidationError(message || `String must be at most ${maxLength} characters long`)
 }
 
+const length = (wantedLength, value, message) => {
+  const strValue = value || ''
+  if (strValue.length === wantedLength) {
+    return true
+  }
+
+  return new ValidationError(message || `String must be exactly ${wantedLength} characters long`)
+}
+
 const stringCasing = (casing, value, message) => {
   const strValue = value || ''
   if (casing === 'uppercase' && strValue !== strValue.toLocaleUpperCase()) {
@@ -58,6 +67,7 @@ module.exports = Object.assign({}, genericValidator, {
   stringCasing,
   presence,
   regex,
+  length,
   min,
   max
 })
