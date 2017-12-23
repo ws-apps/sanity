@@ -147,6 +147,11 @@ class Rule {
     return this.cloneWithRules([{flag: 'max', constraint: len}])
   }
 
+  length(len) {
+    this._assertIsType(['String', 'Array'], 'length')
+    return this.cloneWithRules([{flag: 'length', constraint: len}])
+  }
+
   // String only
   uppercase() {
     this._assertIsType(['String'], 'uppercase')
@@ -168,6 +173,8 @@ class Rule {
     this._assertIsType(['String'], 'regex')
     return this.cloneWithRules([{flag: 'regex', constraint}])
   }
+
+  // Array only
 }
 
 module.exports = Rule

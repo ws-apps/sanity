@@ -21,6 +21,13 @@ describe('string', () => {
     expect(rule.validate('abc')).toMatchSnapshot('max length: valid')
   })
 
+  test('exact length constraint', () => {
+    const rule = Rule.string().length(5)
+    expect(rule.validate('abcdefgh')).toMatchSnapshot('exact length: too long')
+    expect(rule.validate('abc')).toMatchSnapshot('exact length: too short')
+    expect(rule.validate('abcde')).toMatchSnapshot('exact length: valid')
+  })
+
   test('uppercase constraint', () => {
     const rule = Rule.string().uppercase()
     expect(rule.validate('sanity')).toMatchSnapshot('uppercase: all lowercase')
