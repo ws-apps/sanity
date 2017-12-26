@@ -1,15 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`all() rules - failure 1`] = `
+exports[`all() rules - match 1`] = `
 Object {
   "errors": Array [],
   "warnings": Array [],
 }
 `;
 
-exports[`all() rules - match 1`] = `
+exports[`all() rules - match 2`] = `
 Object {
   "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`all() rules - multiple failures, common error 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Needs to be a capital letter followed by at least 4 lowercase characters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`all() rules - multiple failures, custom messages 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError:
+- Must start with an uppercase character
+- 5 chars or more],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`all() rules - single failure, common error 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Needs to start with a capital letter and then follow with lowercase characters],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`all() rules - single failure, custom message 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Must start with an uppercase character],
+  ],
   "warnings": Array [],
 }
 `;

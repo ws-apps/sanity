@@ -2,10 +2,9 @@ const Type = require('type-of-is')
 const ValidationError = require('../ValidationError')
 
 const type = (expected, value, message) => {
-  if (!Type.is(value, expected)) {
-    return new ValidationError(
-      message || `Expected type "${expected}", got "${Type.string(value)}"`
-    )
+  const actualType = Type.string(value)
+  if (actualType !== expected && actualType !== 'undefined') {
+    return new ValidationError(message || `Expected type "${expected}", got "${actualType}"`)
   }
 
   return true
@@ -20,7 +19,24 @@ const presence = (expected, value, message) => {
 }
 
 const all = (children, value, message) => {
-  console.log(children)
+  const validate = require('../validate')
+
+  let result = {warnings: [], errors: []}
+  children.forEach(child => {
+    result = validate(child, value, {initial: result})
+  })
+
+  const numErrors = result.errors.length
+
+  if (numErrors === 0) {
+    return true
+  }
+
+  if (numErrors === 1) {
+    return new ValidationError(message || result.errors[0].message)
+  }
+
+  return new ValidationError(message || result.errors.map(err => `\n- ${err.message}`).join(''))
 }
 
 module.exports = {

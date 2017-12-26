@@ -9,7 +9,7 @@ const typeValidators = {
 module.exports = (rule, value, options = {}) => {
   const type = rule._type
   const validators = typeValidators[type] || genericValidator
-  const initial = {warnings: [], errors: []}
+  const initial = options.initial || {warnings: [], errors: []}
 
   // Short-circuit on optional, empty fields
   if (!rule._required && (value === null || typeof value === 'undefined')) {
