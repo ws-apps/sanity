@@ -1,0 +1,91 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`exact length: too long 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array must have exactly 2 items],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`exact length: too short 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array must have exactly 2 items],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`exact length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`max length: too long 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array must have at most 2 items],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`max length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`min length: too short 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array must have at least 2 items],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`min length: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: empty array 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: null 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Expected type "Array", got "null"],
+    [ValidationError: This field is required],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: undefined 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: This field is required],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`required: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;

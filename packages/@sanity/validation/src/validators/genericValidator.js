@@ -19,7 +19,12 @@ const presence = (expected, value, message) => {
   return true
 }
 
+const all = (children, value, message) => {
+  console.log(children)
+}
+
 module.exports = {
+  all,
   type,
   presence
 }

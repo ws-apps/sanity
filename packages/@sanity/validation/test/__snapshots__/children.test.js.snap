@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`all() rules - failure 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`all() rules - match 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
