@@ -28,9 +28,39 @@ describe('array', () => {
     expect(rule.validate(['a', 'b'])).toMatchSnapshot('exact length: valid')
   })
 
-  test.skip('unique constraint (default, simple values)', () => {
+  test('unique constraint (default, simple values)', () => {
     const rule = Rule.array().unique()
-    expect(rule.validate(['a', 'b'])).toMatchSnapshot('unique: valid')
-    expect(rule.validate(['a', 'a'])).toMatchSnapshot('unique: duplicates')
+    expect(rule.validate(['a', 'b', 'c', 'd'])).toMatchSnapshot('simple unique: valid')
+    expect(rule.validate(['a', 'b', 'c', 'a'])).toMatchSnapshot('simple unique: duplicates')
+  })
+
+  test('unique constraint (default, object values)', () => {
+    const rule = Rule.array().unique()
+    const ref = id => ({_ref: id, _type: 'reference'})
+    expect(rule.validate(['a', 'b', 'c', 'd'].map(ref))).toMatchSnapshot('object unique: valid')
+    expect(rule.validate(['a', 'b', 'c', 'a'].map(ref))).toMatchSnapshot(
+      'object unique: duplicates'
+    )
+  })
+
+  test('unique constraint (default, array values)', () => {
+    const rule = Rule.array().unique()
+    const refArr = id => [{_ref: id, _type: 'reference'}]
+    expect(rule.validate(['a', 'b', 'c', 'd'].map(refArr))).toMatchSnapshot('array unique: valid')
+    expect(rule.validate(['a', 'a', 'c', 'd'].map(refArr))).toMatchSnapshot(
+      'array unique: duplicates'
+    )
+  })
+
+  test('unique constraint (default, bool values)', () => {
+    const rule = Rule.array().unique()
+    expect(rule.validate([true, false])).toMatchSnapshot('boolean unique: valid')
+    expect(rule.validate([false, true, false])).toMatchSnapshot('boolean unique: duplicates')
+  })
+
+  test('unique constraint (default, numeric values)', () => {
+    const rule = Rule.array().unique()
+    expect(rule.validate([1, 3])).toMatchSnapshot('numeric unique: valid')
+    expect(rule.validate([3, 1, 3])).toMatchSnapshot('numeric unique: duplicates')
   })
 })

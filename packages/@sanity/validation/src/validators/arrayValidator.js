@@ -35,13 +35,39 @@ const presence = (flag, value, message) => {
 }
 
 const unique = (flag, value, message) => {
-  const dupes = []
-  // MEEH
+  const dupeIndices = []
+
+  /* eslint-disable max-depth */
+  for (let x = 0; x < value.length; x++) {
+    for (let y = x + 1; y < value.length; y++) {
+      const itemA = value[x]
+      const itemB = value[y]
+
+      if (!deepEqual(itemA, itemB)) {
+        continue
+      }
+
+      if (dupeIndices.indexOf(x) === -1) {
+        dupeIndices.push(x)
+      }
+
+      if (dupeIndices.indexOf(y) === -1) {
+        dupeIndices.push(y)
+      }
+    }
+  }
+  /* eslint-enable max-depth */
+
+  const paths = dupeIndices.map(idx => [idx])
+  return dupeIndices.length > 0
+    ? new ValidationError(message || `Array cannot contain duplicate values`, paths)
+    : true
 }
 
 module.exports = Object.assign({}, genericValidator, {
   presence,
+  unique,
   length,
   min,
-  max,
+  max
 })

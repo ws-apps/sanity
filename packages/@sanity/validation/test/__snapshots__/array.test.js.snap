@@ -1,5 +1,41 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`array unique: duplicates 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array cannot contain duplicate values
+ @ [0]
+ @ [1]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`array unique: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`boolean unique: duplicates 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array cannot contain duplicate values
+ @ [0]
+ @ [2]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`boolean unique: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
 exports[`exact length: too long 1`] = `
 Object {
   "errors": Array [
@@ -57,6 +93,42 @@ Object {
 }
 `;
 
+exports[`numeric unique: duplicates 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array cannot contain duplicate values
+ @ [0]
+ @ [2]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`numeric unique: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`object unique: duplicates 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array cannot contain duplicate values
+ @ [0]
+ @ [3]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`object unique: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
 exports[`required: empty array 1`] = `
 Object {
   "errors": Array [],
@@ -84,6 +156,24 @@ Object {
 `;
 
 exports[`required: valid 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`simple unique: duplicates 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Array cannot contain duplicate values
+ @ [0]
+ @ [3]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`simple unique: valid 1`] = `
 Object {
   "errors": Array [],
   "warnings": Array [],
