@@ -82,6 +82,10 @@ class Rule {
     return this.cloneWithRules([{flag: 'all', constraint: children}])
   }
 
+  either(children) {
+    return this.cloneWithRules([{flag: 'either', constraint: children}])
+  }
+
   optional() {
     const rule = this.cloneWithRules([{flag: 'presence', constraint: 'required'}])
     rule._required = false

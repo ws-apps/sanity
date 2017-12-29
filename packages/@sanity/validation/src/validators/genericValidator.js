@@ -18,7 +18,7 @@ const presence = (expected, value, message) => {
   return true
 }
 
-const all = (children, value, message) => {
+const multiple = (children, value) => {
   const validate = require('../validate')
 
   let result = {warnings: [], errors: []}
@@ -26,21 +26,44 @@ const all = (children, value, message) => {
     result = validate(child, value, {initial: result})
   })
 
+  return result
+}
+
+const all = (children, value, message) => {
+  const result = multiple(children, value)
+  const numErrors = result.errors.length
+  return numErrors === 0
+    ? true
+    : formatValidationErrors(message, result, {separator: ' - AND - ', operator: 'AND'})
+}
+
+const either = (children, value, message) => {
+  const result = multiple(children, value)
   const numErrors = result.errors.length
 
-  if (numErrors === 0) {
-    return true
+  // Read: There is at least one rule that matched
+  return numErrors < children.length
+    ? true
+    : formatValidationErrors(message, result, {separator: ' - OR - ', operator: 'OR'})
+}
+
+function formatValidationErrors(message, result, options = {}) {
+  const errOpts = {
+    children: result.errors.length > 1 ? result.errors : undefined,
+    operator: options.operator
   }
 
-  if (numErrors === 1) {
-    return new ValidationError(message || result.errors[0].message)
-  }
-
-  return new ValidationError(message || result.errors.map(err => `\n- ${err.message}`).join(''))
+  return result.errors.length === 1
+    ? new ValidationError(message || result.errors[0].message, errOpts)
+    : new ValidationError(
+        message || `[${result.errors.map(err => err.message).join(options.separator)}]`,
+        errOpts
+      )
 }
 
 module.exports = {
   all,
   type,
+  either,
   presence
 }
