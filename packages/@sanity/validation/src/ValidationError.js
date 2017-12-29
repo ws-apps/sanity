@@ -10,12 +10,14 @@ function serializePath(path) {
 }
 
 class ValidationError extends ExtendableError {
-  constructor(message, paths = []) {
+  constructor(message, options = {}) {
     super(message)
-    this.paths = paths
+    this.paths = options.paths || []
+    this.children = options.children
+    this.operation = options.operation
     this.message =
-      paths.length > 0
-        ? `${this.message}\n @ ${paths.map(serializePath).join('\n @ ')}`
+      this.paths.length > 0
+        ? `${this.message}\n @ ${this.paths.map(serializePath).join('\n @ ')}`
         : this.message
   }
 }

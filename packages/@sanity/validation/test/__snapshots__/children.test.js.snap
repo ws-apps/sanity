@@ -26,9 +26,7 @@ Object {
 exports[`all() rules - multiple failures, custom messages 1`] = `
 Object {
   "errors": Array [
-    [ValidationError: 
-- Must start with an uppercase character
-- 5 chars or more],
+    [ValidationError: [Must start with an uppercase character - AND - 5 chars or more]],
   ],
   "warnings": Array [],
 }
@@ -47,6 +45,49 @@ exports[`all() rules - single failure, custom message 1`] = `
 Object {
   "errors": Array [
     [ValidationError: Must start with an uppercase character],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`either() rules - all fail, common error 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: Needs to start with a capital letter, unless it's an iProduct],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`either() rules - all match 1`] = `
+Object {
+  "errors": Array [],
+  "warnings": Array [],
+}
+`;
+
+exports[`either() rules - match 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`either() rules - no matches 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: [Must start with a capital R - OR - Must end with "ed"]],
+  ],
+  "warnings": Array [],
+}
+`;
+
+exports[`either() rules - single failure, custom message 1`] = `
+Object {
+  "errors": Array [
+    [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
   ],
   "warnings": Array [],
 }

@@ -60,7 +60,7 @@ const unique = (flag, value, message) => {
 
   const paths = dupeIndices.map(idx => [idx])
   return dupeIndices.length > 0
-    ? new ValidationError(message || `Array cannot contain duplicate values`, paths)
+    ? new ValidationError(message || `Array cannot contain duplicate values`, {paths})
     : true
 }
 

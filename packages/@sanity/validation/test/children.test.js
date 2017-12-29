@@ -1,6 +1,7 @@
 const {Rule} = require('../src')
 
 describe('child rules', () => {
+  // --- ALL ---
   test('all() rules - single failure', () => {
     const rule = Rule.string().all([
       Rule.string()
@@ -48,5 +49,42 @@ describe('child rules', () => {
       .error('Needs to be a capital letter followed by at least 4 lowercase characters')
 
     expect(rule.validate('moop')).toMatchSnapshot('all() rules - multiple failures, common error')
+  })
+
+  // --- EITHER ---
+  test('either() rules - single failure', () => {
+    const rule = Rule.string().either([
+      Rule.string()
+        .regex(/^rgb(\d+,\s*\d+,\s*\d+)$/)
+        .error('Must be rgb(num, num, num) format'),
+      Rule.string()
+        .regex(/^#([a-f0-9]{3}|[a-f0-9]{6})$/)
+        .error('Must be hex color with #-prefix')
+    ])
+
+    expect(rule.validate('rgb(16, 22, 133)')).toMatchSnapshot('either() rules - match')
+    expect(rule.validate('#bf')).toMatchSnapshot('either() rules - single failure, custom message')
+  })
+
+  test('either() rules - all matches', () => {
+    const rule = Rule.string().either([
+      Rule.string()
+        .regex(/^R/)
+        .error('Must start with a capital R'),
+      Rule.string()
+        .regex(/ed$/)
+        .error('Must end with "ed"')
+    ])
+
+    expect(rule.validate('Red')).toMatchSnapshot('either() rules - all match')
+    expect(rule.validate('nope')).toMatchSnapshot('either() rules - no matches')
+  })
+
+  test('either() rules - all fail, custom, common error', () => {
+    const rule = Rule.string()
+      .either([Rule.string().regex(/^[A-Z]/), Rule.string().regex(/^i[A-Z]/)])
+      .error("Needs to start with a capital letter, unless it's an iProduct")
+
+    expect(rule.validate('mopatis!')).toMatchSnapshot('either() rules - all fail, common error')
   })
 })
