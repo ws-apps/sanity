@@ -1,6 +1,5 @@
-const Type = require('type-of-is')
-const deepEqual = require('fast-deep-equal')
 const ValidationError = require('../ValidationError')
+const genericValidator = require('./genericValidator')
 
 const presence = (expected, value, message) => {
   if (expected !== 'required') {
@@ -14,6 +13,6 @@ const presence = (expected, value, message) => {
   return true
 }
 
-module.exports = {
+module.exports = Object.assign({}, genericValidator, {
   presence
-}
+})
