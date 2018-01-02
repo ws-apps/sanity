@@ -74,7 +74,7 @@ function initValidation(field, baseRule) {
     return field.validation(baseRule)
   }
 
-  return undefined
+  return baseRule
 }
 
 module.exports = inferFromSchemaType
