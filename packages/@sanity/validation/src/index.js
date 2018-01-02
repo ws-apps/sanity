@@ -1,3 +1,4 @@
 module.exports = {
-  Rule: require('./Rule')
+  Rule: require('./Rule'),
+  inferFromSchema: require('./inferFromSchema')
 }

@@ -1,4 +1,5 @@
 const Type = require('type-of-is')
+const deepEqual = require('fast-deep-equal')
 const ValidationError = require('../ValidationError')
 
 const type = (expected, value, message) => {
@@ -47,6 +48,12 @@ const either = (children, value, message) => {
     : formatValidationErrors(message, result, {separator: ' - OR - ', operator: 'OR'})
 }
 
+const valid = (allowedValues, actual, message) => {
+  return allowedValues.some(expected => deepEqual(expected, actual))
+    ? true
+    : new ValidationError(message || 'Value did not match any of allowed values')
+}
+
 function formatValidationErrors(message, result, options = {}) {
   const errOpts = {
     children: result.errors.length > 1 ? result.errors : undefined,
@@ -65,5 +72,6 @@ module.exports = {
   all,
   type,
   either,
+  valid,
   presence
 }
