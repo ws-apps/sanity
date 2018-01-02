@@ -5,24 +5,19 @@ function inferFromSchemaType(typeDef, options) {
     return inferFromArray(typeDef, options)
   }
 
-  if (!typeDef.fields) {
-    return typeDef
-  }
+  const fields = typeDef.fields
+    ? {fields: typeDef.fields.map(field => inferFromSchemaType(field, options))}
+    : {}
 
-  return Object.assign({}, typeDef, {
-    fields: typeDef.fields.map(inferFromField),
-    validation: initValidation(typeDef, new Rule())
-  })
-}
-
-function inferFromField(field) {
-  const typed = Rule[field.type] && Rule[field.type]
+  const typed = Rule[typeDef.type] && Rule[typeDef.type]
   const base = typed ? typed() : new Rule()
-  return Object.assign({}, field, {
-    validation: initValidation(field, base)
+
+  return Object.assign({}, typeDef, fields, {
+    validation: initValidation(typeDef, base)
   })
 }
 
+// eslint-disable-next-line complexity
 function inferFromArray(typeDef, options) {
   const {schemaTypes} = options
   const typeRules = []
