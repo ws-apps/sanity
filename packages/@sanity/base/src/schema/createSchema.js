@@ -15,9 +15,12 @@ module.exports = schemaDef => {
   const validation = groupProblems(validated)
   const hasErrors = validation.some(group => group.problems.some(isError))
 
-  const schemaTypes = hasErrors
-    ? []
-    : [...schemaDef.types, geopoint, legacyRichDate, imageAsset, fileAsset]
+  let schemaTypes = []
+  if (!hasErrors) {
+    schemaTypes = [...schemaDef.types, geopoint, legacyRichDate, imageAsset, fileAsset].filter(
+      Boolean
+    )
+  }
 
   const types = schemaTypes.filter(Boolean).map(type => inferValidation(type, {schemaTypes}))
 
