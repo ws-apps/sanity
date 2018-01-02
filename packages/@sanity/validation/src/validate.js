@@ -3,7 +3,8 @@ const genericValidator = require('./validators/genericValidator')
 
 const typeValidators = {
   String: require('./validators/stringValidator'),
-  Array: require('./validators/arrayValidator')
+  Array: require('./validators/arrayValidator'),
+  Object: require('./validators/objectValidator')
 }
 
 module.exports = (rule, value, options = {}) => {

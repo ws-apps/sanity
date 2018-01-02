@@ -4,8 +4,11 @@ const validate = require('./validate')
 const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array']
 
 class Rule {
+  static object = () => new Rule().type('Object')
   static array = () => new Rule().type('Array')
   static string = () => new Rule().type('String')
+  static number = () => new Rule().type('Number')
+  static boolean = () => new Rule().type('Boolean')
 
   constructor() {
     this._type = null
@@ -110,6 +113,11 @@ class Rule {
     return this.cloneWithRules([{flag: 'length', constraint: len}])
   }
 
+  valid(value) {
+    const values = Array.isArray(value) ? value : [value]
+    return this.cloneWithRules([{flag: 'valid', constraint: values}])
+  }
+
   // String only
   uppercase() {
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
@@ -132,6 +140,16 @@ class Rule {
   // Array only
   unique(comparator) {
     return this.cloneWithRules([{flag: 'unique', constraint: comparator}])
+  }
+
+  items(childRule) {
+    const childRules = Array.isArray(childRule) ? childRule : [childRule]
+    return this.cloneWithRules([{flag: 'items', constraint: childRules}])
+  }
+
+  // Object only
+  keys(keys) {
+    return this.cloneWithRules([{flag: 'keys', constraint: keys}])
   }
 }
 
