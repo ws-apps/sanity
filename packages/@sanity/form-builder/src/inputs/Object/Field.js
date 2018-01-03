@@ -78,6 +78,7 @@ export default class Field extends React.Component {
           onFocus={onFocus}
           onBlur={onBlur}
           focusPath={focusPath}
+          markers={markers}
           level={level}
           ref={this.setInput}
         />

@@ -91,7 +91,7 @@ export default class ObjectInput extends React.PureComponent {
       return null
     }
 
-    const {value, focusPath, onFocus, onBlur} = this.props
+    const {value, markers, focusPath, onFocus, onBlur} = this.props
     const fieldValue = value && value[field.name]
     return (
       <Field
@@ -101,6 +101,7 @@ export default class ObjectInput extends React.PureComponent {
         onChange={this.handleFieldChange}
         onFocus={onFocus}
         onBlur={onBlur}
+        markers={markers}
         focusPath={focusPath}
         level={level}
         ref={index === 0 && this.setFirstField}
