@@ -1,10 +1,6 @@
 const Rule = require('./Rule')
 
 function inferFromSchemaType(typeDef, options) {
-  if (typeDef.type === 'array') {
-    return inferFromArray(typeDef, options)
-  }
-
   const fields = typeDef.fields
     ? {fields: typeDef.fields.map(field => inferFromSchemaType(field, options))}
     : {}
@@ -13,7 +9,8 @@ function inferFromSchemaType(typeDef, options) {
   const base = typed ? typed() : new Rule()
 
   return Object.assign({}, typeDef, fields, {
-    validation: initValidation(typeDef, base)
+    validation:
+      typeDef.type === 'array' ? inferFromArray(typeDef, options) : initValidation(typeDef, base)
   })
 }
 
@@ -55,7 +52,7 @@ function inferFromArray(typeDef, options) {
     )
   }
 
-  return Rule.array().items(candidates.length === 1 ? candidates[0] : new Rule().either(candidates))
+  return Rule.array().items(typeRules.length === 1 ? typeRules[0] : new Rule().either(typeRules))
 }
 
 function initValidation(field, baseRule) {

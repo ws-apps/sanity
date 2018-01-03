@@ -14,5 +14,7 @@ const presence = (expected, value, message) => {
 }
 
 module.exports = Object.assign({}, genericValidator, {
-  presence
+  presence,
+  keys: () => true // @todo
 })
+
