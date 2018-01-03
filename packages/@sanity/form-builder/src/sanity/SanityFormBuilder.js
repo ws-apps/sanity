@@ -13,6 +13,7 @@ type Props = {
   value: ?any,
   schema: any,
   type: Object,
+  markers: Array<*>,
   patchChannel: PatchChannel,
   onChange: () => {},
   autoFocus: boolean
@@ -33,7 +34,7 @@ export default class SanityFormBuilder extends React.Component<Props> {
   }
 
   renderInput = ({onFocus, onBlur, focusPath}) => {
-    const {value, type, onChange} = this.props
+    const {value, type, onChange, markers} = this.props
     return (
       <FormBuilderInput
         type={type}
@@ -42,6 +43,7 @@ export default class SanityFormBuilder extends React.Component<Props> {
         value={value}
         onFocus={onFocus}
         onBlur={onBlur}
+        markers={markers}
         focusPath={focusPath}
         isRoot
         ref={this.setInput}
