@@ -1,4 +1,5 @@
 const deepEqual = require('fast-deep-equal')
+const prefixPaths = require('../util/prefixPaths')
 const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 
@@ -34,6 +35,20 @@ const presence = (flag, value, message) => {
   return true
 }
 
+const items = (rule, values, message) => {
+  const results = values.reduce(
+    (acc, value, index) => {
+      const result = prefixPaths(rule.validate(value), [index])
+      acc.errors = acc.errors.concat(result.errors)
+      acc.warnings = acc.warnings.concat(result.warnings)
+      return acc
+    },
+    {errors: [], warnings: []}
+  )
+
+  return results.errors.length === 0 ? true : results.errors[0]
+}
+
 const unique = (flag, value, message) => {
   const dupeIndices = []
 
@@ -67,6 +82,7 @@ const unique = (flag, value, message) => {
 module.exports = Object.assign({}, genericValidator, {
   presence,
   unique,
+  items,
   length,
   min,
   max

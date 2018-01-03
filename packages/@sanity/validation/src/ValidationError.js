@@ -20,6 +20,11 @@ class ValidationError extends ExtendableError {
         ? `${this.message}\n @ ${this.paths.map(serializePath).join('\n @ ')}`
         : this.message
   }
+
+  prefixPaths(prefix) {
+    this.paths = this.paths.map(path => prefix.concat(path))
+    return this
+  }
 }
 
 module.exports = ValidationError

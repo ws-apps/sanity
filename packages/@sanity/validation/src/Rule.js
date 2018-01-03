@@ -143,8 +143,7 @@ class Rule {
   }
 
   items(childRule) {
-    const childRules = Array.isArray(childRule) ? childRule : [childRule]
-    return this.cloneWithRules([{flag: 'items', constraint: childRules}])
+    return this.cloneWithRules([{flag: 'items', constraint: childRule}])
   }
 
   // Object only
