@@ -1,4 +1,4 @@
 # Backstop
-bitmapsTest/*
-htmlReport/*
-ciReport/*
+bitmapsTest/
+htmlReport/
+ciReport/
