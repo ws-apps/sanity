@@ -1,46 +1,30 @@
-addon:
-  chrome: beta
 language: node_js
 node_js:
+  - '6'
   - '8'
 cache: yarn
-before_install:
-  - openssl aes-256-cbc -K $encrypted_95539a63b022_key -iv $encrypted_95539a63b022_iv -in tests/travis-gcloud-service-account.json.enc -out tests/travis-gcloud-service-account.json -d
-  - echo "deb http://packages.cloud.google.com/apt cloud-sdk-$(lsb_release -c -s) main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
-  - gcloud auth activate-service-account --key-file tests/travis-gcloud-service-account.json
 before_script:
   - travis_wait yarn run bootstrap
   - yarn run build
-  - cd $TRAVIS_BUILD_DIR
-  - gulp backstopServer &
-  - sleep 60
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
-  - yarn run pack
+  - npm run pack
 
   # Remove source and dependencies from CLI to ensure it works standalone
   - rm -rf packages/@sanity/cli/node_modules
   - rm -rf packages/@sanity/cli/src && rm -rf packages/@sanity/cli/lib
 
   # Test building the test studio with all customizations
-  #- cd $TRAVIS_BUILD_DIR/packages/test-studio
-  #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
+  - cd $TRAVIS_BUILD_DIR/packages/test-studio
+  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
 
   # Test initializing a project in unattended mode
-  #- sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
+  - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
 
   # Use the newly commited changes instead of the latest dependencies from NPM
-  #- cd /tmp/test-project
-  #- $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
-
-  # Backstop test
-  - cd $TRAVIS_BUILD_DIR
-  - node node_modules/backstopjs/cli/index.js test --config=./tests/backstop/config.json
+  - cd /tmp/test-project
+  - $TRAVIS_BUILD_DIR/scripts/symlinkDependencies.js .
 
   # Test building the project with latest dependencies
-  #- $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
-
-after_script:
-  # Put Backstop artifacts in Google Cloud Storage
-  - gsutil -m -q rsync -r tests/backstop/ gs://sanity-ci/travis/$TRAVIS_REPO_SLUG/build-$TRAVIS_BUILD_NUMBER/tests/backstop
+  - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build --skip-minify
