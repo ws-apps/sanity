@@ -6,6 +6,8 @@ cache: yarn
 before_script:
   - travis_wait yarn run bootstrap
   - yarn run build
+  - gulp backstopServer &
+  - sleep 60
 script:
   # Build CLI to a single file
   - cd packages/@sanity/cli
@@ -18,6 +20,9 @@ script:
   # Test building the test studio with all customizations
   - cd $TRAVIS_BUILD_DIR/packages/test-studio
   - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
+
+  # Browserstack
+  - yarn run parallel_local
 
   # Test initializing a project in unattended mode
   - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
