@@ -4,7 +4,6 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && yarn run package-yarn && yarn run install-husky",
     "test:backstop": "gulp backstop",
-    "test:backstop:test": "gulp backstop",
     "test:backstop:reference": "gulp backstop:reference",
     "test:backstop:approve": "gulp backstop:approve",
     "build": "lerna run clean && gulp && yarn run package",
@@ -16,6 +15,7 @@
     "package-yarn": "(cd packages/@sanity/cli && yarn run package-yarn)",
     "init": "lerna clean --yes && yarn run bootstrap && yarn run build",
     "start": "gulp dev",
+    "start:backstop": "yarn run build && gulp backstopServer",
     "storybook": "gulp storybook",
     "example": "gulp example",
     "stylelint": "stylelint \"**/*.css\"",
