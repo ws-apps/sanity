@@ -17,12 +17,14 @@ script:
   - rm -rf packages/@sanity/cli/node_modules
   - rm -rf packages/@sanity/cli/src && rm -rf packages/@sanity/cli/lib
 
+  # Browserstack
+  - cd $TRAVIS_BUILD_DIR
+  - yarn run parallel_local
+
   # Test building the test studio with all customizations
   - cd $TRAVIS_BUILD_DIR/packages/test-studio
   - $TRAVIS_BUILD_DIR/packages/@sanity/cli/bin/sanity build
 
-  # Browserstack
-  - yarn run parallel_local
 
   # Test initializing a project in unattended mode
   - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
