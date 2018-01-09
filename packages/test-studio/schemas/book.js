@@ -13,11 +13,13 @@ export default {
   title: 'Book',
   description: 'This is just a simple type for generating some test data',
   icon: BookIcon,
+  validation: Rule => Rule.keys({}),
   fields: [
     {
       name: 'title',
       title: 'Title',
-      type: 'string'
+      type: 'string',
+      validation: Rule => Rule.min(5).max(100)
     },
     {
       name: 'translations',
@@ -57,18 +59,12 @@ export default {
     {
       title: 'Title',
       name: 'title',
-      by: [
-        {field: 'title', direction: 'asc'},
-        {field: 'publicationYear', direction: 'asc'}
-      ]
+      by: [{field: 'title', direction: 'asc'}, {field: 'publicationYear', direction: 'asc'}]
     },
     {
       title: 'Swedish title',
       name: 'swedishTitle',
-      by: [
-        {field: 'translations.se', direction: 'asc'},
-        {field: 'title', direction: 'asc'}
-      ]
+      by: [{field: 'translations.se', direction: 'asc'}, {field: 'title', direction: 'asc'}]
     }
   ],
   preview: {
@@ -83,7 +79,9 @@ export default {
     },
     prepare(book, options = {}) {
       return Object.assign({}, book, {
-        title: ((options.ordering || {}).name === 'swedishTitle' && (book.translations || {}).se) || book.title,
+        title:
+          ((options.ordering || {}).name === 'swedishTitle' && (book.translations || {}).se) ||
+          book.title,
         subtitle: formatSubtitle(book)
       })
     }
