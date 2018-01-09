@@ -142,10 +142,6 @@ class Rule {
     return this.cloneWithRules([{flag: 'unique', constraint: comparator}])
   }
 
-  items(childRule) {
-    return this.cloneWithRules([{flag: 'items', constraint: childRule}])
-  }
-
   // Object only
   keys(keys) {
     return this.cloneWithRules([{flag: 'keys', constraint: keys}])

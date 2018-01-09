@@ -13,14 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/sanity-io/sanity.git"
   },
-  "keywords": [
-    "sanity",
-    "cms",
-    "headless",
-    "realtime",
-    "content",
-    "base"
-  ],
+  "keywords": ["sanity", "cms", "headless", "realtime", "content", "base"],
   "author": "Sanity.io <hello@sanity.io>",
   "license": "MIT",
   "bugs": {
