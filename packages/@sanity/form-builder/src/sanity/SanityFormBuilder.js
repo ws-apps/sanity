@@ -3,6 +3,7 @@ import React from 'react'
 import SanityFormBuilderContext from './SanityFormBuilderContext'
 import {FormBuilderInput} from '../FormBuilderInput'
 import SimpleFocusManager from './focusManagers/SimpleFocusManager'
+import {Marker} from '../typedefs'
 
 type PatchChannel = {
   subscribe: () => () => {},
@@ -13,7 +14,7 @@ type Props = {
   value: ?any,
   schema: any,
   type: Object,
-  markers: Array<*>,
+  markers: Array<Marker>,
   patchChannel: PatchChannel,
   onChange: () => {},
   autoFocus: boolean

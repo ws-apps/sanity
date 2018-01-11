@@ -20,11 +20,15 @@ import {createDragHandle} from 'part:@sanity/components/lists/sortable'
 import {IntentLink} from 'part:@sanity/base/router'
 import {resolveTypeName} from '../../utils/resolveTypeName'
 import type {Path} from '../../typedefs/path'
-import type {Type} from '../../typedefs'
+import type {Type, Marker} from '../../typedefs'
 import * as PathUtils from '../../utils/pathUtils'
 import DragBarsIcon from 'part:@sanity/base/bars-icon'
 
-const DragHandle = createDragHandle(() => <span className={styles.dragHandle}><DragBarsIcon /></span>)
+const DragHandle = createDragHandle(() => (
+  <span className={styles.dragHandle}>
+    <DragBarsIcon />
+  </span>
+))
 
 const DIALOG_ACTIONS = [
   {
@@ -46,10 +50,11 @@ type Props = {
   type: ArrayType,
   value: ItemValue,
   level: number,
+  markers: Array<Marker>,
   layout?: 'media' | 'default',
-  onRemove: (ItemValue) => void,
+  onRemove: ItemValue => void,
   onChange: (PatchEvent, ItemValue) => void,
-  onFocus: (Path) => void,
+  onFocus: Path => void,
   onBlur: void => void,
   focusPath: Path
 }
@@ -63,11 +68,11 @@ function hasFocusInPath(path, value) {
 }
 
 export default class RenderItemValue extends React.Component<Props> {
-
   _focusArea: ?FocusArea
 
   static defaultProps = {
-    level: 0
+    level: 0,
+    markers: []
   }
 
   componentDidMount() {
@@ -141,7 +146,8 @@ export default class RenderItemValue extends React.Component<Props> {
     }
     if (action.name === 'delete') {
       // Needs a proper confirm dialog later
-      if (window.confirm('Do you really want to delete?')) { // eslint-disable-line no-alert
+      if (window.confirm('Do you really want to delete?')) {
+        // eslint-disable-line no-alert
         this.handleRemove()
       }
     }
@@ -208,16 +214,25 @@ export default class RenderItemValue extends React.Component<Props> {
           showCloseButton={false}
           actions={DIALOG_ACTIONS}
         >
-          <div className={styles.defaultDialogContent}>
-            {content}
-          </div>
+          <div className={styles.defaultDialogContent}>{content}</div>
         </DefaultDialog>
       </div>
     )
   }
 
+  renderValidationResult(validation) {
+    const errors = validation.filter(marker => marker.level === 'error')
+    const warnings = validation.filter(marker => marker.level === 'warning')
+    if (errors.length === 0 && errors.warnings === 0) {
+      return null
+    }
+
+    const messages = errors.length > 0 ? errors : warnings
+    return <ul>{messages.map((err, i) => <li key={i}>{err.item.message}</li>)}</ul>
+  }
+
   renderItem() {
-    const {value, type} = this.props
+    const {value, markers, type} = this.props
     const options = type.options || {}
     const isGrid = options.layout === 'grid'
     const isSortable = options.sortable !== false
@@ -238,31 +253,20 @@ export default class RenderItemValue extends React.Component<Props> {
             className={styles.previewWrapperHelper}
             onFocus={this.handleFocus}
           >
-            <Preview
-              layout={previewLayout}
-              value={value}
-              type={this.getMemberType()}
-            />
+            <Preview layout={previewLayout} value={value} type={this.getMemberType()} />
+
+            {this.renderValidationResult(markers)}
           </div>
         </div>
 
         <div className={styles.functions}>
-          {
-            value._ref && (
-              <IntentLink
-                className={styles.linkToReference}
-                intent="edit"
-                params={{id: value._ref}}
-              >
-                <LinkIcon />
-              </IntentLink>
-            )
-          }
+          {value._ref && (
+            <IntentLink className={styles.linkToReference} intent="edit" params={{id: value._ref}}>
+              <LinkIcon />
+            </IntentLink>
+          )}
           {!type.readOnly && (
-            <ConfirmButton
-              title="Remove this item"
-              onConfirm={this.handleRemove}
-            />
+            <ConfirmButton title="Remove this item" onConfirm={this.handleRemove} />
           )}
         </div>
       </div>
@@ -277,14 +281,9 @@ export default class RenderItemValue extends React.Component<Props> {
     const isExpanded = PathUtils.isExpanded(value, focusPath)
 
     return (
-      <div
-        className={isGrid ? styles.gridItem : styles.listItem}
-        ref={this.setElement}
-      >
+      <div className={isGrid ? styles.gridItem : styles.listItem} ref={this.setElement}>
         {this.renderItem()}
-        <div
-          className={options.editModal === 'fold' ? styles.editRootFold : styles.editRoot}
-        >
+        <div className={options.editModal === 'fold' ? styles.editRootFold : styles.editRoot}>
           {isExpanded && this.renderEditItemForm(value)}
         </div>
       </div>

@@ -10,9 +10,14 @@ import PatchEvent, {insert, set, setIfMissing, unset} from '../../PatchEvent'
 import resolveListComponents from './resolveListComponents'
 import {resolveTypeName} from '../../utils/resolveTypeName'
 import type {Uploader} from '../../sanity/uploads/typedefs'
-import type {Type} from '../../typedefs'
+import type {Type, Marker} from '../../typedefs'
 import type {Path} from '../../typedefs/path'
-import {FOCUS_TERMINATOR, isExpanded} from '../../utils/pathUtils'
+import {
+  FOCUS_TERMINATOR,
+  isExpanded,
+  startsWith,
+  isEqual as isEqualPath
+} from '../../utils/pathUtils'
 import type {Subscription} from '../../typedefs/observable'
 import UploadTargetFieldset from '../../utils/UploadTargetFieldset'
 
@@ -207,8 +212,20 @@ export default class ArrayInput extends React.Component<Props, State> {
     return type.of.find(memberType => memberType.name === itemTypeName)
   }
 
+  // @todo generalize/refactor validation rendering into separate components or similar
+  renderValidationResult(validation) {
+    const errors = validation.filter(marker => marker.level === 'error')
+    const warnings = validation.filter(marker => marker.level === 'warning')
+    if (errors.length === 0 && errors.warnings === 0) {
+      return null
+    }
+
+    const messages = errors.length > 0 ? errors : warnings
+    return <ul>{messages.map((err, i) => <li key={i}>{err.item.message}</li>)}</ul>
+  }
+
   renderList = () => {
-    const {type, value, focusPath, onBlur, onFocus, level} = this.props
+    const {type, value, focusPath, onBlur, onFocus, level, markers} = this.props
     const {isMoving} = this.state
     const options = type.options || {}
 
@@ -248,6 +265,7 @@ export default class ArrayInput extends React.Component<Props, State> {
                 type={type}
                 value={item}
                 level={level}
+                markers={markers.filter(marker => startsWith([index], marker.path))}
                 onRemove={this.handleRemoveItem}
                 onChange={this.handleItemChange}
                 focusPath={focusPath}
@@ -304,7 +322,10 @@ export default class ArrayInput extends React.Component<Props, State> {
   }
 
   render() {
-    const {type, level, value} = this.props
+    const {type, level, markers, value} = this.props
+    const validation = markers.filter(
+      marker => marker.type === 'validation' && isEqualPath(marker.path, [])
+    )
 
     return (
       <UploadTargetFieldset
@@ -328,6 +349,7 @@ export default class ArrayInput extends React.Component<Props, State> {
               </Button>
             )}
             {this.props.type.of.length > 1 && this.renderSelectType()}
+            {this.renderValidationResult(validation)}
           </div>
         )}
       </UploadTargetFieldset>

@@ -14,38 +14,44 @@ export default class DefaultFormField extends React.Component {
     children: PropTypes.node,
     wrapped: PropTypes.bool,
     labelFor: PropTypes.string,
-    validation: PropTypes.shape({
-      warnings: PropTypes.arrayOf(PropTypes.instanceOf(Error)),
-      errors: PropTypes.arrayOf(PropTypes.instanceOf(Error))
-    })
+    markers: PropTypes.arrayOf(
+      PropTypes.shape({
+        path: PropTypes.arrayOf(PropTypes.string),
+        type: PropTypes.string,
+        level: PropTypes.string,
+        item: PropTypes.any
+      })
+    )
   }
 
   static defaultProps = {
-    level: 1
+    level: 1,
+    markers: []
   }
 
-  getValidationClass() {
-    const validation = this.props.validation
-    if (validation && validation.errors.length > 0) {
+  // @todo generalize/refactor validation rendering into separate components or similar
+  getValidationClass(validation) {
+    if (validation.some(marker => marker.level === 'error')) {
       return styles.validationError
     }
 
-    if (validation && validation.warnings.length > 0) {
+    if (validation.some(marker => marker.level === 'warning')) {
       return styles.validationWarning
     }
 
     return ''
   }
 
+  // @todo generalize/refactor validation rendering into separate components or similar
   renderValidationResult(validation) {
-    const hasErrors = validation && validation.errors.length > 0
-    const hasWarnings = validation && validation.warnings.length > 0
-    if (!hasErrors && !hasWarnings) {
+    const errors = validation.filter(marker => marker.level === 'error')
+    const warnings = validation.filter(marker => marker.level === 'warning')
+    if (errors.length === 0 && errors.warnings === 0) {
       return null
     }
 
-    const messages = hasErrors ? validation.errors : validation.warnings
-    return <ul>{messages.map((err, i) => <li key={i}>{err.message}</li>)}</ul>
+    const messages = errors.length > 0 ? errors : warnings
+    return <ul>{messages.map((err, i) => <li key={i}>{err.item.message}</li>)}</ul>
   }
 
   render() {
@@ -58,10 +64,11 @@ export default class DefaultFormField extends React.Component {
       inline,
       wrapped,
       className,
-      validation
+      markers
     } = this.props
 
-    const validationClass = this.getValidationClass()
+    const validation = markers.filter(marker => marker.type === 'validation')
+    const validationClass = this.getValidationClass(validation)
     const levelClass = `level_${level}`
 
     return (
