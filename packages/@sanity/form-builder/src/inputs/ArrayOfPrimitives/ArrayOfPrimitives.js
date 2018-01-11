@@ -11,6 +11,7 @@ import PatchEvent, {set, unset} from '../../PatchEvent'
 import DropDownButton from 'part:@sanity/components/buttons/dropdown'
 import getEmptyValue from './getEmptyValue'
 
+import {startsWith} from '../../utils/pathUtils'
 import {resolveTypeName} from '../../utils/resolveTypeName'
 import InvalidValue from '../InvalidValue'
 import type {ItemValue} from '../Array/typedefs'
@@ -110,7 +111,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
   }
 
   renderItem = (item, index) => {
-    const {type, level, value, focusPath, onChange, onFocus, onBlur} = this.props
+    const {type, level, markers, value, focusPath, onChange, onFocus, onBlur} = this.props
 
     const typeName = resolveTypeName(item)
     const itemMemberType = this.getMemberType(typeName)
@@ -135,6 +136,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
           level={level + 1}
           index={index}
           value={item}
+          markers={markers.filter(marker => startsWith([index], marker.path))}
           isSortable={isSortable}
           type={itemMemberType}
           focusPath={focusPath}

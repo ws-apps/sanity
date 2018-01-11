@@ -1,4 +1,4 @@
-const deepEqual = require('fast-deep-equal')
+const deepEquals = require('../util/deepEquals')
 const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 
@@ -43,7 +43,7 @@ const unique = (flag, value, message) => {
       const itemA = value[x]
       const itemB = value[y]
 
-      if (!deepEqual(itemA, itemB)) {
+      if (!deepEquals(itemA, itemB)) {
         continue
       }
 

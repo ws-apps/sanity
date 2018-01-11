@@ -73,8 +73,7 @@ export default {
       type: 'array',
       of: [
         {
-          type: 'author',
-          validation: Rule => Rule.keys({})
+          type: 'author'
         }
       ]
     },
@@ -83,7 +82,10 @@ export default {
       title: 'Title Case',
       description: 'Regex-based title case, custom error message',
       type: 'string',
-      validation: Rule => Rule.min(1).regex(/^([A-Z][a-z]*?)+$/)
+      validation: Rule =>
+        Rule.min(1)
+          .regex(/^(?:[A-Z][^\s]*\s?)+$/)
+          .error('Must be in Title Case')
     }
   ]
 }

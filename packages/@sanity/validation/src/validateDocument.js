@@ -2,32 +2,33 @@ const Type = require('type-of-is')
 
 /* eslint-disable no-console */
 module.exports = (doc, schema) => {
-  return validateObject(doc, schema, [])
+  const type = schema.get(doc._type)
+  if (!type) {
+    console.warn('Schema type for object type "%s" not found, skipping validation', doc._type)
+    return []
+  }
+
+  return validateItem(doc, type, [], schema)
 }
 
-function validateItem(item, type, path) {
+function validateItem(item, type, path, schema) {
   if (Array.isArray(item)) {
-    return validateArray(item, type, path)
+    return validateArray(item, type, path, schema)
   }
 
   if (typeof item === 'object') {
-    return validateObject(item, type, path)
+    return validateObject(item, type, path, schema)
   }
 
-  return validatePrimitive(item, type, path)
+  return validatePrimitive(item, type, path, schema)
 }
 
-function validateObject(obj, schema, path) {
+function validateObject(obj, type, path, schema) {
   let results = []
-  const type = schema.get(obj._type)
-  if (!type) {
-    console.warn('Schema type for object type "%s" not found, skipping validation', obj._type)
-    return results
-  }
 
   // Validate actual object itself
   if (type.validation) {
-    results = results.concat(applyPath(type.validation.validate(obj), path))
+    results = results.concat(type.validation.validate(obj))
   }
 
   // Validate fields within object
@@ -38,14 +39,14 @@ function validateObject(obj, schema, path) {
     }
 
     const fieldPath = appendPath(path, field.name)
-    const fieldResults = validateItem(obj[field.name], field.type, fieldPath)
-    results = results.concat(applyPath(fieldResults, fieldPath))
+    const fieldResults = validateItem(obj[field.name], field.type, fieldPath, schema)
+    results = results.concat(fieldResults)
   })
 
   return results
 }
 
-function validateArray(items, type, path) {
+function validateArray(items, type, path, schema) {
   // Validate actual array itself
   let results = []
   if (type.validation) {
@@ -54,13 +55,9 @@ function validateArray(items, type, path) {
 
   // Validate items within array
   items.forEach((item, i) => {
-    const validateArrayItem = resolveValidationForArrayItem(item, type.of)
-    if (!validateArrayItem) {
-      console.warn('Failed to resolve validator for item %o', item)
-      return
-    }
-
-    results = results.concat(applyPath(validateArrayItem.validate(item), appendPath(path, i)))
+    const itemType = resolveTypeForArrayItem(item, type.of)
+    const itemResults = validateItem(item, itemType, appendPath(path, [i]), schema)
+    results = results.concat(itemResults)
   })
 
   return results
@@ -71,27 +68,23 @@ function validatePrimitive(item, type, path) {
     return []
   }
 
-  return type.validation.validate(item)
+  return applyPath(type.validation.validate(item), path)
 }
 
-function resolveValidationForArrayItem(item, candidates) {
-  let resolved
-
-  const isPrimitive = !item._type
-  if (isPrimitive) {
-    const primitive = Type.string(item).toLowerCase()
-    resolved = candidates.find(candidate => candidate.jsonType === primitive)
-  } else {
-    resolved = candidates.find(candidate => candidate.type.name === item._type)
-  }
-
-  return resolved && resolved.validation
+function resolveTypeForArrayItem(item, candidates) {
+  const primitive = !item._type && Type.string(item).toLowerCase()
+  return primitive
+    ? candidates.find(candidate => candidate.jsonType === primitive)
+    : candidates.find(candidate => candidate.type.name === item._type)
 }
 
 function appendPath(base, next) {
   return base.concat(next)
 }
 
-function applyPath(results, path) {
-  return results.map(result => Object.assign({path}, result))
+function applyPath(results, pathPrefix) {
+  return results.map(result => {
+    const path = typeof result.path === 'undefined' ? pathPrefix : pathPrefix.concat(result.path)
+    return Object.assign({type: 'validation'}, result, {path})
+  })
 }

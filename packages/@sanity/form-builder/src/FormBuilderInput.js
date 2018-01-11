@@ -97,7 +97,8 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
           'Missing a required ".focus()" method on input component. Please check the implementation of %s. Read more at %s',
           displayName,
           generateHelpUrl('input-component-missing-required-method')
-        ))
+        )
+      )
       return
     }
 
@@ -177,7 +178,16 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
 
     const rootProps = isRoot ? {isRoot} : {}
 
-    const childMarkers = markers.map(marker => ({...marker, path: trimChildPath(path, marker.path)}))
+    let childMarkers = markers
+    if (!isRoot) {
+      childMarkers = markers
+        .filter(marker => PathUtils.startsWith(path, marker.path))
+        .map(marker => ({
+          ...marker,
+          path: trimChildPath(path, marker.path)
+        }))
+    }
+
     const childFocusPath = this.getChildFocusPath()
 
     const isLeaf = childFocusPath.length === 0 || childFocusPath[0] === PathUtils.FOCUS_TERMINATOR

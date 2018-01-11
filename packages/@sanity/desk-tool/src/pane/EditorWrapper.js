@@ -147,7 +147,11 @@ export default class EditorPane extends React.Component {
     if (nextProps.documentId !== this.props.documentId) {
       this.setState(INITIAL_STATE)
       this.setup(nextProps.documentId)
+      return
     }
+
+    const snapshot = this.state.draft.snapshot || this.state.published.snapshot
+    this.setState({markers: this.validateDocument(snapshot)})
   }
 
   componentWillUnmount() {

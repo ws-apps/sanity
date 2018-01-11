@@ -29,13 +29,18 @@ module.exports = (rule, value, options = {}) => {
       throw new Error(`Validator for flag "${curr.flag}" not found for ${forType}`)
     }
 
-    // If we encounter any "errors", push it to the `errors` or `warnings` based on the
-    // flagged type for this rule. The default is error, but the user might de-escalate
-    // it to a warning
     const result = validator(curr.constraint, value, rule._message)
     const hasError = result instanceof ValidationError
     if (hasError) {
-      results.push({level: rule._level, item: result})
+      if (result.paths.length === 0) {
+        // Add an item at "root" level (for arrays, the actual array)
+        results.push({level: rule._level, item: result})
+      }
+
+      // Add individual items for each path
+      result.paths.forEach(path => {
+        results.push({path, level: rule._level, item: result})
+      })
     }
 
     // In certain cases it might make more sense to throw as early as possible

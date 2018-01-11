@@ -31,14 +31,10 @@ export default class StringInput extends React.Component<Props> {
   }
 
   render() {
-    const {value, type, level, ...rest} = this.props
+    const {value, type, markers, level, ...rest} = this.props
 
     return (
-      <FormField
-        level={level}
-        label={type.title}
-        description={type.description}
-      >
+      <FormField markers={markers} level={level} label={type.title} description={type.description}>
         <TextInput
           {...rest}
           type="text"
