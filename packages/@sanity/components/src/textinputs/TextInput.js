@@ -12,6 +12,7 @@ export default class DefaultTextInput extends React.PureComponent {
       PropTypes.string,
       PropTypes.number
     ]),
+    markers: PropTypes.array,
     type: PropTypes.string,
     onClear: PropTypes.func,
     onFocus: PropTypes.func,
@@ -69,6 +70,7 @@ export default class DefaultTextInput extends React.PureComponent {
       isClearable,
       isSelected,
       disabled,
+      markers,
       styles: passedStyles,
       ...rest
     } = this.props

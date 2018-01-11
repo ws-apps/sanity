@@ -154,10 +154,14 @@ export default class RenderItemValue extends React.Component<Props> {
   }
 
   renderEditItemForm(item: ItemValue): Node {
-    const {type, focusPath, onFocus, onBlur} = this.props
+    const {type, markers, focusPath, onFocus, onBlur} = this.props
     const options = type.options || {}
 
     const memberType = this.getMemberType() || {}
+
+    const childMarkers = markers.filter(marker => {
+      return PathUtils.startsWith([{_key: item._key}], marker.path)
+    })
 
     const content = (
       <FormBuilderInput
@@ -168,6 +172,7 @@ export default class RenderItemValue extends React.Component<Props> {
         onFocus={onFocus}
         onBlur={onBlur}
         focusPath={focusPath}
+        markers={childMarkers}
         path={[{_key: item._key}]}
       />
     )
