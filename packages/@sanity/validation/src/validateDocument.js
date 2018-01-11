@@ -55,8 +55,9 @@ function validateArray(items, type, path, schema) {
 
   // Validate items within array
   items.forEach((item, i) => {
+    const pathSegment = item._key ? {_key: item._key} : i
     const itemType = resolveTypeForArrayItem(item, type.of)
-    const itemResults = validateItem(item, itemType, appendPath(path, [i]), schema)
+    const itemResults = validateItem(item, itemType, appendPath(path, [pathSegment]), schema)
     results = results.concat(itemResults)
   })
 

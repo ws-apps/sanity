@@ -251,6 +251,9 @@ export default class ArrayInput extends React.Component<Props, State> {
         {...listProps}
       >
         {value.map((item, index) => {
+          const isChildMarker = marker =>
+            startsWith([index], marker.path) || startsWith([{_key: item && item._key}], marker.path)
+
           const itemProps = isSortable ? {index} : {}
           return (
             <Item
@@ -265,7 +268,7 @@ export default class ArrayInput extends React.Component<Props, State> {
                 type={type}
                 value={item}
                 level={level}
-                markers={markers.filter(marker => startsWith([index], marker.path))}
+                markers={markers.filter(isChildMarker)}
                 onRemove={this.handleRemoveItem}
                 onChange={this.handleItemChange}
                 focusPath={focusPath}

@@ -58,7 +58,12 @@ const unique = (flag, value, message) => {
   }
   /* eslint-enable max-depth */
 
-  const paths = dupeIndices.map(idx => [idx])
+  const paths = dupeIndices.map(idx => {
+    const item = value[idx]
+    const pathSegment = item && item._key ? {_key: item._key} : idx
+    return [pathSegment]
+  })
+
   return dupeIndices.length > 0
     ? new ValidationError(message || `Array cannot contain duplicate values`, {paths})
     : true
