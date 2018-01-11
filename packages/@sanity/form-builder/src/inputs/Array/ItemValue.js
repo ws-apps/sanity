@@ -158,10 +158,7 @@ export default class RenderItemValue extends React.Component<Props> {
     const options = type.options || {}
 
     const memberType = this.getMemberType() || {}
-
-    const childMarkers = markers.filter(marker => {
-      return PathUtils.startsWith([{_key: item._key}], marker.path)
-    })
+    const childMarkers = markers.filter(marker => marker.path.length > 1)
 
     const content = (
       <FormBuilderInput
@@ -242,6 +239,7 @@ export default class RenderItemValue extends React.Component<Props> {
     const isGrid = options.layout === 'grid'
     const isSortable = options.sortable !== false
     const previewLayout = isGrid ? 'media' : 'default'
+    const currentMarkers = markers.filter(marker => marker.path.length === 1)
 
     return (
       <div className={styles.inner}>
