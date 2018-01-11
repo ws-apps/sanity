@@ -12,27 +12,9 @@ import {resolveTypeName} from '../../utils/resolveTypeName'
 import type {Uploader} from '../../sanity/uploads/typedefs'
 import type {Type, Marker} from '../../typedefs'
 import type {Path} from '../../typedefs/path'
-import {
-  FOCUS_TERMINATOR,
-  isExpanded,
-  startsWith,
-  isEqual as isEqualPath
-} from '../../utils/pathUtils'
+import {FOCUS_TERMINATOR, startsWith, isEqual as isEqualPath} from '../../utils/pathUtils'
 import type {Subscription} from '../../typedefs/observable'
 import UploadTargetFieldset from '../../utils/UploadTargetFieldset'
-
-function hasKeys(object, exclude = []) {
-  for (const key in object) {
-    if (!exclude.includes(key)) {
-      return true
-    }
-  }
-  return false
-}
-
-function isEmpty(value: ?ItemValue) {
-  return value === undefined || !hasKeys(value, ['_key', '_type', 'index'])
-}
 
 function createProtoValue(type: Type): ItemValue {
   if (type.jsonType !== 'object') {
