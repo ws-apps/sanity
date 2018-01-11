@@ -48,6 +48,7 @@ function createProtoValue(type: Type): ItemValue {
 type Props = {
   type: ArrayType,
   value: Array<ItemValue>,
+  markers: Array<Marker>,
   level: number,
   onChange: (event: PatchEvent) => void,
   onFocus: Path => void,
