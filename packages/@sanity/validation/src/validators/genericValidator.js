@@ -22,30 +22,30 @@ const presence = (expected, value, message) => {
 const multiple = (children, value) => {
   const validate = require('../validate')
 
-  let result = {warnings: [], errors: []}
+  let results = []
   children.forEach(child => {
-    result = validate(child, value, {initial: result})
+    results = results.concat(validate(child, value))
   })
 
-  return result
+  return results
 }
 
 const all = (children, value, message) => {
-  const result = multiple(children, value)
-  const numErrors = result.errors.length
+  const results = multiple(children, value)
+  const numErrors = results.length
   return numErrors === 0
     ? true
-    : formatValidationErrors(message, result, {separator: ' - AND - ', operator: 'AND'})
+    : formatValidationErrors(message, results, {separator: ' - AND - ', operator: 'AND'})
 }
 
 const either = (children, value, message) => {
-  const result = multiple(children, value)
-  const numErrors = result.errors.length
+  const results = multiple(children, value)
+  const numErrors = results.length
 
   // Read: There is at least one rule that matched
   return numErrors < children.length
     ? true
-    : formatValidationErrors(message, result, {separator: ' - OR - ', operator: 'OR'})
+    : formatValidationErrors(message, results, {separator: ' - OR - ', operator: 'OR'})
 }
 
 const valid = (allowedValues, actual, message) => {
@@ -54,16 +54,16 @@ const valid = (allowedValues, actual, message) => {
     : new ValidationError(message || 'Value did not match any of allowed values')
 }
 
-function formatValidationErrors(message, result, options = {}) {
+function formatValidationErrors(message, results, options = {}) {
   const errOpts = {
-    children: result.errors.length > 1 ? result.errors : undefined,
+    children: results.length > 1 ? results : undefined,
     operator: options.operator
   }
 
-  return result.errors.length === 1
-    ? new ValidationError(message || result.errors[0].message, errOpts)
+  return results.length === 1
+    ? new ValidationError(message || results[0].item.message, errOpts)
     : new ValidationError(
-        message || `[${result.errors.map(err => err.message).join(options.separator)}]`,
+        message || `[${results.map(err => err.item.message).join(options.separator)}]`,
         errOpts
       )
 }

@@ -1,234 +1,187 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`exact length: too long 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be exactly 5 characters long],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be exactly 5 characters long],
+    "level": "error",
+  },
+]
 `;
 
 exports[`exact length: too short 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be exactly 5 characters long],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be exactly 5 characters long],
+    "level": "error",
+  },
+]
 `;
 
-exports[`exact length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`exact length: valid 1`] = `Array []`;
 
 exports[`lowercase: all uppercase 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all lowercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all lowercase letters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`lowercase: locale characters 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all lowercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all lowercase letters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`lowercase: some uppercase 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all lowercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all lowercase letters],
+    "level": "error",
+  },
+]
 `;
 
-exports[`lowercase: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`lowercase: valid 1`] = `Array []`;
 
 exports[`max length: too long 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be at most 5 characters long],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be at most 5 characters long],
+    "level": "error",
+  },
+]
 `;
 
-exports[`max length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`max length: valid 1`] = `Array []`;
 
 exports[`min length: too short 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be at least 2 characters long],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be at least 2 characters long],
+    "level": "error",
+  },
+]
 `;
 
-exports[`min length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`min length: valid 1`] = `Array []`;
 
 exports[`regex: inverted match 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Value should not match "/^[A-Z][a-z]+$/"-pattern],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Value should not match "/^[A-Z][a-z]+$/"-pattern],
+    "level": "error",
+  },
+]
 `;
 
-exports[`regex: inverted non-match 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`regex: inverted non-match 1`] = `Array []`;
 
-exports[`regex: match 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`regex: match 1`] = `Array []`;
 
-exports[`regex: match w/ custom pattern name (opt) 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`regex: match w/ custom pattern name (opt) 1`] = `Array []`;
 
-exports[`regex: match w/ custom pattern name 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`regex: match w/ custom pattern name 1`] = `Array []`;
 
 exports[`regex: non-match 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Value does not match "/^[A-Z][a-z]+$/"-pattern],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Value does not match "/^[A-Z][a-z]+$/"-pattern],
+    "level": "error",
+  },
+]
 `;
 
 exports[`regex: non-match w/ custom pattern name (opt) 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Value does not match PascalCase-pattern],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Value does not match PascalCase-pattern],
+    "level": "error",
+  },
+]
 `;
 
 exports[`regex: non-match w/ custom pattern name 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Value does not match PascalCase-pattern],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Value does not match PascalCase-pattern],
+    "level": "error",
+  },
+]
 `;
 
 exports[`required: empty string 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: This field is required],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
 `;
 
 exports[`required: null 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Expected type "String", got "null"],
-    [ValidationError: This field is required],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Expected type "String", got "null"],
+    "level": "error",
+  },
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
 `;
 
 exports[`required: undefined 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: This field is required],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
 `;
 
-exports[`required: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`required: valid 1`] = `Array []`;
 
 exports[`uppercase: all lowercase 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all uppercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all uppercase letters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`uppercase: locale characters 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all uppercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all uppercase letters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`uppercase: some lowercase 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all uppercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all uppercase letters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`uppercase: some lowercase 2`] = `
-Object {
-  "errors": Array [
-    [ValidationError: String must be all uppercase letters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: String must be all uppercase letters],
+    "level": "error",
+  },
+]
 `;
 
-exports[`uppercase: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`uppercase: valid 1`] = `Array []`;
