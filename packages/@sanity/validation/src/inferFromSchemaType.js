@@ -13,6 +13,10 @@ function inferFromSchemaType(typeDef, options) {
       ? {of: typeDef.of.map(candidate => inferFromSchemaType(candidate, options))}
       : {}
 
+  if (typeDef.type === 'url') {
+    validation.validation.url()
+  }
+
   return Object.assign({}, typeDef, fields, validation, ofTypes)
 }
 
