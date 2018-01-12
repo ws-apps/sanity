@@ -1,94 +1,79 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`all() rules - match 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`all() rules - match 1`] = `Array []`;
 
-exports[`all() rules - match 2`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`all() rules - match 2`] = `Array []`;
 
 exports[`all() rules - multiple failures, common error 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Needs to be a capital letter followed by at least 4 lowercase characters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Needs to be a capital letter followed by at least 4 lowercase characters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`all() rules - multiple failures, custom messages 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: [Must start with an uppercase character - AND - 5 chars or more]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: [Must start with an uppercase character - AND - 5 chars or more]],
+    "level": "error",
+  },
+]
 `;
 
 exports[`all() rules - single failure, common error 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Needs to start with a capital letter and then follow with lowercase characters],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Needs to start with a capital letter and then follow with lowercase characters],
+    "level": "error",
+  },
+]
 `;
 
 exports[`all() rules - single failure, custom message 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Must start with an uppercase character],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Must start with an uppercase character],
+    "level": "error",
+  },
+]
 `;
 
 exports[`either() rules - all fail, common error 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Needs to start with a capital letter, unless it's an iProduct],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Needs to start with a capital letter, unless it's an iProduct],
+    "level": "error",
+  },
+]
 `;
 
-exports[`either() rules - all match 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`either() rules - all match 1`] = `Array []`;
 
 exports[`either() rules - match 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
+    "level": "error",
+  },
+]
 `;
 
 exports[`either() rules - no matches 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: [Must start with a capital R - OR - Must end with "ed"]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: [Must start with a capital R - OR - Must end with "ed"]],
+    "level": "error",
+  },
+]
 `;
 
 exports[`either() rules - single failure, custom message 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: [Must be rgb(num, num, num) format - OR - Must be hex color with #-prefix]],
+    "level": "error",
+  },
+]
 `;

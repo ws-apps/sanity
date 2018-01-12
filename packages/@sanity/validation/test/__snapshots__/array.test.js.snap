@@ -1,181 +1,174 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`array unique: duplicates 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array cannot contain duplicate values
- @ [0]
- @ [1]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      0,
+    ],
+  },
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      1,
+    ],
+  },
+]
 `;
 
-exports[`array unique: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`array unique: valid 1`] = `Array []`;
 
 exports[`boolean unique: duplicates 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array cannot contain duplicate values
- @ [0]
- @ [2]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      0,
+    ],
+  },
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      2,
+    ],
+  },
+]
 `;
 
-exports[`boolean unique: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`boolean unique: valid 1`] = `Array []`;
 
 exports[`exact length: too long 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array must have exactly 2 items],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array must have exactly 2 items],
+    "level": "error",
+  },
+]
 `;
 
 exports[`exact length: too short 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array must have exactly 2 items],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array must have exactly 2 items],
+    "level": "error",
+  },
+]
 `;
 
-exports[`exact length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`exact length: valid 1`] = `Array []`;
 
 exports[`max length: too long 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array must have at most 2 items],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array must have at most 2 items],
+    "level": "error",
+  },
+]
 `;
 
-exports[`max length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`max length: valid 1`] = `Array []`;
 
 exports[`min length: too short 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array must have at least 2 items],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array must have at least 2 items],
+    "level": "error",
+  },
+]
 `;
 
-exports[`min length: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`min length: valid 1`] = `Array []`;
 
 exports[`numeric unique: duplicates 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array cannot contain duplicate values
- @ [0]
- @ [2]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      0,
+    ],
+  },
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      2,
+    ],
+  },
+]
 `;
 
-exports[`numeric unique: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`numeric unique: valid 1`] = `Array []`;
 
 exports[`object unique: duplicates 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array cannot contain duplicate values
- @ [0]
- @ [3]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      0,
+    ],
+  },
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      3,
+    ],
+  },
+]
 `;
 
-exports[`object unique: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`object unique: valid 1`] = `Array []`;
 
-exports[`required: empty array 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`required: empty array 1`] = `Array []`;
 
 exports[`required: null 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Expected type "Array", got "null"],
-    [ValidationError: This field is required],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Expected type "Array", got "null"],
+    "level": "error",
+  },
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
 `;
 
 exports[`required: undefined 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: This field is required],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
 `;
 
-exports[`required: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`required: valid 1`] = `Array []`;
 
 exports[`simple unique: duplicates 1`] = `
-Object {
-  "errors": Array [
-    [ValidationError: Array cannot contain duplicate values
- @ [0]
- @ [3]],
-  ],
-  "warnings": Array [],
-}
+Array [
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      0,
+    ],
+  },
+  Object {
+    "item": [ValidationError: Array cannot contain duplicate values],
+    "level": "error",
+    "path": Array [
+      3,
+    ],
+  },
+]
 `;
 
-exports[`simple unique: valid 1`] = `
-Object {
-  "errors": Array [],
-  "warnings": Array [],
-}
-`;
+exports[`simple unique: valid 1`] = `Array []`;
