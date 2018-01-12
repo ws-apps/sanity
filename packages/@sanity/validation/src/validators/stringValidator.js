@@ -1,3 +1,4 @@
+const URL = require('url-parse')
 const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 
@@ -24,6 +25,32 @@ const length = (wantedLength, value, message) => {
   }
 
   return new ValidationError(message || `String must be exactly ${wantedLength} characters long`)
+}
+
+// eslint-disable-next-line complexity
+const url = (options, value, message) => {
+  const schemes = options.schemes || ['http', 'https']
+  const allowCredentials = Boolean(options.allowCredentials)
+
+  const [, proto] = value.match(/^(\w+):\/\//) || []
+  if (!proto) {
+    return new ValidationError(message || `String is not a valid URL - no protocol defined`)
+  }
+
+  if (!schemes.includes(proto)) {
+    return new ValidationError(
+      message || `String is not a valid URL - protocol "${proto}" not allowed`
+    )
+  }
+
+  const uri = new URL(value, true)
+  if (!allowCredentials && uri.auth) {
+    return new ValidationError(
+      message || `String is not a valid URL - username/password not allowed`
+    )
+  }
+
+  return true
 }
 
 const stringCasing = (casing, value, message) => {
@@ -69,5 +96,6 @@ module.exports = Object.assign({}, genericValidator, {
   regex,
   length,
   min,
-  max
+  max,
+  url
 })

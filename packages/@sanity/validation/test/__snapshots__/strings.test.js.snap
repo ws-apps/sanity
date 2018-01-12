@@ -185,3 +185,49 @@ Array [
 `;
 
 exports[`uppercase: valid 1`] = `Array []`;
+
+exports[`url: credentials not specified and not allowed 1`] = `Array []`;
+
+exports[`url: credentials not specified but allowed 1`] = `Array []`;
+
+exports[`url: credentials specified and allowed 1`] = `Array []`;
+
+exports[`url: credentials specified but not allowed 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: String is not a valid URL - username/password not allowed],
+    "level": "error",
+  },
+]
+`;
+
+exports[`url: match 1`] = `Array []`;
+
+exports[`url: non-match 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: String is not a valid URL - no protocol defined],
+    "level": "error",
+  },
+]
+`;
+
+exports[`url: protocol match 1`] = `Array []`;
+
+exports[`url: protocol non-match 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: String is not a valid URL - protocol "https" not allowed],
+    "level": "error",
+  },
+]
+`;
+
+exports[`url: username specified but not allowed 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: String is not a valid URL - username/password not allowed],
+    "level": "error",
+  },
+]
+`;

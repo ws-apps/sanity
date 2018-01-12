@@ -68,4 +68,37 @@ describe('string', () => {
     expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match w/ custom pattern name (opt)')
     expect(rule.validate('Sanity')).toMatchSnapshot('regex: match w/ custom pattern name (opt)')
   })
+
+  test('url constraint', () => {
+    const rule = Rule.string().url()
+    expect(rule.validate('SANITY')).toMatchSnapshot('url: non-match')
+    expect(rule.validate('https://sanity.io/')).toMatchSnapshot('url: match')
+  })
+
+  test('url constraint (invalid protocol)', () => {
+    const rule = Rule.string().url({schemes: ['http', 'ftp']})
+    expect(rule.validate('https://sanity.io/')).toMatchSnapshot('url: protocol non-match')
+    expect(rule.validate('ftp://code.sanity.io/')).toMatchSnapshot('url: protocol match')
+  })
+
+  test('url constraint (credentials)', () => {
+    let rule = Rule.string().url({allowCredentials: true})
+    expect(rule.validate('http://foo:bar@sanity.io/')).toMatchSnapshot(
+      'url: credentials specified and allowed'
+    )
+    expect(rule.validate('http://sanity.io/')).toMatchSnapshot(
+      'url: credentials not specified but allowed'
+    )
+
+    rule = Rule.string().url({allowCredentials: false})
+    expect(rule.validate('http://foo:bar@sanity.io/')).toMatchSnapshot(
+      'url: credentials specified but not allowed'
+    )
+    expect(rule.validate('http://sanity.io/')).toMatchSnapshot(
+      'url: credentials not specified and not allowed'
+    )
+    expect(rule.validate('http://espen@sanity.io/')).toMatchSnapshot(
+      'url: username specified but not allowed'
+    )
+  })
 })

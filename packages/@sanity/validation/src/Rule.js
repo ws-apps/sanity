@@ -118,6 +118,10 @@ class Rule {
     return this.cloneWithRules([{flag: 'valid', constraint: values}])
   }
 
+  url(options = {}) {
+    return this.cloneWithRules([{flag: 'url', constraint: options}])
+  }
+
   // String only
   uppercase() {
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
