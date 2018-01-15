@@ -258,7 +258,7 @@ export default class RenderItemValue extends React.Component<Props> {
           >
             <Preview layout={previewLayout} value={value} type={this.getMemberType()} />
 
-            {this.renderValidationResult(markers)}
+            {this.renderValidationResult(currentMarkers)}
           </div>
         </div>
 
