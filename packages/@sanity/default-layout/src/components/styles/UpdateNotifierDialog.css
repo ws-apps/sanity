@@ -7,6 +7,7 @@
 
 .versionsTable {
   border-collapse: collapse;
+  margin: 0 auto;
   border-bottom: 1px solid #ccc;
   margin-bottom: calc(var(--large-padding) * 2);
 }
