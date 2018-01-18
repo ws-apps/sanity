@@ -1,23 +1,29 @@
 const Rule = require('./Rule')
 
-function inferFromSchemaType(typeDef, options) {
-  const typed = Rule[typeDef.type] && Rule[typeDef.type]
-  const base = typed ? typed() : new Rule()
-  const validation = {validation: inferValidation(typeDef, base)}
-  const fields = typeDef.fields
-    ? {fields: typeDef.fields.map(field => inferFromSchemaType(field, options))}
-    : {}
-
-  const ofTypes =
-    typeDef.of && typeDef.type === 'array'
-      ? {of: typeDef.of.map(candidate => inferFromSchemaType(candidate, options))}
-      : {}
-
-  if (typeDef.type === 'url') {
-    validation.validation.url()
+function inferFromSchemaType(typeDef, isRoot = true) {
+  if (typeDef.validation instanceof Rule) {
+    return typeDef
   }
 
-  return Object.assign({}, typeDef, fields, validation, ofTypes)
+  const typed = Rule[typeDef.jsonType] && Rule[typeDef.jsonType]
+  const base = typed ? typed() : new Rule()
+  const type = typeDef.type
+
+  typeDef.validation = inferValidation(typeDef, base)
+
+  if (typeDef.fields) {
+    typeDef.fields.forEach(field => inferFromSchemaType(field.type, false))
+  }
+
+  if (typeDef.of && typeDef.jsonType === 'array') {
+    typeDef.of.forEach(candidate => inferFromSchemaType(candidate, false))
+  }
+
+  if (type && type.name === 'url') {
+    typeDef.validation = typeDef.validation.url()
+  }
+
+  return typeDef
 }
 
 function inferValidation(field, baseRule) {
