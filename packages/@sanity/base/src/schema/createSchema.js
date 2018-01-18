@@ -22,7 +22,7 @@ module.exports = schemaDef => {
     )
   }
 
-  const types = schemaTypes.filter(Boolean).map(type => inferValidation(type, {schemaTypes}))
+  const types = schemaTypes.map(type => inferValidation(type, {schemaTypes}))
   const compiled = Schema.compile({
     name: schemaDef.name,
     types
