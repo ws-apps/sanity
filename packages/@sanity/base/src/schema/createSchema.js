@@ -5,7 +5,7 @@ import Schema from '@sanity/schema'
 import legacyRichDate from 'part:@sanity/form-builder/input/legacy-date/schema?'
 import validateSchema from '@sanity/schema/lib/sanity/validateSchema'
 import groupProblems from '@sanity/schema/lib/sanity/groupProblems'
-import {inferFromSchemaType as inferValidation} from '@sanity/validation'
+import {inferFromSchema as inferValidation} from '@sanity/validation'
 
 const isError = problem => problem.severity === 'error'
 
@@ -15,14 +15,11 @@ module.exports = schemaDef => {
   const validation = groupProblems(validated)
   const hasErrors = validation.some(group => group.problems.some(isError))
 
-  let schemaTypes = []
+  let types = []
   if (!hasErrors) {
-    schemaTypes = [...schemaDef.types, geopoint, legacyRichDate, imageAsset, fileAsset].filter(
-      Boolean
-    )
+    types = [...schemaDef.types, geopoint, legacyRichDate, imageAsset, fileAsset].filter(Boolean)
   }
 
-  const types = schemaTypes.map(type => inferValidation(type, {schemaTypes}))
   const compiled = Schema.compile({
     name: schemaDef.name,
     types
@@ -30,5 +27,6 @@ module.exports = schemaDef => {
 
   compiled._source = schemaDef
   compiled._validation = validation
-  return compiled
+
+  return inferValidation(compiled)
 }
