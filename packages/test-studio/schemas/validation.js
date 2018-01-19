@@ -39,13 +39,15 @@ export default {
       name: 'lowestTemperature',
       type: 'number',
       title: 'Lowest temperature recorded',
-      description: '@todo Only negative numbers'
+      description: 'Only negative numbers',
+      validation: Rule => Rule.negative()
     },
     {
       name: 'highestTemperature',
       type: 'number',
       title: 'Highest temperature recorded',
-      description: '@todo Only positive numbers'
+      description: 'Only positive numbers',
+      validation: Rule => Rule.positive().min(Rule.valueOfField('lowestTemperature'))
     },
     {
       name: 'someInteger',

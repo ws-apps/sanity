@@ -8,27 +8,27 @@ module.exports = (doc, schema) => {
     return []
   }
 
-  return validateItem(doc, type, [], schema)
+  return validateItem(doc, type, [], {})
 }
 
-function validateItem(item, type, path, schema) {
+function validateItem(item, type, path, options) {
   if (Array.isArray(item)) {
-    return validateArray(item, type, path, schema)
+    return validateArray(item, type, path, options)
   }
 
   if (typeof item === 'object') {
-    return validateObject(item, type, path, schema)
+    return validateObject(item, type, path, options)
   }
 
-  return validatePrimitive(item, type, path, schema)
+  return validatePrimitive(item, type, path, options)
 }
 
-function validateObject(obj, type, path, schema) {
+function validateObject(obj, type, path, options) {
   let results = []
 
   // Validate actual object itself
   if (type.validation) {
-    results = results.concat(type.validation.validate(obj))
+    results = results.concat(type.validation.validate(obj, {parent: options.parent}))
   }
 
   // Validate fields within object
@@ -40,37 +40,41 @@ function validateObject(obj, type, path, schema) {
     }
 
     const fieldPath = appendPath(path, field.name)
-    const fieldResults = validateItem(obj[field.name], field.type, fieldPath, schema)
+    const fieldValue = obj[field.name]
+    const fieldResults = validateItem(fieldValue, field.type, fieldPath, {parent: obj})
     results = results.concat(fieldResults)
   })
 
   return results
 }
 
-function validateArray(items, type, path, schema) {
+function validateArray(items, type, path, options) {
   // Validate actual array itself
   let results = []
   if (type.validation) {
-    results = results.concat(applyPath(type.validation.validate(items), path))
+    results = results.concat(
+      applyPath(type.validation.validate(items, {parent: options.parent}), path)
+    )
   }
 
   // Validate items within array
   items.forEach((item, i) => {
     const pathSegment = item._key ? {_key: item._key} : i
     const itemType = resolveTypeForArrayItem(item, type.of)
-    const itemResults = validateItem(item, itemType, appendPath(path, [pathSegment]), schema)
+    const itemPath = appendPath(path, [pathSegment])
+    const itemResults = validateItem(item, itemType, itemPath, {parent: items})
     results = results.concat(itemResults)
   })
 
   return results
 }
 
-function validatePrimitive(item, type, path) {
+function validatePrimitive(item, type, path, options) {
   if (!type.validation) {
     return []
   }
 
-  return applyPath(type.validation.validate(item), path)
+  return applyPath(type.validation.validate(item, {parent: options.parent}), path)
 }
 
 function resolveTypeForArrayItem(item, candidates) {
