@@ -45,9 +45,10 @@ class Rule {
   clone() {
     const rule = new Rule()
     rule._type = this._type
-    rule._level = this._level
     rule._message = this._message
+    rule._required = this._required
     rule._rules = cloneDeep(this._rules)
+    rule._level = this._level
     return rule
   }
 
