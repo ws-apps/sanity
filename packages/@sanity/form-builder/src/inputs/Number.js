@@ -3,13 +3,14 @@ import React from 'react'
 import TextInput from 'part:@sanity/components/textinputs/default'
 import FormField from 'part:@sanity/components/formfields/default'
 import PatchEvent, {set, unset} from '../PatchEvent'
-import type {Type} from '../typedefs'
+import type {Type, Marker} from '../typedefs'
 
 type Props = {
   type: Type,
   level: number,
   value: ?string,
-  onChange: PatchEvent => void
+  onChange: PatchEvent => void,
+  markers: Array<Marker>
 }
 
 export default class NumberInput extends React.Component<Props> {
@@ -31,14 +32,10 @@ export default class NumberInput extends React.Component<Props> {
   }
 
   render() {
-    const {value = '', type, level, ...rest} = this.props
+    const {value = '', markers, type, level, ...rest} = this.props
 
     return (
-      <FormField
-        level={level}
-        label={type.title}
-        description={type.description}
-      >
+      <FormField markers={markers} level={level} label={type.title} description={type.description}>
         <TextInput
           {...rest}
           type="number"
