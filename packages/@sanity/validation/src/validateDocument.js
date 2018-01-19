@@ -32,7 +32,8 @@ function validateObject(obj, type, path, schema) {
   }
 
   // Validate fields within object
-  type.fields.forEach(field => {
+  const fields = type.fields || []
+  fields.forEach(field => {
     const validation = field.type.validation
     if (!validation) {
       return
