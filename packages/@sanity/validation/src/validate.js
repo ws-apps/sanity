@@ -1,3 +1,4 @@
+const {get} = require('lodash')
 const ValidationError = require('./ValidationError')
 const genericValidator = require('./validators/genericValidator')
 
@@ -11,11 +12,10 @@ const typeValidators = {
 module.exports = (rule, value, options = {}) => {
   const type = rule._type
   const validators = typeValidators[type] || genericValidator
-  const initial = options.initial || []
 
   // Short-circuit on optional, empty fields
   if (!rule._required && (value === null || typeof value === 'undefined')) {
-    return initial
+    return []
   }
 
   // eslint-disable-next-line complexity
@@ -30,7 +30,16 @@ module.exports = (rule, value, options = {}) => {
       throw new Error(`Validator for flag "${curr.flag}" not found for ${forType}`)
     }
 
-    const result = validator(curr.constraint, value, rule._message)
+    let itemConstraint = curr.constraint
+    if (itemConstraint && itemConstraint.type === rule.FIELD_REF) {
+      if (!options.parent) {
+        throw new Error('Field reference provided, but no parent received')
+      }
+
+      itemConstraint = get(options.parent, itemConstraint.path)
+    }
+
+    const result = validator(itemConstraint, value, rule._message)
     const hasError = result instanceof ValidationError
     if (hasError) {
       if (result.paths.length === 0) {
@@ -50,5 +59,5 @@ module.exports = (rule, value, options = {}) => {
     }
 
     return results
-  }, initial)
+  }, [])
 }

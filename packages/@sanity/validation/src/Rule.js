@@ -4,18 +4,28 @@ const validate = require('./validate')
 const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array']
 
 class Rule {
+  static FIELD_REF = Symbol('FIELD_REF')
   static object = () => new Rule().type('Object')
   static array = () => new Rule().type('Array')
   static string = () => new Rule().type('String')
   static number = () => new Rule().type('Number')
   static boolean = () => new Rule().type('Boolean')
+  static valueOfField = path => ({type: Rule.FIELD_REF, path})
 
   constructor() {
+    this.FIELD_REF = Rule.FIELD_REF
+
     this._type = null
     this._message = null
     this._required = false
     this._rules = []
     this._level = 'error'
+  }
+
+  // Alias to static method, since we often have access to an _instance_ of a rule but not the actual Rule class
+  // eslint-disable-next-line class-methods-use-this
+  valueOfField(...args) {
+    return Rule.valueOfField(...args)
   }
 
   error(message) {
@@ -41,10 +51,16 @@ class Rule {
     return rule
   }
 
-  cloneWithRules(rules) {
+  cloneWithRules(rules, options) {
     const rule = this.clone()
-    const newRules = new Set()
 
+    const removeDuplicates = options && options.removeDuplicates
+    if (!removeDuplicates) {
+      rule._rules = rule._rules.concat(rules)
+      return rule
+    }
+
+    const newRules = new Set()
     rules.forEach(curr => {
       if (curr.flag === 'type') {
         rule._type = curr.constraint
@@ -76,7 +92,7 @@ class Rule {
       throw new Error(`Unknown type "${targetType}"`)
     }
 
-    const rule = this.cloneWithRules([{flag: 'type', constraint: type}])
+    const rule = this.cloneWithRules([{flag: 'type', constraint: type}], {removeDuplicates: true})
     rule._type = type
     return rule
   }
