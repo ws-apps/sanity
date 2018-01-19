@@ -4,21 +4,20 @@ import Select from 'part:@sanity/components/selects/default'
 import RadioSelect from 'part:@sanity/components/selects/radio'
 import PatchEvent, {set} from '../PatchEvent'
 import FormField from 'part:@sanity/components/formfields/default'
-import type {Type} from '../typedefs'
+import type {Type, Marker} from '../typedefs'
 
 const EMPTY_ITEM = {title: '', value: undefined}
 
 function toSelectItems(list) {
-  return (typeof list[0] === 'string')
-    ? list.map(item => ({title: item, value: item}))
-    : list
+  return typeof list[0] === 'string' ? list.map(item => ({title: item, value: item})) : list
 }
 
 type Props = {
   type: Type,
   level: number,
   value: ?string,
-  onChange: PatchEvent => void
+  onChange: PatchEvent => void,
+  markers: Array<Marker>
 }
 
 export default class StringSelect extends React.Component<Props> {
@@ -44,7 +43,7 @@ export default class StringSelect extends React.Component<Props> {
   }
 
   render() {
-    const {value, type, level, ...rest} = this.props
+    const {value, markers, type, level, ...rest} = this.props
 
     const items = toSelectItems(type.options.list || [])
 
@@ -52,14 +51,10 @@ export default class StringSelect extends React.Component<Props> {
 
     const isRadio = type.options && type.options.layout === 'radio'
     return (
-      <FormField
-        level={level}
-        label={type.title}
-        description={type.description}
-      >
-        {isRadio
+      <FormField markers={markers} level={level} label={type.title} description={type.description}>
+        {isRadio ? (
           // todo: make separate inputs
-          ? <RadioSelect
+          <RadioSelect
             {...rest}
             name={type.name}
             legend={type.title}
@@ -69,7 +64,8 @@ export default class StringSelect extends React.Component<Props> {
             direction={type.options.direction || 'vertical'}
             ref={this.setInput}
           />
-          : <Select
+        ) : (
+          <Select
             {...rest}
             label={type.title}
             value={currentItem}
@@ -78,7 +74,7 @@ export default class StringSelect extends React.Component<Props> {
             items={[EMPTY_ITEM].concat(items)}
             ref={this.setInput}
           />
-        }
+        )}
       </FormField>
     )
   }
