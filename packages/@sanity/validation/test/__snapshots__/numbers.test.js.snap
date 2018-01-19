@@ -1,8 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`integer: invalid (float) 1`] = `Array []`;
+exports[`gt: too low 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be greater than 10],
+    "level": "error",
+  },
+]
+`;
 
-exports[`integer: valid 1`] = `
+exports[`gt: too low, at limit 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be greater than 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`gt: valid 1`] = `Array []`;
+
+exports[`integer: invalid (float) 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be an integer],
@@ -11,37 +29,45 @@ Array [
 ]
 `;
 
+exports[`integer: valid 1`] = `Array []`;
+
+exports[`lt: too high 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be less than 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`lt: too high, at limit 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be less than 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`lt: valid 1`] = `Array []`;
+
 exports[`max: too large 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be lower than or equal 10],
+    "item": [ValidationError: Number must be less than or equal 10],
     "level": "error",
   },
 ]
 `;
 
-exports[`max: valid 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Number must be lower than or equal 10],
-    "level": "error",
-  },
-]
-`;
+exports[`max: valid 1`] = `Array []`;
 
-exports[`max: valid, at limit 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Number must be lower than or equal 10],
-    "level": "error",
-  },
-]
-`;
+exports[`max: valid, at limit 1`] = `Array []`;
 
-exports[`min: too small 1`] = `
+exports[`min: too low 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be higher than or equal 10],
+    "item": [ValidationError: Number must be greater than or equal 10],
     "level": "error",
   },
 ]
@@ -51,20 +77,51 @@ exports[`min: valid 1`] = `Array []`;
 
 exports[`min: valid, at limit 1`] = `Array []`;
 
-exports[`precision: invalid (pi) 1`] = `Array []`;
-
-exports[`precision: valid (at limit) 1`] = `Array []`;
-
-exports[`precision: valid (below limit) 1`] = `Array []`;
-
-exports[`required: null 1`] = `
+exports[`negative: invalid (zero) 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Expected type "Number", got "null"],
+    "item": [ValidationError: Number must be less than 0],
     "level": "error",
   },
 ]
 `;
+
+exports[`negative: invalid 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be less than 0],
+    "level": "error",
+  },
+]
+`;
+
+exports[`negative: valid 1`] = `Array []`;
+
+exports[`positive: invalid 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be greater than or equal 0],
+    "level": "error",
+  },
+]
+`;
+
+exports[`positive: valid (zero) 1`] = `Array []`;
+
+exports[`positive: valid 1`] = `Array []`;
+
+exports[`precision: invalid (pi) 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Max precision is 3],
+    "level": "error",
+  },
+]
+`;
+
+exports[`precision: valid (at limit) 1`] = `Array []`;
+
+exports[`precision: valid (below limit) 1`] = `Array []`;
 
 exports[`required: undefined 1`] = `
 Array [

@@ -4,7 +4,7 @@ const genericValidator = require('./genericValidator')
 const precisionRx = /(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/
 
 const integer = (unused, value, message) => {
-  if (Number.isInteger(value)) {
+  if (!Number.isInteger(value)) {
     return new ValidationError(message || 'Number must be an integer')
   }
 
@@ -12,17 +12,14 @@ const integer = (unused, value, message) => {
 }
 
 const precision = (limit, value, message) => {
-  const prec = Math.pow(10, limit)
-  const fixed = Math.round(value * prec) / prec
-
-  const places = fixed.toString().match(precisionRx)
+  const places = value.toString().match(precisionRx)
   const decimals = Math.max(
     (places[1] ? places[1].length : 0) - (places[2] ? parseInt(places[2], 10) : 0),
     0
   )
 
   if (decimals > limit) {
-    throw new ValidationError(message || `Max precision is ${limit}`)
+    return new ValidationError(message || `Max precision is ${limit}`)
   }
 
   return true
@@ -33,20 +30,38 @@ const min = (minNum, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Number must be higher than or equal ${minNum}`)
+  return new ValidationError(message || `Number must be greater than or equal ${minNum}`)
 }
 
 const max = (maxNum, value, message) => {
-  if (value.length <= maxNum) {
+  if (value <= maxNum) {
     return true
   }
 
-  return new ValidationError(message || `Number must be lower than or equal ${maxNum}`)
+  return new ValidationError(message || `Number must be less than or equal ${maxNum}`)
+}
+
+const greaterThan = (num, value, message) => {
+  if (value > num) {
+    return true
+  }
+
+  return new ValidationError(message || `Number must be greater than ${num}`)
+}
+
+const lessThan = (maxNum, value, message) => {
+  if (value < maxNum) {
+    return true
+  }
+
+  return new ValidationError(message || `Number must be less than ${maxNum}`)
 }
 
 module.exports = Object.assign({}, genericValidator, {
   min,
   max,
+  lessThan,
+  greaterThan,
   integer,
   precision
 })
