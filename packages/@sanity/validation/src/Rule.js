@@ -59,7 +59,7 @@ class Rule {
 
   merge(rule) {
     if (this._type && rule._type && this._type !== rule._type) {
-      throw new Error('concat() failed: conflicting types')
+      throw new Error('merge() failed: conflicting types')
     }
 
     return this.cloneWithRules(rule._rules)
@@ -118,11 +118,20 @@ class Rule {
     return this.cloneWithRules([{flag: 'valid', constraint: values}])
   }
 
+  // Numbers only
+  integer() {
+    return this.cloneWithRules([{flag: 'integer'}])
+  }
+
+  precision(limit) {
+    return this.cloneWithRules([{flag: 'precision', constraint: limit}])
+  }
+
+  // String only
   url(options = {}) {
     return this.cloneWithRules([{flag: 'url', constraint: options}])
   }
 
-  // String only
   uppercase() {
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
   }
@@ -144,11 +153,6 @@ class Rule {
   // Array only
   unique(comparator) {
     return this.cloneWithRules([{flag: 'unique', constraint: comparator}])
-  }
-
-  // Object only
-  keys(keys) {
-    return this.cloneWithRules([{flag: 'keys', constraint: keys}])
   }
 }
 
