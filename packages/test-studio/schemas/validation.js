@@ -7,8 +7,11 @@ export default {
       name: 'title',
       type: 'string',
       title: 'Title',
-      description: 'Basic minimum/maximum length validation',
-      validation: Rule => Rule.min(5).max(100)
+      description: 'Required field with minimum/maximum length validation',
+      validation: Rule =>
+        Rule.required()
+          .min(5)
+          .max(100)
     },
     {
       name: 'myUrlField',

@@ -3,7 +3,7 @@ const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 
 const min = (minLength, value, message) => {
-  if (value.length >= minLength) {
+  if (!value || value.length >= minLength) {
     return true
   }
 
@@ -11,7 +11,7 @@ const min = (minLength, value, message) => {
 }
 
 const max = (maxLength, value, message) => {
-  if (value.length <= maxLength) {
+  if (!value || value.length <= maxLength) {
     return true
   }
 
@@ -29,10 +29,11 @@ const length = (wantedLength, value, message) => {
 
 // eslint-disable-next-line complexity
 const url = (options, value, message) => {
+  const strValue = value || ''
   const schemes = options.schemes || ['http', 'https']
   const allowCredentials = Boolean(options.allowCredentials)
 
-  const [, proto] = value.match(/^(\w+):\/\//) || []
+  const [, proto] = strValue.match(/^(\w+):\/\//) || []
   if (!proto) {
     return new ValidationError(message || `String is not a valid URL - no protocol defined`)
   }
@@ -43,7 +44,7 @@ const url = (options, value, message) => {
     )
   }
 
-  const uri = new URL(value, true)
+  const uri = new URL(strValue, true)
   if (!allowCredentials && uri.auth) {
     return new ValidationError(
       message || `String is not a valid URL - username/password not allowed`
