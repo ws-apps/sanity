@@ -20,7 +20,8 @@ export default {
       name: 'myFancyUrlField',
       type: 'url',
       title: 'Fancy URL',
-      description: '@TODO: URL that allows relative URLs and custom schemes'
+      description: 'URL that only allows mailto: and tel: schemes',
+      validation: Rule => Rule.url({})
     },
     {
       name: 'date',
