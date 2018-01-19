@@ -1,0 +1,78 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integer: invalid (float) 1`] = `Array []`;
+
+exports[`integer: valid 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be an integer],
+    "level": "error",
+  },
+]
+`;
+
+exports[`max: too large 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be lower than or equal 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`max: valid 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be lower than or equal 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`max: valid, at limit 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be lower than or equal 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`min: too small 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Number must be higher than or equal 10],
+    "level": "error",
+  },
+]
+`;
+
+exports[`min: valid 1`] = `Array []`;
+
+exports[`min: valid, at limit 1`] = `Array []`;
+
+exports[`precision: invalid (pi) 1`] = `Array []`;
+
+exports[`precision: valid (at limit) 1`] = `Array []`;
+
+exports[`precision: valid (below limit) 1`] = `Array []`;
+
+exports[`required: null 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Expected type "Number", got "null"],
+    "level": "error",
+  },
+]
+`;
+
+exports[`required: undefined 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Value is required],
+    "level": "error",
+  },
+]
+`;
+
+exports[`required: valid 1`] = `Array []`;

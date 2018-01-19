@@ -28,7 +28,25 @@ const precision = (limit, value, message) => {
   return true
 }
 
+const min = (minNum, value, message) => {
+  if (value >= minNum) {
+    return true
+  }
+
+  return new ValidationError(message || `Number must be higher than or equal ${minNum}`)
+}
+
+const max = (maxNum, value, message) => {
+  if (value.length <= maxNum) {
+    return true
+  }
+
+  return new ValidationError(message || `Number must be lower than or equal ${maxNum}`)
+}
+
 module.exports = Object.assign({}, genericValidator, {
+  min,
+  max,
   integer,
   precision
 })
