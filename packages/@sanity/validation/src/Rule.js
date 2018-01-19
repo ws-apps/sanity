@@ -127,6 +127,22 @@ class Rule {
     return this.cloneWithRules([{flag: 'precision', constraint: limit}])
   }
 
+  positive() {
+    return this.cloneWithRules([{flag: 'min', constraint: 0}])
+  }
+
+  negative() {
+    return this.cloneWithRules([{flag: 'lessThan', constraint: 0}])
+  }
+
+  greaterThan(num) {
+    return this.cloneWithRules([{flag: 'greaterThan', constraint: num}])
+  }
+
+  lessThan(num) {
+    return this.cloneWithRules([{flag: 'lessThan', constraint: num}])
+  }
+
   // String only
   url(options = {}) {
     return this.cloneWithRules([{flag: 'url', constraint: options}])
