@@ -8,6 +8,7 @@ import type {Type} from '../typedefs'
 type Props = {
   type: Type,
   value: ?boolean,
+  level: number,
   onChange: PatchEvent => void
 }
 
@@ -30,28 +31,21 @@ export default class BooleanInput extends React.Component<Props> {
   }
 
   render() {
-    const {value, type, level, description, ...rest} = this.props
+    const {value, type, level, ...rest} = this.props
 
     const isCheckbox = type.options && type.options.layout === 'checkbox'
-    return isCheckbox
-      ? (
-        <Checkbox
-          {...rest}
-          onChange={this.handleChange}
-          checked={!!value}
-          ref={this.setInput}
-        >
-          {type.title}
-        </Checkbox>
-      )
-      : (
-        <Switch
-          {...rest}
-          onChange={this.handleChange}
-          checked={!!value}
-          label={type.title}
-          ref={this.setInput}
-        />
-      )
+    return isCheckbox ? (
+      <Checkbox {...rest} onChange={this.handleChange} checked={!!value} ref={this.setInput}>
+        {type.title}
+      </Checkbox>
+    ) : (
+      <Switch
+        {...rest}
+        onChange={this.handleChange}
+        checked={!!value}
+        label={type.title}
+        ref={this.setInput}
+      />
+    )
   }
 }
