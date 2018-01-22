@@ -189,6 +189,10 @@ class Rule {
     return this.cloneWithRules([{flag: 'regex', constraint}])
   }
 
+  email(options) {
+    return this.cloneWithRules([{flag: 'email', constraint: options}])
+  }
+
   // eslint-disable-next-line complexity
   uri(opts = {}) {
     const options = Object.assign(

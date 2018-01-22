@@ -3,6 +3,8 @@ const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 const createUriRegex = require('../util/createUriRegex')
 
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
 const min = (minLength, value, message) => {
   if (!value || value.length >= minLength) {
     return true
@@ -95,11 +97,21 @@ const regex = (options, value, message) => {
   return true
 }
 
+const email = (options, value, message) => {
+  const strValue = `${value || ''}`.trim()
+  if (!strValue || emailRegex.test(strValue)) {
+    return true
+  }
+
+  return new ValidationError(message || 'Must be a valid email address')
+}
+
 module.exports = Object.assign({}, genericValidator, {
   stringCasing,
   presence,
   regex,
   length,
+  email,
   min,
   max,
   uri

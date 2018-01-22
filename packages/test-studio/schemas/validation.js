@@ -37,7 +37,7 @@ export default {
       name: 'email',
       type: 'email',
       title: 'Recipient email',
-      description: '@todo Email, inferred'
+      description: 'Email, inferred'
     },
     {
       name: 'lowestTemperature',

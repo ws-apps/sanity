@@ -22,6 +22,10 @@ function inferFromSchemaType(typeDef, isRoot = true) {
     base = base.reference()
   }
 
+  if (type && type.name === 'email') {
+    base = base.email()
+  }
+
   typeDef.validation = inferValidation(typeDef, base)
 
   if (typeDef.fields) {
