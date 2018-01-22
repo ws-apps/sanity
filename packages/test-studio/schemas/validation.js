@@ -17,13 +17,13 @@ export default {
       name: 'myUrlField',
       type: 'url',
       title: 'Plain url',
-      description: '@TODO: URL validation (inferred)'
+      description: 'URL validation (inferred)'
     },
     {
       name: 'myFancyUrlField',
       type: 'url',
       title: 'Fancy URL',
-      description: 'URL that only allows mailto: and tel: schemes',
+      description: '@todo URL that only allows mailto: and tel: schemes',
       validation: Rule => Rule.url({})
     },
     {
@@ -49,14 +49,15 @@ export default {
       name: 'highestTemperature',
       type: 'number',
       title: 'Highest temperature recorded',
-      description: 'Only positive numbers',
+      description: 'Only positive numbers larger than lowest temperature',
       validation: Rule => Rule.positive().min(Rule.valueOfField('lowestTemperature'))
     },
     {
       name: 'someInteger',
       type: 'number',
       title: 'Some integer',
-      description: '@todo Only integers'
+      description: 'Only integers',
+      validation: Rule => Rule.integer()
     },
     {
       name: 'quotes',
