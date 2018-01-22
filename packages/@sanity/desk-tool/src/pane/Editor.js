@@ -156,7 +156,7 @@ export default withRouterHOC(
       type: PropTypes.object.isRequired,
       markers: PropTypes.arrayOf(
         PropTypes.shape({
-          path: PropTypes.arrayOf(PropTypes.string)
+          path: PropTypes.array
         })
       ),
       router: PropTypes.shape({
@@ -181,6 +181,7 @@ export default withRouterHOC(
     }
 
     static defaultProps = {
+      markers: [],
       isLoading: false,
       isSaving: false,
       isUnpublishing: false,
