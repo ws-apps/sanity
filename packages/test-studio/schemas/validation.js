@@ -30,7 +30,8 @@ export default {
       name: 'date',
       type: 'datetime',
       title: 'Some date',
-      description: '@todo ISO-formatted date, inferred'
+      description: 'ISO-formatted date, inferred, must be in 2017',
+      validation: Rule => Rule.min('2017-01-01 00:00:00').max('2017-12-31 00:00:00')
     },
     {
       name: 'email',

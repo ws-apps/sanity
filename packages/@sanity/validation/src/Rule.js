@@ -3,15 +3,16 @@ const validate = require('./validate')
 const escapeRegex = require('./util/escapeRegex')
 const createUriRegex = require('./util/createUriRegex')
 
-const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array']
+const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array', 'Date']
 
 class Rule {
   static FIELD_REF = Symbol('FIELD_REF')
-  static object = () => new Rule().type('Object')
   static array = () => new Rule().type('Array')
+  static object = () => new Rule().type('Object')
   static string = () => new Rule().type('String')
   static number = () => new Rule().type('Number')
   static boolean = () => new Rule().type('Boolean')
+  static dateTime = () => new Rule().type('Date')
   static valueOfField = path => ({type: Rule.FIELD_REF, path})
 
   constructor() {
