@@ -6,9 +6,17 @@ function inferFromSchemaType(typeDef, isRoot = true) {
     return typeDef
   }
 
-  const typed = Rule[typeDef.jsonType] && Rule[typeDef.jsonType]
-  const base = typed ? typed() : new Rule()
   const type = typeDef.type
+  const typed = Rule[typeDef.jsonType] && Rule[typeDef.jsonType]
+  let base = typed ? typed() : new Rule()
+
+  if (type && type.name === 'url') {
+    base = base.uri()
+  }
+
+  if (type && type.name === 'reference') {
+    base = base.reference()
+  }
 
   typeDef.validation = inferValidation(typeDef, base)
 
@@ -18,14 +26,6 @@ function inferFromSchemaType(typeDef, isRoot = true) {
 
   if (typeDef.of && typeDef.jsonType === 'array') {
     typeDef.of.forEach(candidate => inferFromSchemaType(candidate, false))
-  }
-
-  if (type && type.name === 'url') {
-    typeDef.validation = typeDef.validation.uri()
-  }
-
-  if (type && type.name === 'reference') {
-    typeDef.validation = typeDef.validation.reference()
   }
 
   return typeDef

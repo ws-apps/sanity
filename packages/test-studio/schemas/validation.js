@@ -23,8 +23,8 @@ export default {
       name: 'myFancyUrlField',
       type: 'url',
       title: 'Fancy URL',
-      description: '@todo URL that only allows mailto: and tel: schemes',
-      validation: Rule => Rule.url({})
+      description: 'URL that only allows mailto: and tel: schemes',
+      validation: Rule => Rule.uri({scheme: ['mailto', 'tel']})
     },
     {
       name: 'date',
