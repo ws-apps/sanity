@@ -187,6 +187,11 @@ class Rule {
   unique(comparator) {
     return this.cloneWithRules([{flag: 'unique', constraint: comparator}])
   }
+
+  // Objects only
+  reference() {
+    return this.cloneWithRules([{flag: 'reference'}])
+  }
 }
 
 module.exports = Rule

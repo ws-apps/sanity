@@ -28,7 +28,10 @@ function validateObject(obj, type, path, options) {
 
   // Validate actual object itself
   if (type.validation) {
-    results = results.concat(type.validation.validate(obj, {parent: options.parent}))
+    results = applyPath(
+      results.concat(type.validation.validate(obj, {parent: options.parent})),
+      path
+    )
   }
 
   // Validate fields within object
