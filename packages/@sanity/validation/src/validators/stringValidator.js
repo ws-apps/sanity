@@ -1,6 +1,7 @@
 const URL = require('url-parse')
 const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
+const createUriRegex = require('../util/createUriRegex')
 
 const min = (minLength, value, message) => {
   if (!value || value.length >= minLength) {
@@ -28,30 +29,33 @@ const length = (wantedLength, value, message) => {
 }
 
 // eslint-disable-next-line complexity
-const url = (options, value, message) => {
+const uri = (constraints, value, message) => {
   const strValue = value || ''
-  const schemes = options.schemes || ['http', 'https']
-  const allowCredentials = Boolean(options.allowCredentials)
+  const {options, regex} = constraints
+  const {allowCredentials, relativeOnly} = options
 
-  const [, proto] = strValue.match(/^(\w+):\/\//) || []
-  if (!proto) {
-    return new ValidationError(message || `String is not a valid URL - no protocol defined`)
+  const matchesConstraint = regex.test(strValue)
+  if (matchesConstraint) {
+    const url = new URL(strValue, true)
+    if (!allowCredentials && url.auth) {
+      return new ValidationError(
+        message || `String is not a valid URL - username/password not allowed`
+      )
+    }
+
+    return true
   }
 
-  if (!schemes.includes(proto)) {
-    return new ValidationError(
-      message || `String is not a valid URL - protocol "${proto}" not allowed`
-    )
+  const isValidUri = createUriRegex().test(strValue)
+  if (!isValidUri) {
+    return new ValidationError(message || 'String is not a valid URL')
   }
 
-  const uri = new URL(strValue, true)
-  if (!allowCredentials && uri.auth) {
-    return new ValidationError(
-      message || `String is not a valid URL - username/password not allowed`
-    )
+  if (relativeOnly) {
+    return new ValidationError(message || 'Only relative URLs are allowed')
   }
 
-  return true
+  return new ValidationError(message || 'URL does not match allowed protocols/schemes')
 }
 
 const stringCasing = (casing, value, message) => {
@@ -98,5 +102,5 @@ module.exports = Object.assign({}, genericValidator, {
   length,
   min,
   max,
-  url
+  uri
 })

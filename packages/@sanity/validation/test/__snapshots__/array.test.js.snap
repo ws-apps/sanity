@@ -1,6 +1,74 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`array unique: duplicates 1`] = `
+exports[`array exact length constraint: exact length: too long 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Array must have exactly 2 items],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array exact length constraint: exact length: too short 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Array must have exactly 2 items],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array exact length constraint: exact length: valid 1`] = `Array []`;
+
+exports[`array max length constraint: max length: too long 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Array must have at most 2 items],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array max length constraint: max length: valid 1`] = `Array []`;
+
+exports[`array min length constraint: min length: too short 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Array must have at least 2 items],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array min length constraint: min length: valid 1`] = `Array []`;
+
+exports[`array required constraint: required: empty array 1`] = `Array []`;
+
+exports[`array required constraint: required: null 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Expected type "Array", got "null"],
+    "level": "error",
+  },
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array required constraint: required: undefined 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: This field is required],
+    "level": "error",
+  },
+]
+`;
+
+exports[`array required constraint: required: valid 1`] = `Array []`;
+
+exports[`array unique constraint (default, array values): array unique: duplicates 1`] = `
 Array [
   Object {
     "item": [ValidationError: Array cannot contain duplicate values],
@@ -19,9 +87,9 @@ Array [
 ]
 `;
 
-exports[`array unique: valid 1`] = `Array []`;
+exports[`array unique constraint (default, array values): array unique: valid 1`] = `Array []`;
 
-exports[`boolean unique: duplicates 1`] = `
+exports[`array unique constraint (default, bool values): boolean unique: duplicates 1`] = `
 Array [
   Object {
     "item": [ValidationError: Array cannot contain duplicate values],
@@ -40,51 +108,9 @@ Array [
 ]
 `;
 
-exports[`boolean unique: valid 1`] = `Array []`;
+exports[`array unique constraint (default, bool values): boolean unique: valid 1`] = `Array []`;
 
-exports[`exact length: too long 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Array must have exactly 2 items],
-    "level": "error",
-  },
-]
-`;
-
-exports[`exact length: too short 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Array must have exactly 2 items],
-    "level": "error",
-  },
-]
-`;
-
-exports[`exact length: valid 1`] = `Array []`;
-
-exports[`max length: too long 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Array must have at most 2 items],
-    "level": "error",
-  },
-]
-`;
-
-exports[`max length: valid 1`] = `Array []`;
-
-exports[`min length: too short 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Array must have at least 2 items],
-    "level": "error",
-  },
-]
-`;
-
-exports[`min length: valid 1`] = `Array []`;
-
-exports[`numeric unique: duplicates 1`] = `
+exports[`array unique constraint (default, numeric values): numeric unique: duplicates 1`] = `
 Array [
   Object {
     "item": [ValidationError: Array cannot contain duplicate values],
@@ -103,9 +129,9 @@ Array [
 ]
 `;
 
-exports[`numeric unique: valid 1`] = `Array []`;
+exports[`array unique constraint (default, numeric values): numeric unique: valid 1`] = `Array []`;
 
-exports[`object unique: duplicates 1`] = `
+exports[`array unique constraint (default, object values): object unique: duplicates 1`] = `
 Array [
   Object {
     "item": [ValidationError: Array cannot contain duplicate values],
@@ -124,35 +150,9 @@ Array [
 ]
 `;
 
-exports[`object unique: valid 1`] = `Array []`;
+exports[`array unique constraint (default, object values): object unique: valid 1`] = `Array []`;
 
-exports[`required: empty array 1`] = `Array []`;
-
-exports[`required: null 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Expected type "Array", got "null"],
-    "level": "error",
-  },
-  Object {
-    "item": [ValidationError: This field is required],
-    "level": "error",
-  },
-]
-`;
-
-exports[`required: undefined 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: This field is required],
-    "level": "error",
-  },
-]
-`;
-
-exports[`required: valid 1`] = `Array []`;
-
-exports[`simple unique: duplicates 1`] = `
+exports[`array unique constraint (default, simple values): simple unique: duplicates 1`] = `
 Array [
   Object {
     "item": [ValidationError: Array cannot contain duplicate values],
@@ -171,4 +171,4 @@ Array [
 ]
 `;
 
-exports[`simple unique: valid 1`] = `Array []`;
+exports[`array unique constraint (default, simple values): simple unique: valid 1`] = `Array []`;
