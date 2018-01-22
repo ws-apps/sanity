@@ -13,6 +13,19 @@ const presence = (expected, value, message) => {
   return true
 }
 
+const reference = (unused, value, message) => {
+  if (!value) {
+    return true
+  }
+
+  if (typeof value._ref !== 'string') {
+    return new ValidationError(message || 'Must be a reference to a document')
+  }
+
+  return true
+}
+
 module.exports = Object.assign({}, genericValidator, {
-  presence
+  presence,
+  reference
 })

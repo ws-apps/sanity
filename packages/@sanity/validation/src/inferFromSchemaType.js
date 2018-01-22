@@ -1,5 +1,6 @@
 const Rule = require('./Rule')
 
+// eslint-disable-next-line complexity
 function inferFromSchemaType(typeDef, isRoot = true) {
   if (typeDef.validation instanceof Rule) {
     return typeDef
@@ -21,6 +22,10 @@ function inferFromSchemaType(typeDef, isRoot = true) {
 
   if (type && type.name === 'url') {
     typeDef.validation = typeDef.validation.url()
+  }
+
+  if (type && type.name === 'reference') {
+    typeDef.validation = typeDef.validation.reference()
   }
 
   return typeDef

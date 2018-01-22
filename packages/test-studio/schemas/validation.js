@@ -85,6 +85,22 @@ export default {
       ]
     },
     {
+      name: 'books',
+      title: 'Books',
+      description: 'Unique book references, minimum 1, max 5',
+      validation: Rule =>
+        Rule.unique()
+          .min(1)
+          .max(5),
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'book'}]
+        }
+      ]
+    },
+    {
       name: 'titleCase',
       title: 'Title Case',
       description: 'Regex-based title case, custom error message',
