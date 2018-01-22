@@ -36,15 +36,6 @@ Array [
 ]
 `;
 
-exports[`generics can override earlier defined rules 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: String must be at most 2 characters long],
-    "level": "error",
-  },
-]
-`;
-
 exports[`generics returns arrays of errors/warnings by default 1`] = `
 Array [
   Object {

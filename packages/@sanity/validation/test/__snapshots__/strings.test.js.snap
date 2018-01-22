@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`exact length: too long 1`] = `
+exports[`string exact length constraint: exact length: too long 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be exactly 5 characters long],
@@ -9,7 +9,7 @@ Array [
 ]
 `;
 
-exports[`exact length: too short 1`] = `
+exports[`string exact length constraint: exact length: too short 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be exactly 5 characters long],
@@ -18,9 +18,9 @@ Array [
 ]
 `;
 
-exports[`exact length: valid 1`] = `Array []`;
+exports[`string exact length constraint: exact length: valid 1`] = `Array []`;
 
-exports[`lowercase: all uppercase 1`] = `
+exports[`string lowercase constraint: lowercase: all uppercase 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all lowercase letters],
@@ -29,7 +29,7 @@ Array [
 ]
 `;
 
-exports[`lowercase: locale characters 1`] = `
+exports[`string lowercase constraint: lowercase: locale characters 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all lowercase letters],
@@ -38,7 +38,7 @@ Array [
 ]
 `;
 
-exports[`lowercase: some uppercase 1`] = `
+exports[`string lowercase constraint: lowercase: some uppercase 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all lowercase letters],
@@ -47,9 +47,9 @@ Array [
 ]
 `;
 
-exports[`lowercase: valid 1`] = `Array []`;
+exports[`string lowercase constraint: lowercase: valid 1`] = `Array []`;
 
-exports[`max length: too long 1`] = `
+exports[`string max length constraint: max length: too long 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be at most 5 characters long],
@@ -58,9 +58,9 @@ Array [
 ]
 `;
 
-exports[`max length: valid 1`] = `Array []`;
+exports[`string max length constraint: max length: valid 1`] = `Array []`;
 
-exports[`min length: too short 1`] = `
+exports[`string min length constraint: min length: too short 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be at least 2 characters long],
@@ -69,9 +69,31 @@ Array [
 ]
 `;
 
-exports[`min length: valid 1`] = `Array []`;
+exports[`string min length constraint: min length: valid 1`] = `Array []`;
 
-exports[`regex: inverted match 1`] = `
+exports[`string regex constraint (custom pattern name): regex: match w/ custom pattern name 1`] = `Array []`;
+
+exports[`string regex constraint (custom pattern name): regex: non-match w/ custom pattern name 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Value does not match PascalCase-pattern],
+    "level": "error",
+  },
+]
+`;
+
+exports[`string regex constraint (custom pattern name, as options): regex: match w/ custom pattern name (opt) 1`] = `Array []`;
+
+exports[`string regex constraint (custom pattern name, as options): regex: non-match w/ custom pattern name (opt) 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Value does not match PascalCase-pattern],
+    "level": "error",
+  },
+]
+`;
+
+exports[`string regex constraint (inverted): regex: inverted match 1`] = `
 Array [
   Object {
     "item": [ValidationError: Value should not match "/^[A-Z][a-z]+$/"-pattern],
@@ -80,15 +102,11 @@ Array [
 ]
 `;
 
-exports[`regex: inverted non-match 1`] = `Array []`;
+exports[`string regex constraint (inverted): regex: inverted non-match 1`] = `Array []`;
 
-exports[`regex: match 1`] = `Array []`;
+exports[`string regex constraint: regex: match 1`] = `Array []`;
 
-exports[`regex: match w/ custom pattern name (opt) 1`] = `Array []`;
-
-exports[`regex: match w/ custom pattern name 1`] = `Array []`;
-
-exports[`regex: non-match 1`] = `
+exports[`string regex constraint: regex: non-match 1`] = `
 Array [
   Object {
     "item": [ValidationError: Value does not match "/^[A-Z][a-z]+$/"-pattern],
@@ -97,25 +115,7 @@ Array [
 ]
 `;
 
-exports[`regex: non-match w/ custom pattern name (opt) 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Value does not match PascalCase-pattern],
-    "level": "error",
-  },
-]
-`;
-
-exports[`regex: non-match w/ custom pattern name 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: Value does not match PascalCase-pattern],
-    "level": "error",
-  },
-]
-`;
-
-exports[`required: empty string 1`] = `
+exports[`string required constraint: required: empty string 1`] = `
 Array [
   Object {
     "item": [ValidationError: This field is required],
@@ -124,7 +124,7 @@ Array [
 ]
 `;
 
-exports[`required: null 1`] = `
+exports[`string required constraint: required: null 1`] = `
 Array [
   Object {
     "item": [ValidationError: Expected type "String", got "null"],
@@ -137,7 +137,7 @@ Array [
 ]
 `;
 
-exports[`required: undefined 1`] = `
+exports[`string required constraint: required: undefined 1`] = `
 Array [
   Object {
     "item": [ValidationError: This field is required],
@@ -146,9 +146,9 @@ Array [
 ]
 `;
 
-exports[`required: valid 1`] = `Array []`;
+exports[`string required constraint: required: valid 1`] = `Array []`;
 
-exports[`uppercase: all lowercase 1`] = `
+exports[`string uppercase constraint: uppercase: all lowercase 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all uppercase letters],
@@ -157,7 +157,7 @@ Array [
 ]
 `;
 
-exports[`uppercase: locale characters 1`] = `
+exports[`string uppercase constraint: uppercase: locale characters 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all uppercase letters],
@@ -166,7 +166,7 @@ Array [
 ]
 `;
 
-exports[`uppercase: some lowercase 1`] = `
+exports[`string uppercase constraint: uppercase: some lowercase 1`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all uppercase letters],
@@ -175,7 +175,7 @@ Array [
 ]
 `;
 
-exports[`uppercase: some lowercase 2`] = `
+exports[`string uppercase constraint: uppercase: some lowercase 2`] = `
 Array [
   Object {
     "item": [ValidationError: String must be all uppercase letters],
@@ -184,15 +184,9 @@ Array [
 ]
 `;
 
-exports[`uppercase: valid 1`] = `Array []`;
+exports[`string uppercase constraint: uppercase: valid 1`] = `Array []`;
 
-exports[`url: credentials not specified and not allowed 1`] = `Array []`;
-
-exports[`url: credentials not specified but allowed 1`] = `Array []`;
-
-exports[`url: credentials specified and allowed 1`] = `Array []`;
-
-exports[`url: credentials specified but not allowed 1`] = `
+exports[`string uri constraint (credentials): uri: credentials specified but not allowed 1`] = `
 Array [
   Object {
     "item": [ValidationError: String is not a valid URL - username/password not allowed],
@@ -201,32 +195,28 @@ Array [
 ]
 `;
 
-exports[`url: match 1`] = `Array []`;
-
-exports[`url: non-match 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: String is not a valid URL - no protocol defined],
-    "level": "error",
-  },
-]
-`;
-
-exports[`url: protocol match 1`] = `Array []`;
-
-exports[`url: protocol non-match 1`] = `
-Array [
-  Object {
-    "item": [ValidationError: String is not a valid URL - protocol "https" not allowed],
-    "level": "error",
-  },
-]
-`;
-
-exports[`url: username specified but not allowed 1`] = `
+exports[`string uri constraint (credentials): uri: username specified but not allowed 1`] = `
 Array [
   Object {
     "item": [ValidationError: String is not a valid URL - username/password not allowed],
+    "level": "error",
+  },
+]
+`;
+
+exports[`string uri constraint (invalid protocol): uri: protocol non-match 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: URL does not match allowed protocols/schemes],
+    "level": "error",
+  },
+]
+`;
+
+exports[`string uri constraint: uri: non-match 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: String is not a valid URL],
     "level": "error",
   },
 ]

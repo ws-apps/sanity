@@ -1,5 +1,7 @@
 const cloneDeep = require('clone-deep')
 const validate = require('./validate')
+const escapeRegex = require('./util/escapeRegex')
+const createUriRegex = require('./util/createUriRegex')
 
 const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array']
 
@@ -15,11 +17,7 @@ class Rule {
   constructor() {
     this.FIELD_REF = Rule.FIELD_REF
 
-    this._type = null
-    this._message = null
-    this._required = false
-    this._rules = []
-    this._level = 'error'
+    this.reset()
   }
 
   // Alias to static method, since we often have access to an _instance_ of a rule but not the actual Rule class
@@ -52,6 +50,15 @@ class Rule {
     return rule
   }
 
+  reset() {
+    this._type = this._type || null
+    this._rules = (this._rules || []).filter(rule => rule.flag === 'type')
+    this._message = null
+    this._required = false
+    this._level = 'error'
+    return this
+  }
+
   cloneWithRules(rules, options) {
     const rule = this.clone()
 
@@ -79,7 +86,9 @@ class Rule {
       throw new Error('merge() failed: conflicting types')
     }
 
-    return this.cloneWithRules(rule._rules)
+    const newRule = this.cloneWithRules(rule._rules)
+    newRule._type = this._type || rule._type
+    return newRule
   }
 
   validate(value, options = {}) {
@@ -161,10 +170,6 @@ class Rule {
   }
 
   // String only
-  url(options = {}) {
-    return this.cloneWithRules([{flag: 'url', constraint: options}])
-  }
-
   uppercase() {
     return this.cloneWithRules([{flag: 'stringCasing', constraint: 'uppercase'}])
   }
@@ -181,6 +186,56 @@ class Rule {
 
     const constraint = Object.assign({}, options, {pattern})
     return this.cloneWithRules([{flag: 'regex', constraint}])
+  }
+
+  // eslint-disable-next-line complexity
+  uri(opts = {}) {
+    const options = Object.assign(
+      {scheme: ['http', 'https'], allowRelative: false, relativeOnly: false},
+      opts
+    )
+
+    let customScheme = ''
+
+    if (
+      !(options.scheme instanceof RegExp) &&
+      typeof options.scheme !== 'string' &&
+      !Array.isArray(options.scheme)
+    ) {
+      throw new Error('scheme must be a RegExp, String, or Array')
+    }
+
+    if (!Array.isArray(options.scheme)) {
+      options.scheme = [options.scheme]
+    }
+
+    if (!options.scheme.length) {
+      throw new Error('scheme must have at least 1 scheme specified')
+    }
+
+    // Flatten the array into a string to be used to match the schemes.
+    for (let i = 0; i < options.scheme.length; ++i) {
+      const scheme = options.scheme[i]
+      if (!(scheme instanceof RegExp) && typeof scheme !== 'string') {
+        throw new Error(`scheme at position ${i} must be a RegExp or String`)
+      }
+
+      // Add OR separators if a value already exists
+      customScheme += customScheme ? '|' : ''
+
+      const schemePattern = scheme instanceof RegExp ? scheme.source : escapeRegex(scheme)
+
+      // If someone wants to match HTTP or HTTPS for example then we need to support
+      // both RegExp and String so we don't escape their pattern unknowingly.
+      if (!(scheme instanceof RegExp) && !/[a-zA-Z][a-zA-Z0-9+-\.]*/.test(scheme)) {
+        throw new Error(`scheme at position ${i} must be a valid scheme`)
+      }
+
+      customScheme += schemePattern
+    }
+
+    const regex = createUriRegex(customScheme, options.allowRelative, options.relativeOnly)
+    return this.cloneWithRules([{flag: 'uri', constraint: {options, regex}}])
   }
 
   // Array only

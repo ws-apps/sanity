@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gt: too low 1`] = `
+exports[`number greater than constraint: gt: too low 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be greater than 10],
@@ -9,7 +9,7 @@ Array [
 ]
 `;
 
-exports[`gt: too low, at limit 1`] = `
+exports[`number greater than constraint: gt: too low, at limit 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be greater than 10],
@@ -18,9 +18,9 @@ Array [
 ]
 `;
 
-exports[`gt: valid 1`] = `Array []`;
+exports[`number greater than constraint: gt: valid 1`] = `Array []`;
 
-exports[`integer: invalid (float) 1`] = `
+exports[`number integer constraint: integer: invalid (float) 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be an integer],
@@ -29,9 +29,9 @@ Array [
 ]
 `;
 
-exports[`integer: valid 1`] = `Array []`;
+exports[`number integer constraint: integer: valid 1`] = `Array []`;
 
-exports[`lt: too high 1`] = `
+exports[`number less than constraint: lt: too high 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be less than 10],
@@ -40,7 +40,7 @@ Array [
 ]
 `;
 
-exports[`lt: too high, at limit 1`] = `
+exports[`number less than constraint: lt: too high, at limit 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be less than 10],
@@ -49,9 +49,9 @@ Array [
 ]
 `;
 
-exports[`lt: valid 1`] = `Array []`;
+exports[`number less than constraint: lt: valid 1`] = `Array []`;
 
-exports[`max: too large 1`] = `
+exports[`number max constraint: max: too large 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be less than or equal 10],
@@ -60,11 +60,11 @@ Array [
 ]
 `;
 
-exports[`max: valid 1`] = `Array []`;
+exports[`number max constraint: max: valid 1`] = `Array []`;
 
-exports[`max: valid, at limit 1`] = `Array []`;
+exports[`number max constraint: max: valid, at limit 1`] = `Array []`;
 
-exports[`min: too low 1`] = `
+exports[`number min constraint: min: too low 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be greater than or equal 10],
@@ -73,11 +73,11 @@ Array [
 ]
 `;
 
-exports[`min: valid 1`] = `Array []`;
+exports[`number min constraint: min: valid 1`] = `Array []`;
 
-exports[`min: valid, at limit 1`] = `Array []`;
+exports[`number min constraint: min: valid, at limit 1`] = `Array []`;
 
-exports[`negative: invalid (zero) 1`] = `
+exports[`number negative constraint: negative: invalid (zero) 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be less than 0],
@@ -86,7 +86,7 @@ Array [
 ]
 `;
 
-exports[`negative: invalid 1`] = `
+exports[`number negative constraint: negative: invalid 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be less than 0],
@@ -95,9 +95,9 @@ Array [
 ]
 `;
 
-exports[`negative: valid 1`] = `Array []`;
+exports[`number negative constraint: negative: valid 1`] = `Array []`;
 
-exports[`positive: invalid 1`] = `
+exports[`number positive constraint: positive: invalid 1`] = `
 Array [
   Object {
     "item": [ValidationError: Number must be greater than or equal 0],
@@ -106,11 +106,11 @@ Array [
 ]
 `;
 
-exports[`positive: valid (zero) 1`] = `Array []`;
+exports[`number positive constraint: positive: valid (zero) 1`] = `Array []`;
 
-exports[`positive: valid 1`] = `Array []`;
+exports[`number positive constraint: positive: valid 1`] = `Array []`;
 
-exports[`precision: invalid (pi) 1`] = `
+exports[`number precision constraint: precision: invalid (pi) 1`] = `
 Array [
   Object {
     "item": [ValidationError: Max precision is 3],
@@ -119,11 +119,11 @@ Array [
 ]
 `;
 
-exports[`precision: valid (at limit) 1`] = `Array []`;
+exports[`number precision constraint: precision: valid (at limit) 1`] = `Array []`;
 
-exports[`precision: valid (below limit) 1`] = `Array []`;
+exports[`number precision constraint: precision: valid (below limit) 1`] = `Array []`;
 
-exports[`required: undefined 1`] = `
+exports[`number required constraint: required: undefined 1`] = `
 Array [
   Object {
     "item": [ValidationError: Value is required],
@@ -132,4 +132,4 @@ Array [
 ]
 `;
 
-exports[`required: valid 1`] = `Array []`;
+exports[`number required constraint: required: valid 1`] = `Array []`;

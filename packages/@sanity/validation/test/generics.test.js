@@ -30,15 +30,6 @@ describe('generics', () => {
     expect(() => Rule.string().validate(123, {throwOnError: true})).toThrowErrorMatchingSnapshot()
   })
 
-  test('can override earlier defined rules', () => {
-    expect(
-      Rule.string()
-        .max(1)
-        .max(2)
-        .validate('hei')
-    ).toMatchSnapshot()
-  })
-
   test('can demote errors to warnings', () => {
     const result = Rule.string()
       .warning()

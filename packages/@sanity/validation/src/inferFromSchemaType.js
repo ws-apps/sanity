@@ -21,7 +21,7 @@ function inferFromSchemaType(typeDef, isRoot = true) {
   }
 
   if (type && type.name === 'url') {
-    typeDef.validation = typeDef.validation.url()
+    typeDef.validation = typeDef.validation.uri()
   }
 
   if (type && type.name === 'reference') {
