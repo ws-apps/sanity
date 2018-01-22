@@ -154,6 +154,11 @@ export default withRouterHOC(
       draft: PropTypes.object,
       published: PropTypes.object,
       type: PropTypes.object.isRequired,
+      markers: PropTypes.arrayOf(
+        PropTypes.shape({
+          path: PropTypes.arrayOf(PropTypes.string)
+        })
+      ),
       router: PropTypes.shape({
         state: PropTypes.object
       }).isRequired,
