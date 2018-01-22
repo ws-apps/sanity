@@ -9,6 +9,7 @@ import FormField from 'part:@sanity/components/formfields/default'
 import TextInput from 'part:@sanity/components/textinputs/default'
 import styles from './styles/DateTimeInput.css'
 import PatchEvent, {set, unset} from '../../PatchEvent'
+import type {Marker} from '../../typedefs'
 import Dialog from 'part:@sanity/components/dialogs/default'
 import Button from 'part:@sanity/components/buttons/default'
 import CalendarIcon from 'part:@sanity/base/calendar-icon'
@@ -32,6 +33,7 @@ const DEFAULT_TIME_FORMAT = 'HH:mm'
 
 type Props = {
   value: string,
+  markers: Array<Marker>,
   type: {
     name: string,
     title: string,
@@ -144,7 +146,7 @@ export default class DateInput extends React.Component<Props, State> {
   }
 
   render() {
-    const {value, type, level, ...rest} = this.props
+    const {value, markers, type, level, ...rest} = this.props
     const {inputValue, isActive} = this.state
     const {title, description, readOnly} = type
     const momentValue: ?Moment = value ? moment(value) : null
@@ -170,7 +172,7 @@ export default class DateInput extends React.Component<Props, State> {
     ]
 
     return (
-      <FormField labelFor={this.inputId} label={title} level={level} description={description}>
+      <FormField markers={markers} labelFor={this.inputId} label={title} level={level} description={description}>
         {
           readOnly && (
             <TextInput

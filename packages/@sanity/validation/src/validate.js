@@ -6,7 +6,8 @@ const typeValidators = {
   Number: require('./validators/numberValidator'),
   String: require('./validators/stringValidator'),
   Array: require('./validators/arrayValidator'),
-  Object: require('./validators/objectValidator')
+  Object: require('./validators/objectValidator'),
+  Date: require('./validators/dateValidator')
 }
 
 module.exports = (rule, value, options = {}) => {

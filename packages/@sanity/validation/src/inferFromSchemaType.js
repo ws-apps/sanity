@@ -10,6 +10,10 @@ function inferFromSchemaType(typeDef, isRoot = true) {
   const typed = Rule[typeDef.jsonType] && Rule[typeDef.jsonType]
   let base = typed ? typed() : new Rule()
 
+  if (type && type.name === 'datetime') {
+    base = base.type('Date')
+  }
+
   if (type && type.name === 'url') {
     base = base.uri()
   }
