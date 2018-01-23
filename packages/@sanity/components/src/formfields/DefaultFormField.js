@@ -1,8 +1,11 @@
+/* eslint-disable complexity */
 import PropTypes from 'prop-types'
 import React from 'react'
 
 import styles from 'part:@sanity/components/formfields/default-style'
 import DefaultLabel from 'part:@sanity/components/labels/default'
+import ValidationStatus from 'part:@sanity/components/validation/status'
+import ValidationList from 'part:@sanity/components/validation/list'
 
 export default class DefaultFormField extends React.Component {
   static propTypes = {
@@ -29,29 +32,14 @@ export default class DefaultFormField extends React.Component {
     markers: []
   }
 
-  // @todo generalize/refactor validation rendering into separate components or similar
-  getValidationClass(validation) {
-    if (validation.some(marker => marker.level === 'error')) {
-      return styles.validationError
-    }
-
-    if (validation.some(marker => marker.level === 'warning')) {
-      return styles.validationWarning
-    }
-
-    return ''
+  state = {
+    showValidationMessages: false
   }
 
-  // @todo generalize/refactor validation rendering into separate components or similar
-  renderValidationResult(validation) {
-    const errors = validation.filter(marker => marker.level === 'error')
-    const warnings = validation.filter(marker => marker.level === 'warning')
-    if (errors.length === 0 && errors.warnings === 0) {
-      return null
-    }
-
-    const messages = errors.length > 0 ? errors : warnings
-    return <ul>{messages.map((err, i) => <li key={i}>{err.item.message}</li>)}</ul>
+  handleToggleShowValidation = event => {
+    this.setState({
+      showValidationMessages: !this.state.showValidationMessages
+    })
   }
 
   render() {
@@ -67,6 +55,8 @@ export default class DefaultFormField extends React.Component {
       markers
     } = this.props
 
+    const {showValidationMessages} = this.state
+
     const validation = markers.filter(marker => marker.type === 'validation')
     const validationClass = this.getValidationClass(validation)
     const levelClass = `level_${level}`
@@ -81,17 +71,29 @@ export default class DefaultFormField extends React.Component {
           ${className || ''}`}
       >
         <label className={styles.inner} htmlFor={labelFor}>
-          {label && (
-            <DefaultLabel className={styles.label} level={level}>
-              {label}
-            </DefaultLabel>
-          )}
-
-          {description && <div className={styles.description}>{description}</div>}
-
+          {
+            label && (
+              <div className={styles.header}>
+                <div className={styles.headerMain}>
+                  {label && (
+                    <DefaultLabel className={styles.label} level={level}>
+                      {label}
+                    </DefaultLabel>
+                  )}
+                  {description && <div className={styles.description}>{description}</div>}
+                </div>
+                <div className={styles.headerStatus}>
+                  <div onClick={this.handleToggleShowValidation} className={styles.validationStatus}>
+                    <ValidationStatus markers={markers} />
+                  </div>
+                </div>
+              </div>
+            )
+          }
+          <div className={showValidationMessages ? styles.validationList : styles.validationListClosed}>
+            <ValidationList markers={markers} />
+          </div>
           <div className={styles.content}>{children}</div>
-
-          {this.renderValidationResult(validation)}
         </label>
       </div>
     )
