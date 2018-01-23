@@ -115,7 +115,6 @@ export default class EditorPane extends React.Component {
     }
 
     const result = validateDocument(doc, schema)
-    console.dir(result)
     return result
   }
 
