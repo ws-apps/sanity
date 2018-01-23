@@ -33,11 +33,14 @@ export default class TelephoneInput extends React.Component<Props> {
 
   render() {
     const {value, markers, type, level, ...rest} = this.props
+    const validation = markers.filter(marker => marker.type === 'validation') || []
+    const errors = validation.filter(marker => marker.level === 'error') || []
 
     return (
       <FormField markers={markers} level={level} label={type.title} description={type.description}>
         <TextInput
           {...rest}
+          customValidity={errors && errors.length > 0 ? errors[0].item.message : ''}
           type="tel"
           value={value}
           readOnly={type.readOnly}
