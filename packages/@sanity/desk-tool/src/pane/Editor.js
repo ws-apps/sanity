@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import PropTypes from 'prop-types'
 // Connects the FormBuilder with various sanity roles
 import React from 'react'
@@ -31,6 +32,7 @@ import SyncIcon from 'part:@sanity/base/sync-icon'
 import CheckIcon from 'part:@sanity/base/check-icon'
 import Snackbar from 'part:@sanity/components/snackbar/default'
 import resolveProductionPreviewUrl from 'part:@sanity/transitional/production-preview/resolve-production-url?'
+import ValidationList from 'part:@sanity/components/validation/list'
 
 const preventDefault = ev => ev.preventDefault()
 
@@ -96,30 +98,39 @@ const getProductionPreviewItem = (draft, published) => {
   try {
     previewUrl = resolveProductionPreviewUrl(snapshot)
   } catch (error) {
-    error.message = `An error was thrown while trying to get production preview url: ${error.message}`
+    error.message = `An error was thrown while trying to get production preview url: ${
+      error.message
+    }`
     // eslint-disable-next-line no-console
     console.error(error)
     return null
   }
 
-  return previewUrl && {
-    action: 'production-preview',
-    title: <span>Open preview <code className={styles.hotkey}>Ctrl+Alt+O</code></span>,
-    icon: PublicIcon,
-    url: previewUrl
-  }
+  return (
+    previewUrl && {
+      action: 'production-preview',
+      title: (
+        <span>
+          Open preview <code className={styles.hotkey}>Ctrl+Alt+O</code>
+        </span>
+      ),
+      icon: PublicIcon,
+      url: previewUrl
+    }
+  )
 }
 
-const getMenuItems = (draft, published) => ([
-  getProductionPreviewItem,
-  getDiscardItem,
-  getUnpublishItem,
-  getDuplicateItem,
-  getDeleteItem,
-  getInspectItem
-])
-  .map(fn => fn(draft, published))
-  .filter(Boolean)
+const getMenuItems = (draft, published) =>
+  [
+    getProductionPreviewItem,
+    getDiscardItem,
+    getUnpublishItem,
+    getDuplicateItem,
+    getDeleteItem,
+    getInspectItem
+  ]
+    .map(fn => fn(draft, published))
+    .filter(Boolean)
 
 const INITIAL_STATE = {
   inspect: false,
@@ -129,7 +140,8 @@ const INITIAL_STATE = {
   showConfirmPublish: false,
   showConfirmDiscard: false,
   showConfirmDelete: false,
-  showConfirmUnpublish: false
+  showConfirmUnpublish: false,
+  showValidation: false
 }
 
 function getToggleKeyState(event) {
@@ -202,10 +214,7 @@ export default withRouterHOC(
         const toggleKey = getToggleKeyState(event)
         if (toggleKey) {
           this.setState(prevState => ({[toggleKey]: !prevState[toggleKey]}))
-        } else if (event.ctrlKey
-          && event.code === 'KeyO'
-          && event.altKey
-          && !event.shiftKey) {
+        } else if (event.ctrlKey && event.code === 'KeyO' && event.altKey && !event.shiftKey) {
           const {draft, published} = this.props
           const item = getProductionPreviewItem(draft || published)
           if (item && item.url) {
@@ -403,7 +412,8 @@ export default withRouterHOC(
               title="Ctrl+Alt+P"
               disabled={!draft}
               onClick={this.handlePublishButtonClick}
-              color="primary">
+              color="primary"
+            >
               {published ? 'Publish changes' : 'Publish'}
             </Button>
           </div>
@@ -445,7 +455,8 @@ export default withRouterHOC(
         showConfirmPublish,
         showConfirmDelete,
         showConfirmDiscard,
-        showConfirmUnpublish
+        showConfirmUnpublish,
+        showValidation
       } = this.state
 
       const value = draft || published
@@ -471,12 +482,17 @@ export default withRouterHOC(
         )
       }
 
+      const validation = markers.filter(marker => marker.type === 'validation') || []
+      const errors = validation.filter(marker => marker.level === 'error') || []
+      const warnings = validation.filter(marker => marker.level === 'warning') || []
+
       return (
         <Pane
           title={this.getTitle(value)}
           renderMenu={this.renderMenu}
           renderFunctions={this.renderFunctions}
-          onMenuToggle={this.handleMenuToggle}>
+          onMenuToggle={this.handleMenuToggle}
+        >
           <div className={styles.root}>
             {isCreatingDraft && <Spinner fullscreen message="Making changes…" />}
             {isPublishing && <Spinner fullscreen message="Publishing…" />}
@@ -498,11 +514,32 @@ export default withRouterHOC(
                   'Not published'
                 )}
               </div>
+              {errors &&
+                errors.length > 0 && (
+                  <div
+                    className={styles.errors}
+                    onClick={() => this.setState({showValidation: !this.state.showValidation})}
+                  >
+                    {errors.length} errors
+                  </div>
+                )}
+              {warnings &&
+                warnings.length > 0 && (
+                  <div
+                    className={styles.warnings}
+                    onClick={() => this.setState({showValidation: !this.state.showValidation})}
+                  >
+                    {warnings.length} warnings
+                  </div>
+                )}
             </div>
+
             <form
               className={styles.editor}
               onSubmit={preventDefault}
-              id="Sanity_Default_DeskTool_Editor_ScrollContainer">
+              id="Sanity_Default_DeskTool_Editor_ScrollContainer"
+            >
+              {showValidation && <ValidationList markers={markers} />}
               <FormBuilder
                 schema={schema}
                 patchChannel={patchChannel}
@@ -558,7 +595,8 @@ export default withRouterHOC(
                 <Snackbar
                   kind={'danger'}
                   action={{title: 'Ok, got it'}}
-                  onAction={onClearTransactionResult}>
+                  onAction={onClearTransactionResult}
+                >
                   <div>
                     {transactionResult.message}
                     <details>{transactionResult.error.message}</details>

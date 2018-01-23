@@ -38,18 +38,18 @@
 }
 
 .top {
-  display: flex;
+  display: none;
   margin: 0 var(--medium-padding);
   color: var(--text-color-secondary);
+  font-size: 0.7rem;
+
+  @media (--screen-medium) {
+    display: flex;
+  }
 }
 
 .dates {
-  font-size: 0.7rem;
-  display: none;
-
-  @media (--screen-medium) {
-    display: block;
-  }
+  display: block;
 }
 
 .publishedDate {
@@ -59,6 +59,16 @@
 .editedDate {
   composes: dates;
   margin-right: 1rem;
+}
+
+.errors {
+  margin-left: 1rem;
+  color: var(--state-danger-color);
+}
+
+.warnings {
+  margin-left: 1rem;
+  color: var(--state-warning-color);
 }
 
 .editor {
