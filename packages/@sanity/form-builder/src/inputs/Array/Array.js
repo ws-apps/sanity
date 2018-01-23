@@ -315,6 +315,7 @@ export default class ArrayInput extends React.Component<Props, State> {
 
     return (
       <UploadTargetFieldset
+        markers={this.props.markers}
         tabIndex={0}
         legend={type.title}
         description={type.description}

@@ -33,11 +33,17 @@
   padding: 0.5em;
   border: 1px solid transparent;
   z-index: 1;
-  &:hover {
+
+  @nest &:hover {
     opacity: 1;
   }
 }
 
 .addButton {
   margin-top: var(--medium-padding);
+}
+
+.validationStatus {
+  composes: validationStatus from 'part:@sanity/base/theme/forms/validation-style';
+  margin: 0 var(--small-padding);
 }

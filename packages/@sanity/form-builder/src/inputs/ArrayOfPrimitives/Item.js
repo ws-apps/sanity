@@ -4,6 +4,7 @@ import {FormBuilderInput} from '../../FormBuilderInput'
 import styles from './styles/Item.css'
 import Button from 'part:@sanity/components/buttons/default'
 import TrashIcon from 'part:@sanity/base/trash-icon'
+import ValidationStatus from 'part:@sanity/components/validation/status'
 
 import PatchEvent, {set} from '../../PatchEvent'
 import getEmptyValue from './getEmptyValue'
@@ -83,6 +84,9 @@ export default class Item extends React.PureComponent<Props> {
             onChange={this.handleChange}
             level={level}
           />
+        </div>
+        <div className={styles.validationStatus}>
+          <ValidationStatus markers={markers} />
         </div>
         <Button
           kind="simple"

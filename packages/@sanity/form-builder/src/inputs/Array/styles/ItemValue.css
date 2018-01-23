@@ -97,6 +97,10 @@
   font-size: 0.9rem;
 }
 
+.validationStatus {
+  padding: 0 var(--small-padding);
+}
+
 .defaultDialogContent {
   padding: var(--medium-padding);
   min-width: 10rem;
@@ -104,4 +108,8 @@
   @media (--screen-medium) {
     min-width: 30rem;
   }
+}
+
+.validationIconError {
+  composes: validationIconError from 'part:@sanity/base/theme/forms/validation-style';
 }
