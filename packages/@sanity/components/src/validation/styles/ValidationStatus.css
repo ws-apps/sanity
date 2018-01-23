@@ -1,0 +1,23 @@
+@import "part:@sanity/base/theme/variables-style";
+
+.root {
+  opacity: 0.5;
+
+  @nest &:hover {
+    opacity: 1;
+  }
+}
+
+.error {
+  /* color: var(--state-danger-color); */
+}
+
+.warning {
+  color: var(--state-warning-color);
+}
+
+.ok {
+  composes: root;
+  color: var(--state-success-color);
+  display: none;
+}
