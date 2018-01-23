@@ -1,0 +1,38 @@
+@import "part:@sanity/base/theme/variables-style";
+
+.root {
+  display: block;
+}
+
+.block {
+  margin-bottom: var(--medium-padding);
+  border: 1px solid var(--compnent-border-color);
+  border-radius: var(--border-radius-large);
+  padding: var(--medium-padding);
+
+  @nest & > h3 {
+    margin: 0;
+    padding: 0;
+    font-weight: 400;
+  }
+
+  @nest & > ul {
+    margin: 0;
+
+    @nest & > li {
+      margin: 0;
+    }
+  }
+}
+
+.warnings {
+  composes: block;
+  color: var(--state-warning-color);
+}
+
+.errors {
+  composes: block;
+  color: var(--state-danger-color);
+  border: 1px solid var(--state-danger-color);
+  background-color: color(var(--state-danger-color) a(5%));
+}
