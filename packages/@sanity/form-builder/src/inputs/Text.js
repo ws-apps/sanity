@@ -33,11 +33,14 @@ export default class TextInput extends React.Component<Props> {
 
   render() {
     const {value, markers, type, level, ...rest} = this.props
+    const validation = markers.filter(marker => marker.type === 'validation') || []
+    const errors = validation.filter(marker => marker.level === 'error') || []
 
     return (
       <FormField markers={markers} level={level} label={type.title} description={type.description}>
         <TextArea
           {...rest}
+          customValidity={errors && errors.length > 0 ? errors[0].item.message : ''}
           value={value}
           readOnly={type.readOnly}
           placeholder={type.placeholder}
