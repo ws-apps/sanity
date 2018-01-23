@@ -16,7 +16,7 @@ import {resolveTypeName} from '../../utils/resolveTypeName'
 import InvalidValue from '../InvalidValue'
 import type {ItemValue} from '../Array/typedefs'
 import type {Path} from '../../typedefs/path'
-import type {Type} from '../../typedefs'
+import type {Type, Marker} from '../../typedefs'
 
 function move(arr, from, to) {
   const copy = arr.slice()
@@ -39,7 +39,8 @@ type Props = {
   onChange: (event: PatchEvent) => void,
   onFocus: Path => void,
   onBlur: () => void,
-  focusPath: Path
+  focusPath: Path,
+  markers: Array<Marker>
 }
 
 export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
@@ -130,13 +131,15 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
 
     const isSortable = get(type, 'options.sortable') !== false
     const ListItem = isSortable ? SortableItem : DefaultItem
+    const filteredMarkers = markers.filter(marker => startsWith([index], marker.path))
+
     return (
       <ListItem key={index} index={index} className={styles.item}>
         <Item
           level={level + 1}
           index={index}
           value={item}
-          markers={markers.filter(marker => startsWith([index], marker.path))}
+          markers={filteredMarkers}
           isSortable={isSortable}
           type={itemMemberType}
           focusPath={focusPath}
@@ -208,6 +211,7 @@ export default class ArrayOfPrimitivesInput extends React.PureComponent<Props> {
         tabIndex={0}
         onFocus={onFocus}
         ref={this.setElement}
+        markers={this.props.markers}
       >
         <div className={styles.root}>
           <div className={styles.list}>

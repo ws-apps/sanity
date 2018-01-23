@@ -11,6 +11,7 @@ import EditItemFold from 'part:@sanity/components/edititem/fold'
 import EditItemPopOver from 'part:@sanity/components/edititem/popover'
 import FullscreenDialog from 'part:@sanity/components/dialogs/fullscreen'
 import DefaultDialog from 'part:@sanity/components/dialogs/default'
+import ValidationStatus from 'part:@sanity/components/validation/status'
 
 import {FormBuilderInput} from '../../FormBuilderInput'
 import PatchEvent from '../../PatchEvent'
@@ -257,12 +258,13 @@ export default class RenderItemValue extends React.Component<Props> {
             onFocus={this.handleFocus}
           >
             <Preview layout={previewLayout} value={value} type={this.getMemberType()} />
-
-            {this.renderValidationResult(currentMarkers)}
           </div>
         </div>
 
         <div className={styles.functions}>
+          <div className={styles.validationStatus}>
+            <ValidationStatus markers={markers} />
+          </div>
           {value._ref && (
             <IntentLink className={styles.linkToReference} intent="edit" params={{id: value._ref}}>
               <LinkIcon />
@@ -284,7 +286,7 @@ export default class RenderItemValue extends React.Component<Props> {
     const isExpanded = PathUtils.isExpanded(value, focusPath)
 
     return (
-      <div className={isGrid ? styles.gridItem : styles.listItem} ref={this.setElement}>
+      <div className={isGrid ? styles.gridItem : styles.listItem}>
         {this.renderItem()}
         <div className={options.editModal === 'fold' ? styles.editRootFold : styles.editRoot}>
           {isExpanded && this.renderEditItemForm(value)}
