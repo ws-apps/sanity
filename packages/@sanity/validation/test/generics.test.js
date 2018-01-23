@@ -66,4 +66,10 @@ describe('generics', () => {
     const result = newRule.validate('Hei')
     expect(result).toMatchSnapshot()
   })
+
+  test('can merge rules', () => {
+    expect(new Rule().required().isRequired()).toBe(true)
+    expect(new Rule().isRequired()).toBe(false)
+    expect(new Rule().optional().isRequired()).toBe(false)
+  })
 })

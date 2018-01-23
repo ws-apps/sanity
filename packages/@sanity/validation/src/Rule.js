@@ -60,6 +60,10 @@ class Rule {
     return this
   }
 
+  isRequired() {
+    return this._required
+  }
+
   cloneWithRules(rules, options) {
     const rule = this.clone()
 
