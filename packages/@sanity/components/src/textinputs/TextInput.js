@@ -22,6 +22,7 @@ export default class DefaultTextInput extends React.PureComponent {
     disabled: PropTypes.bool,
     autoComplete: PropTypes.string,
     hasError: PropTypes.bool,
+    customValidity: PropTypes.string,
     styles: PropTypes.shape({
       container: PropTypes.string,
       input: PropTypes.string,
@@ -44,7 +45,18 @@ export default class DefaultTextInput extends React.PureComponent {
     onClear: NOOP,
     onFocus: NOOP,
     onBlur: NOOP,
-    styles: {}
+    styles: {},
+    customValidity: ''
+  }
+
+  componentDidMount() {
+    this._input.setCustomValidity(this.props.customValidity)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.setCustomValidity !== this.props.customValidity) {
+      this._input.setCustomValidity(this.props.customValidity)
+    }
   }
 
   select() {
@@ -72,6 +84,7 @@ export default class DefaultTextInput extends React.PureComponent {
       disabled,
       markers,
       styles: passedStyles,
+      customValidity,
       ...rest
     } = this.props
 
@@ -83,7 +96,6 @@ export default class DefaultTextInput extends React.PureComponent {
     return (
       <div
         className={classNames(styles.container, [
-          hasError && styles.containerOnError,
           isClearable && styles.isClearable,
           disabled && styles.isDisabled
         ])}
@@ -91,7 +103,7 @@ export default class DefaultTextInput extends React.PureComponent {
         <input
           ref={this.setInput}
           {...rest}
-          className={classNames(styles.input, [hasError && styles.inputOnError])}
+          className={classNames(styles.input)}
           disabled={disabled}
         />
         {isClearable && (
