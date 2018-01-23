@@ -6,7 +6,7 @@
 
 .block {
   margin-bottom: var(--medium-padding);
-  border: 1px solid var(--compnent-border-color);
+  border: 1px solid var(--gray-light);
   border-radius: var(--border-radius-large);
   padding: var(--medium-padding);
 
