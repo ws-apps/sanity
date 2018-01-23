@@ -57,15 +57,12 @@ export default class DefaultFormField extends React.Component {
 
     const {showValidationMessages} = this.state
 
-    const validation = markers.filter(marker => marker.type === 'validation')
-    const validationClass = this.getValidationClass(validation)
     const levelClass = `level_${level}`
 
     return (
       <div
         className={`
           ${inline ? styles.inline : styles.block}
-          ${validationClass}
           ${styles[levelClass] || ''}
           ${wrapped ? styles.wrapped : ''}
           ${className || ''}`}
