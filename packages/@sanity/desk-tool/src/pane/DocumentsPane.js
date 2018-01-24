@@ -20,8 +20,7 @@ import DocumentsPaneMenu from './DocumentsPaneMenu'
 import Button from 'part:@sanity/components/buttons/default'
 import PlusIcon from 'part:@sanity/base/plus-icon'
 import Snackbar from 'part:@sanity/components/snackbar/default'
-import {Tooltip} from 'react-tippy'
-
+import {Tooltip} from '@sanity/react-tippy'
 const NOOP = () => {} // eslint-disable-line
 
 const LOCALSTORAGE_KEY = 'desk-tool.documents-pane-settings'
@@ -191,14 +190,14 @@ export default withRouterHOC(class DocumentsPane extends React.PureComponent {
       <div className={styles.itemStatus}>
         {
           !item.hasPublished && (
-            <Tooltip title="Not published" arrow theme="light" distance="2" sticky>
+            <Tooltip title="Not published" arrow theme="light" distance="2" sticky size="small">
               <i ><VisibilityOffIcon /></i>
             </Tooltip>
           )
         }
         {
           item.hasDraft && item.hasPublished && (
-            <Tooltip title="Has changes not yet published" arrow theme="light" distance="2" sticky>
+            <Tooltip title="Has changes not yet published" arrow theme="light" distance="2" sticky size="small">
               <i><EditIcon /></i>
             </Tooltip>
           )
