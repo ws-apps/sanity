@@ -8,10 +8,7 @@ const NOOP = () => {}
 
 export default class DefaultTextInput extends React.PureComponent {
   static propTypes = {
-    value: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.number
-    ]),
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     markers: PropTypes.array,
     type: PropTypes.string,
     onClear: PropTypes.func,
@@ -30,7 +27,7 @@ export default class DefaultTextInput extends React.PureComponent {
       clearButton: PropTypes.string,
       inputOnDisabled: PropTypes.string,
       inputOnError: PropTypes.string,
-      containerOnError: PropTypes.string,
+      containerOnError: PropTypes.string
     })
   }
 
@@ -55,7 +52,7 @@ export default class DefaultTextInput extends React.PureComponent {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.customValidity !== this.props.customValidity) {
-      this._input.setCustomValidity(this.props.customValidity)
+      this._input.setCustomValidity(nextProps.customValidity)
     }
   }
 
