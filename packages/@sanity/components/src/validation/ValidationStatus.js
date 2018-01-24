@@ -11,7 +11,9 @@ export default class ValidationStatus extends React.PureComponent {
     onClick: PropTypes.func,
     markers: PropTypes.arrayOf(
       PropTypes.shape({
-        path: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
+        path: PropTypes.arrayOf(
+          PropTypes.oneOfType([PropTypes.object, PropTypes.string, PropTypes.number])
+        ),
         type: PropTypes.string,
         level: PropTypes.string,
         item: PropTypes.any
