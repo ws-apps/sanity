@@ -141,7 +141,8 @@ const INITIAL_STATE = {
   showConfirmDiscard: false,
   showConfirmDelete: false,
   showConfirmUnpublish: false,
-  showValidation: false
+  showValidation: false,
+  focusPath: []
 }
 
 function getToggleKeyState(event) {
@@ -247,6 +248,14 @@ export default withRouterHOC(
       1500,
       {trailing: true}
     )
+
+    handleFocus = path => {
+      this.setState({focusPath: path})
+    }
+
+    handleBlur = () => {
+      // do nothing
+    }
 
     handleCreateCopy = () => {
       const {router, draft, published} = this.props
@@ -452,6 +461,7 @@ export default withRouterHOC(
 
       const {
         inspect,
+        focusPath,
         showConfirmPublish,
         showConfirmDelete,
         showConfirmDiscard,
@@ -537,12 +547,15 @@ export default withRouterHOC(
               onSubmit={preventDefault}
               id="Sanity_Default_DeskTool_Editor_ScrollContainer"
             >
-              {showValidation && <ValidationList markers={markers} />}
+              {showValidation && <ValidationList onFocus={this.handleFocus} markers={markers} />}
               <FormBuilder
                 schema={schema}
                 patchChannel={patchChannel}
                 value={draft || published || {_type: type.name}}
                 type={type}
+                onBlur={this.handleBlur}
+                onFocus={this.handleFocus}
+                focusPath={focusPath}
                 onChange={this.handleChange}
                 markers={markers}
               />
