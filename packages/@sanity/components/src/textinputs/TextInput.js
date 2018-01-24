@@ -54,7 +54,7 @@ export default class DefaultTextInput extends React.PureComponent {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.setCustomValidity !== this.props.customValidity) {
+    if (nextProps.customValidity !== this.props.customValidity) {
       this._input.setCustomValidity(this.props.customValidity)
     }
   }
