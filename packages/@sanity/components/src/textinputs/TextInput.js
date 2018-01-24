@@ -10,6 +10,7 @@ export default class DefaultTextInput extends React.PureComponent {
   static propTypes = {
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     markers: PropTypes.array,
+    focusPath: PropTypes.array,
     type: PropTypes.string,
     onClear: PropTypes.func,
     onFocus: PropTypes.func,
@@ -82,6 +83,7 @@ export default class DefaultTextInput extends React.PureComponent {
       markers,
       styles: passedStyles,
       customValidity,
+      focusPath,
       ...rest
     } = this.props
 
