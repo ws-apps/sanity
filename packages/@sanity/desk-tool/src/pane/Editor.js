@@ -482,9 +482,9 @@ export default withRouterHOC(
         )
       }
 
-      const validation = markers.filter(marker => marker.type === 'validation') || []
-      const errors = validation.filter(marker => marker.level === 'error') || []
-      const warnings = validation.filter(marker => marker.level === 'warning') || []
+      const validation = markers.filter(marker => marker.type === 'validation')
+      const errors = validation.filter(marker => marker.level === 'error')
+      const warnings = validation.filter(marker => marker.level === 'warning')
 
       return (
         <Pane
@@ -514,24 +514,22 @@ export default withRouterHOC(
                   'Not published'
                 )}
               </div>
-              {errors &&
-                errors.length > 0 && (
-                  <div
-                    className={styles.errors}
-                    onClick={() => this.setState({showValidation: !this.state.showValidation})}
-                  >
-                    {errors.length} errors
-                  </div>
-                )}
-              {warnings &&
-                warnings.length > 0 && (
-                  <div
-                    className={styles.warnings}
-                    onClick={() => this.setState({showValidation: !this.state.showValidation})}
-                  >
-                    {warnings.length} warnings
-                  </div>
-                )}
+              {errors.length > 0 && (
+                <div
+                  className={styles.errors}
+                  onClick={() => this.setState({showValidation: !this.state.showValidation})}
+                >
+                  {errors.length} errors
+                </div>
+              )}
+              {warnings.length > 0 && (
+                <div
+                  className={styles.warnings}
+                  onClick={() => this.setState({showValidation: !this.state.showValidation})}
+                >
+                  {warnings.length} warnings
+                </div>
+              )}
             </div>
 
             <form
