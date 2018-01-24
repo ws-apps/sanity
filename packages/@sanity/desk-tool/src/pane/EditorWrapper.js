@@ -4,7 +4,7 @@ import React from 'react'
 import Observable from '@sanity/observable'
 import {getDraftId, getPublishedId} from '../utils/draftUtils'
 import FormBuilder, {checkout} from 'part:@sanity/form-builder'
-import {omit, throttle} from 'lodash'
+import {omit, throttle, debounce} from 'lodash'
 import Editor from './Editor'
 import schema from 'part:@sanity/base/schema'
 import Button from 'part:@sanity/components/buttons/default'
@@ -89,21 +89,20 @@ export default class EditorPane extends React.Component {
       .subscribe(event => {
         this.setState(prevState => {
           const version = event.version // either 'draft' or 'published'
-          const merged = {
-            ...(prevState[version] || {}),
-            ...documentEventToState(event),
-            isLoading: false
-          }
-
           return {
-            [version]: merged,
-            markers: this.validateDocument(merged.snapshot)
+            [version]: {
+              ...(prevState[version] || {}),
+              ...documentEventToState(event),
+              isLoading: false
+            }
           }
-        })
+        }, this.validateDocument)
       })
   }
 
-  validateDocument = doc => {
+  validateDocument = debounce(() => {
+    const {draft, published} = this.state
+    const doc = (draft && draft.snapshot) || (published && published.snapshot)
     if (!doc || !doc._type) {
       return []
     }
@@ -114,9 +113,10 @@ export default class EditorPane extends React.Component {
       return []
     }
 
-    const result = validateDocument(doc, schema)
-    return result
-  }
+    const markers = validateDocument(doc, schema)
+    this.setState({markers})
+    return markers
+  }, 300)
 
   receiveDraftEvent = event => {
     if (event.type !== 'mutation') {
@@ -146,11 +146,7 @@ export default class EditorPane extends React.Component {
     if (nextProps.documentId !== this.props.documentId) {
       this.setState(INITIAL_STATE)
       this.setup(nextProps.documentId)
-      return
     }
-
-    const snapshot = this.state.draft.snapshot || this.state.published.snapshot
-    this.setState({markers: this.validateDocument(snapshot)})
   }
 
   componentWillUnmount() {
