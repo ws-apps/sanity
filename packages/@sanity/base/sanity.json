@@ -803,6 +803,10 @@
       "path": "components/icons/Calendar.js"
     },
     {
+      "implements": "part:@sanity/base/chevron-down-icon",
+      "path": "components/icons/ChevronDown.js"
+    },
+    {
       "implements": "part:@sanity/base/sanity-logo",
       "path": "components/logos/SanityLogo.js"
     },

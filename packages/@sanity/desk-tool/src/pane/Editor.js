@@ -33,6 +33,9 @@ import CheckIcon from 'part:@sanity/base/check-icon'
 import Snackbar from 'part:@sanity/components/snackbar/default'
 import resolveProductionPreviewUrl from 'part:@sanity/transitional/production-preview/resolve-production-url?'
 import ValidationList from 'part:@sanity/components/validation/list'
+import {Tooltip} from '@sanity/react-tippy'
+import ChevronDown from 'part:@sanity/base/chevron-down-icon'
+import WarningIcon from 'part:@sanity/base/warning-icon'
 
 const preventDefault = ev => ev.preventDefault()
 
@@ -393,33 +396,69 @@ export default withRouterHOC(
     }
 
     renderFunctions = () => {
-      const {draft, published} = this.props
+      const {draft, published, markers} = this.props
       const {showSavingStatus} = this.state
 
       const value = draft || published
 
+      const validation = markers.filter(marker => marker.type === 'validation')
+      const errors = validation.filter(marker => marker.level === 'error')
+      const warnings = validation.filter(marker => marker.level === 'warning')
+
       return (
         <div className={styles.paneFunctions}>
           {showSavingStatus && (
-            <div className={styles.syncStatusSyncing}>
+            <Tooltip
+              className={styles.syncStatusSyncing}
+              arrow
+              theme="light"
+              size="small"
+              distance="0"
+              title="Syncing your content with the sanity cloud"
+            >
               <span className={styles.spinnerContainer}>
                 <span className={styles.spinner}>
                   <SyncIcon />
                 </span>
               </span>{' '}
               Syncing…
-            </div>
+            </Tooltip>
           )}
-          {value &&
-            !showSavingStatus && (
-              <div className={styles.syncStatusSynced}>
+          {
+            value && !showSavingStatus && (
+              <Tooltip
+                className={styles.syncStatusSynced}
+                arrow
+                theme="light"
+                size="small"
+                distance="0"
+                title="Synced with the sanity cloud"
+              >
                 <CheckIcon /> Synced
-              </div>
-            )}
+              </Tooltip>
+            )
+          }
+          {
+            (errors.length > 0 || warnings.length > 0) && (
+              <Tooltip
+                arrow
+                theme="light"
+                trigger="click"
+                position="bottom"
+                interactive
+                duration={100}
+                html={<ValidationList markers={validation} showLink onFocus={this.handleFocus} />}
+              >
+                <Button color="danger" icon={WarningIcon} padding="small">
+                  {errors.length} <ChevronDown />
+                </Button>
+              </Tooltip>
+            )
+          }
           <div className={styles.publishButton}>
             <Button
               title="Ctrl+Alt+P"
-              disabled={!draft}
+              disabled={!draft || errors.length > 0}
               onClick={this.handlePublishButtonClick}
               color="primary"
             >

@@ -21,14 +21,6 @@
   @media (--screen-medium) {
     background-color: transparent;
   }
-
-  /* This makes the content behave strange. but fixes a safari bug
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  */
 }
 
 .hotkey {
@@ -78,8 +70,9 @@
 .syncStatus {
   display: block;
   opacity: 1;
-  font-size: 0.7em;
   min-width: 4rem;
+  margin-right: 1em;
+  font-size: var(--font-size-xsmall);
 }
 
 .syncStatusSynced {
@@ -106,13 +99,13 @@
 .paneFunctions {
   display: flex;
   flex-wrap: nowrap;
+  align-items: center;
+  padding-right: 0;
+  font-size: var(--font-size-small);
 }
 
 .publishButton {
   padding: 0 1rem;
-  padding-right: 0;
-  font-size: 0.8em;
-  line-height: calc(2.75em / 0.8);
 }
 
 .spinnerContainer {
@@ -120,6 +113,10 @@
   height: 1em;
   position: relative;
   margin-right: 1em;
+}
+
+.validationButton {
+  border: 5px solid red;
 }
 
 .spinner {

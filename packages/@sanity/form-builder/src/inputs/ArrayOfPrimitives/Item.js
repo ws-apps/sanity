@@ -85,17 +85,20 @@ export default class Item extends React.PureComponent<Props> {
             level={level}
           />
         </div>
-        <div className={styles.validationStatus}>
-          <ValidationStatus markers={markers} />
+        <div className={styles.functions}>
+          <div className={styles.validationStatus}>
+            <ValidationStatus markers={markers} />
+          </div>
+          <div>
+            <Button
+              kind="simple"
+              className={styles.deleteButton}
+              icon={TrashIcon}
+              title="Delete"
+              onClick={this.handleRemove}
+            />
+          </div>
         </div>
-        <Button
-          kind="simple"
-          className={styles.deleteButton}
-          color="danger"
-          icon={TrashIcon}
-          title="Delete"
-          onClick={this.handleRemove}
-        />
       </div>
     )
   }

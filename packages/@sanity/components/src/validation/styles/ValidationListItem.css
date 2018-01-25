@@ -1,0 +1,39 @@
+@import "part:@sanity/base/theme/variables-style";
+
+.item {
+  display: flex;
+  margin: 0;
+  padding: 0.5em 0;
+  flex-grow: 1;
+  align-items: center;
+  width: 100%;
+}
+
+.inveractiveItem {
+  @nest &:hover {
+    background-color: color(var(--state-danger-color) a(10%));
+  }
+}
+
+.icon {
+  display: block;
+  padding: var(--small-padding);
+}
+
+.message {
+  display: block;
+  padding-right: 2rem;
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link {
+  cursor: pointer;
+  text-align: right;
+  display: block;
+  margin-left: auto;
+  text-decoration: underline;
+  white-space: nowrap;
+}
