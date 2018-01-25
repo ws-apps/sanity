@@ -171,11 +171,15 @@ export default class DateInput extends React.Component<Props, State> {
       }
     ]
 
+    const validation = markers.filter(marker => marker.type === 'validation')
+    const errors = validation.filter(marker => marker.level === 'error')
+
     return (
       <FormField markers={markers} labelFor={this.inputId} label={title} level={level} description={description}>
         {
           readOnly && (
             <TextInput
+              customValidity={errors.length > 0 ? errors[0].item.message : ''}
               readOnly
               value={(momentValue ? momentValue.format(getFormat(options)) : '')}
             />
@@ -183,7 +187,7 @@ export default class DateInput extends React.Component<Props, State> {
         }
         {
           !readOnly && (
-            <div className={styles.inputWrapper}>
+            <div className={errors.length > 0 ? styles.inputWrapperWithError : styles.inputWrapper}>
               <DatePicker
                 {...options}
                 {...rest}
