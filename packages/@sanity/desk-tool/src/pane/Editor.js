@@ -469,23 +469,27 @@ export default withRouterHOC(
                   color="danger"
                   icon={WarningIcon}
                   padding="small"
-                  onClick={() => this.setState({showValidationTooltip: true})}
+                  onClick={() => this.setState({showValidationTooltip: !this.state.showValidationTooltip})}
                 >
                   {errors.length} <ChevronDown />
                 </Button>
               </Tooltip>
             )
           }
-          <div className={styles.publishButton}>
+          <Tooltip
+            arrow
+            theme="light"
+            className={styles.publishButton}
+            title={errors.length > 0 ? 'Fix errors before publishing' : 'Ctrl+Alt+P'}
+          >
             <Button
-              title="Ctrl+Alt+P"
               disabled={!draft || errors.length > 0}
               onClick={this.handlePublishButtonClick}
               color="primary"
             >
               {published ? 'Publish changes' : 'Publish'}
             </Button>
-          </div>
+          </Tooltip>
         </div>
       )
     }
