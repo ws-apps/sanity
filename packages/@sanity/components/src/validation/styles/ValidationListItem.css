@@ -10,6 +10,9 @@
 }
 
 .inveractiveItem {
+  composes: item;
+  border-radius: var(--border-radius-small);
+
   @nest &:hover {
     background-color: color(var(--state-danger-color) a(10%));
   }
@@ -36,4 +39,5 @@
   margin-left: auto;
   text-decoration: underline;
   white-space: nowrap;
+  padding-right: var(--small-padding);
 }
