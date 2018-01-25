@@ -223,27 +223,17 @@ export default class RenderItemValue extends React.Component<Props> {
     )
   }
 
-  renderValidationResult(validation) {
-    const errors = validation.filter(marker => marker.level === 'error')
-    const warnings = validation.filter(marker => marker.level === 'warning')
-    if (errors.length === 0 && errors.warnings === 0) {
-      return null
-    }
-
-    const messages = errors.length > 0 ? errors : warnings
-    return <ul>{messages.map((err, i) => <li key={i}>{err.item.message}</li>)}</ul>
-  }
-
   renderItem() {
     const {value, markers, type} = this.props
     const options = type.options || {}
     const isGrid = options.layout === 'grid'
     const isSortable = options.sortable !== false
     const previewLayout = isGrid ? 'media' : 'default'
-    const currentMarkers = markers.filter(marker => marker.path.length === 1)
+    const validation = markers.filter(marker => marker.type === 'validation')
+    const errors = validation.filter(marker => marker.level === 'error')
 
     return (
-      <div className={styles.inner}>
+      <div className={errors.length > 0 ? styles.innerWithError : styles.inner}>
         {!isGrid && isSortable && <DragHandle />}
         <div
           tabIndex={0}

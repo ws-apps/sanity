@@ -87,6 +87,10 @@
     padding: 0;
     box-shadow: none;
   }
+
+  @nest .hasErrors:focus-within & {
+    box-shadow: var(--component-box-shadow--error) !important;
+  }
 }
 
 .canFocus > .fieldset > .inner > .content {

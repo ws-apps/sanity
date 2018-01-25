@@ -94,8 +94,12 @@ export default class Fieldset extends React.Component {
       ...this.props.styles
     }
 
+    const validation = markers.filter(marker => marker.type === 'validation')
+    const errors = validation.filter(marker => marker.level === 'error')
+
     const rootClassName = [
       styles.root,
+      errors.length > 0 && styles.hasErrors,
       styles[`columns${columns}`],
       styles[`level${level}`],
       transparent && styles.transparent,
