@@ -3,7 +3,7 @@
 exports[`number greater than constraint: gt: too low 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be greater than 10],
+    "item": [ValidationError: Must be greater than 10],
     "level": "error",
   },
 ]
@@ -12,7 +12,7 @@ Array [
 exports[`number greater than constraint: gt: too low, at limit 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be greater than 10],
+    "item": [ValidationError: Must be greater than 10],
     "level": "error",
   },
 ]
@@ -23,7 +23,7 @@ exports[`number greater than constraint: gt: valid 1`] = `Array []`;
 exports[`number integer constraint: integer: invalid (float) 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be an integer],
+    "item": [ValidationError: Must be an integer],
     "level": "error",
   },
 ]
@@ -34,7 +34,7 @@ exports[`number integer constraint: integer: valid 1`] = `Array []`;
 exports[`number less than constraint: lt: too high 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be less than 10],
+    "item": [ValidationError: Must be less than 10],
     "level": "error",
   },
 ]
@@ -43,7 +43,7 @@ Array [
 exports[`number less than constraint: lt: too high, at limit 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be less than 10],
+    "item": [ValidationError: Must be less than 10],
     "level": "error",
   },
 ]
@@ -54,7 +54,7 @@ exports[`number less than constraint: lt: valid 1`] = `Array []`;
 exports[`number max constraint: max: too large 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be less than or equal 10],
+    "item": [ValidationError: Must be less than or equal 10],
     "level": "error",
   },
 ]
@@ -67,7 +67,7 @@ exports[`number max constraint: max: valid, at limit 1`] = `Array []`;
 exports[`number min constraint: min: too low 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be greater than or equal 10],
+    "item": [ValidationError: Must be greater than or equal 10],
     "level": "error",
   },
 ]
@@ -80,7 +80,7 @@ exports[`number min constraint: min: valid, at limit 1`] = `Array []`;
 exports[`number negative constraint: negative: invalid (zero) 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be less than 0],
+    "item": [ValidationError: Must be less than 0],
     "level": "error",
   },
 ]
@@ -89,7 +89,7 @@ Array [
 exports[`number negative constraint: negative: invalid 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be less than 0],
+    "item": [ValidationError: Must be less than 0],
     "level": "error",
   },
 ]
@@ -100,7 +100,7 @@ exports[`number negative constraint: negative: valid 1`] = `Array []`;
 exports[`number positive constraint: positive: invalid 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Number must be greater than or equal 0],
+    "item": [ValidationError: Must be greater than or equal 0],
     "level": "error",
   },
 ]

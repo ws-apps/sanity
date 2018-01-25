@@ -7,7 +7,7 @@ const presence = (expected, value, message) => {
   }
 
   if (typeof value === 'undefined' || Object.keys(value).length === 0) {
-    return new ValidationError(message || 'Value is required')
+    return new ValidationError(message || 'Required')
   }
 
   return true

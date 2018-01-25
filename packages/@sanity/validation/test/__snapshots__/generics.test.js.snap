@@ -30,7 +30,7 @@ Array [
 exports[`generics can merge rules 1`] = `
 Array [
   Object {
-    "item": [ValidationError: String must be at least 5 characters long],
+    "item": [ValidationError: Must be at least 5 characters long],
     "level": "error",
   },
 ]

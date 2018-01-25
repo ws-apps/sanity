@@ -7,7 +7,7 @@ const min = (minLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Array must have at least ${minLength} items`)
+  return new ValidationError(message || `Must have at least ${minLength} items`)
 }
 
 const max = (maxLength, value, message) => {
@@ -15,7 +15,7 @@ const max = (maxLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Array must have at most ${maxLength} items`)
+  return new ValidationError(message || `Must have at most ${maxLength} items`)
 }
 
 const length = (wantedLength, value, message) => {
@@ -23,12 +23,12 @@ const length = (wantedLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Array must have exactly ${wantedLength} items`)
+  return new ValidationError(message || `Must have exactly ${wantedLength} items`)
 }
 
 const presence = (flag, value, message) => {
   if (flag === 'required' && !value) {
-    return new ValidationError(message || `This field is required`)
+    return new ValidationError(message || 'Required')
   }
 
   return true
@@ -65,7 +65,7 @@ const unique = (flag, value, message) => {
   })
 
   return dupeIndices.length > 0
-    ? new ValidationError(message || `Array cannot contain duplicate values`, {paths})
+    ? new ValidationError(message || `Can't be a duplicate`, {paths})
     : true
 }
 

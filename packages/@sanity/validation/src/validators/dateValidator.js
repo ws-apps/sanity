@@ -9,7 +9,7 @@ const type = (unused, value, message) => {
     return true
   }
 
-  return new ValidationError(message || 'Date must be a valid ISO-8601 formatted date string')
+  return new ValidationError(message || 'Must be a valid ISO-8601 formatted date string')
 }
 
 const min = (minDate, value, message) => {
@@ -22,7 +22,7 @@ const min = (minDate, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Date must be at or after ${minDate}`)
+  return new ValidationError(message || `Must be at or after ${minDate}`)
 }
 
 const max = (maxDate, value, message) => {
@@ -35,7 +35,7 @@ const max = (maxDate, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Date must be before or at ${maxDate}`)
+  return new ValidationError(message || `Must be before or at ${maxDate}`)
 }
 
 function parseDate(date, throwOnError) {

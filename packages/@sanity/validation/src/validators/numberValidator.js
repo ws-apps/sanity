@@ -5,7 +5,7 @@ const precisionRx = /(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/
 
 const integer = (unused, value, message) => {
   if (!Number.isInteger(value)) {
-    return new ValidationError(message || 'Number must be an integer')
+    return new ValidationError(message || 'Must be an integer')
   }
 
   return true
@@ -30,7 +30,7 @@ const min = (minNum, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Number must be greater than or equal ${minNum}`)
+  return new ValidationError(message || `Must be greater than or equal ${minNum}`)
 }
 
 const max = (maxNum, value, message) => {
@@ -38,7 +38,7 @@ const max = (maxNum, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Number must be less than or equal ${maxNum}`)
+  return new ValidationError(message || `Must be less than or equal ${maxNum}`)
 }
 
 const greaterThan = (num, value, message) => {
@@ -46,7 +46,7 @@ const greaterThan = (num, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Number must be greater than ${num}`)
+  return new ValidationError(message || `Must be greater than ${num}`)
 }
 
 const lessThan = (maxNum, value, message) => {
@@ -54,7 +54,7 @@ const lessThan = (maxNum, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `Number must be less than ${maxNum}`)
+  return new ValidationError(message || `Must be less than ${maxNum}`)
 }
 
 module.exports = Object.assign({}, genericValidator, {
