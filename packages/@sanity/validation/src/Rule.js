@@ -4,6 +4,7 @@ const escapeRegex = require('./util/escapeRegex')
 const createUriRegex = require('./util/createUriRegex')
 
 const knownTypes = ['Object', 'String', 'Number', 'Boolean', 'Array', 'Date']
+const isExclusive = ['type', 'uri', 'email']
 
 class Rule {
   static FIELD_REF = Symbol('FIELD_REF')
@@ -41,16 +42,6 @@ class Rule {
     return rule
   }
 
-  clone() {
-    const rule = new Rule()
-    rule._type = this._type
-    rule._message = this._message
-    rule._required = this._required
-    rule._rules = cloneDeep(this._rules)
-    rule._level = this._level
-    return rule
-  }
-
   reset() {
     this._type = this._type || null
     this._rules = (this._rules || []).filter(rule => rule.flag === 'type')
@@ -64,15 +55,18 @@ class Rule {
     return this._required
   }
 
-  cloneWithRules(rules, options) {
+  clone() {
+    const rule = new Rule()
+    rule._type = this._type
+    rule._message = this._message
+    rule._required = this._required
+    rule._rules = cloneDeep(this._rules)
+    rule._level = this._level
+    return rule
+  }
+
+  cloneWithRules(rules) {
     const rule = this.clone()
-
-    const removeDuplicates = options && options.removeDuplicates
-    if (!removeDuplicates) {
-      rule._rules = rule._rules.concat(rules)
-      return rule
-    }
-
     const newRules = new Set()
     rules.forEach(curr => {
       if (curr.flag === 'type') {
@@ -82,7 +76,14 @@ class Rule {
       newRules.add(curr.flag)
     })
 
-    rule._rules = rule._rules.filter(curr => !newRules.has(curr.flag)).concat(rules)
+    rule._rules = rule._rules
+      .filter(curr => {
+        const disallowDuplicate = isExclusive.includes(curr.flag)
+        const isDuplicate = newRules.has(curr.flag)
+        return !(disallowDuplicate && isDuplicate)
+      })
+      .concat(rules)
+
     return rule
   }
 
@@ -93,6 +94,9 @@ class Rule {
 
     const newRule = this.cloneWithRules(rule._rules)
     newRule._type = this._type || rule._type
+    newRule._message = this._message || rule._message
+    newRule._required = this._required || rule._required
+    newRule._level = this._level === 'error' ? rule._level : this._level
     return newRule
   }
 
@@ -107,7 +111,7 @@ class Rule {
       throw new Error(`Unknown type "${targetType}"`)
     }
 
-    const rule = this.cloneWithRules([{flag: 'type', constraint: type}], {removeDuplicates: true})
+    const rule = this.cloneWithRules([{flag: 'type', constraint: type}])
     rule._type = type
     return rule
   }
@@ -244,9 +248,7 @@ class Rule {
     }
 
     const regex = createUriRegex(customScheme, options.allowRelative, options.relativeOnly)
-    return this.cloneWithRules([{flag: 'uri', constraint: {options, regex}}], {
-      removeDuplicates: true
-    })
+    return this.cloneWithRules([{flag: 'uri', constraint: {options, regex}}])
   }
 
   // Array only

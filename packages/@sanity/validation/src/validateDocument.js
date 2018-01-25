@@ -28,10 +28,10 @@ function validateObject(obj, type, path, options) {
 
   // Validate actual object itself
   if (type.validation) {
-    results = applyPath(
-      results.concat(type.validation.validate(obj, {parent: options.parent})),
-      path
-    )
+    results = type.validation.reduce((acc, rule) => {
+      const ruleResults = rule.validate(obj, {parent: options.parent})
+      return acc.concat(applyPath(ruleResults, path))
+    }, results)
   }
 
   // Validate fields within object
@@ -55,9 +55,10 @@ function validateArray(items, type, path, options) {
   // Validate actual array itself
   let results = []
   if (type.validation) {
-    results = results.concat(
-      applyPath(type.validation.validate(items, {parent: options.parent}), path)
-    )
+    results = type.validation.reduce((acc, rule) => {
+      const ruleResults = rule.validate(items, {parent: options.parent})
+      return acc.concat(applyPath(ruleResults, path))
+    }, results)
   }
 
   // Validate items within array
@@ -77,7 +78,10 @@ function validatePrimitive(item, type, path, options) {
     return []
   }
 
-  return applyPath(type.validation.validate(item, {parent: options.parent}), path)
+  return type.validation.reduce((acc, rule) => {
+    const ruleResults = rule.validate(item, {parent: options.parent})
+    return acc.concat(applyPath(ruleResults, path))
+  }, [])
 }
 
 function resolveTypeForArrayItem(item, candidates) {
