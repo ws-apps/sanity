@@ -22,6 +22,16 @@
     @nest &:focus, &:active {
       box-shadow: var(--input-box-shadow--focus);
     }
+
+    @nest &:invalid {
+      border-color: var(--input-border-color-invalid);
+      background-color: var(--input-bg-error);
+      box-shadow: var(--input-box-shadow--error);
+
+      @nest &:focus, &:focus-within {
+        box-shadow: var(--input-box-shadow--error-focus);
+      }
+    }
   }
 
   @nest &:disabled {
