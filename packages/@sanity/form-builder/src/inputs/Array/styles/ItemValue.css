@@ -46,10 +46,8 @@
 }
 
 .linkToReference {
-  z-index: 1;
-  color: var(--text-color);
+  z-index: 2;
   transition: transform 0.1s linear, opacity 0.1s linear;
-  opacity: 0.6;
   transform: scale(1.2);
 
   @nest &:hover {
@@ -94,11 +92,16 @@
   display: flex;
   align-items: center;
   flex-grow: 0;
-  font-size: 0.9rem;
+  font-size: var(--font-size-small);
+  color: var(--text-color-secondary);
+  margin-left: var(--small-padding);
+
+  @nest & > * {
+    margin-right: var(--small-padding);
+  }
 }
 
 .validationStatus {
-  padding: 0 var(--small-padding);
 }
 
 .defaultDialogContent {
