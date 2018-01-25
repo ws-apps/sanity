@@ -67,7 +67,7 @@ export default class ValidationList extends React.PureComponent {
     console.log('element', element, pathString)
 
     if (element) {
-      element.scrollIntoView({behavior: 'smooth'})
+      element.scrollIntoView({behavior: 'smooth', alignToTop: true})
       this.scrollTimeout = setTimeout(() => {
         onFocus(path)
       }, 300)
