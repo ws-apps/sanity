@@ -2,7 +2,11 @@ const Rule = require('./Rule')
 
 // eslint-disable-next-line complexity
 function inferFromSchemaType(typeDef, isRoot = true) {
-  if (typeDef.validation instanceof Rule) {
+  const isInitialized =
+    Array.isArray(typeDef.validation) &&
+    typeDef.validation.every(item => typeof item.validate === 'function')
+
+  if (isInitialized) {
     return typeDef
   }
 
@@ -40,14 +44,27 @@ function inferFromSchemaType(typeDef, isRoot = true) {
 }
 
 function inferValidation(field, baseRule) {
+  if (!field.validation) {
+    return [baseRule]
+  }
+
+  const validation =
+    typeof field.validation === 'function' ? field.validation(baseRule) : field.validation
+
+  return Array.isArray(validation)
+    ? validation.map(rule => applyBaseRule(rule, baseRule))
+    : [applyBaseRule(validation, baseRule)]
+}
+
+function applyBaseRule(validation, baseRule) {
   // Pre-initialized rule
-  if (field.validation && typeof field.validation.validate === 'function') {
-    return baseRule.merge(field.validation)
+  if (validation && typeof validation.validate === 'function') {
+    return baseRule.merge(validation)
   }
 
   // Lazy-instantiated
-  if (field.validation && typeof field.validation === 'function') {
-    return field.validation(baseRule)
+  if (validation && typeof validation === 'function') {
+    return validation(baseRule)
   }
 
   return baseRule

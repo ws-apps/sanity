@@ -40,6 +40,16 @@ export default {
       description: 'Email, inferred'
     },
     {
+      name: 'intro',
+      type: 'text',
+      title: 'Introduction',
+      description: 'Required, and warn if less than 50 characters',
+      validation: Rule => [
+        Rule.required(),
+        Rule.min(50).warning('Should probably be at least 50 characters')
+      ]
+    },
+    {
       name: 'lowestTemperature',
       type: 'number',
       title: 'Lowest temperature recorded',
