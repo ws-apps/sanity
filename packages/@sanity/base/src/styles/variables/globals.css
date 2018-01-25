@@ -16,8 +16,8 @@
     0 1px 1px 1px color(var(--component-box-shadow-base) a(15%));
   --component-box-shadow--focus:
     0 0 2px 0 color(var(--input-border-color-focus) a(42%)),
-    0 2px 5px 0 color(var(--input-border-color-focus) a(45%)),
-    0 1px 1px 1px color(var(--input-border-color-focus) a(80%));
+    0 0 5px 0 color(var(--input-border-color-focus) a(65%)),
+    0 0 1px 1px color(var(--input-border-color-focus) a(80%));
   --component-box-shadow--error:
     0 0 3px -1px color(var(--state-danger-color) a(100%)),
     0 0 2px 0 color(var(--state-danger-color) a(65%)),

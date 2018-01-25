@@ -70,6 +70,7 @@
 
 .validationList {
   composes: validationList from 'part:@sanity/base/theme/forms/validation-style';
+  margin-bottom: var(--small-padding);
 }
 
 .validationListClosed {
