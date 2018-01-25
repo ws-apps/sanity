@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './styles/ValidationListItem.css'
 import WarningIcon from 'part:@sanity/base/warning-icon'
+import EditIcon from 'part:@sanity/base/edit-icon'
 
 export default class ValidationListItem extends React.PureComponent {
   static propTypes = {
@@ -36,13 +37,13 @@ export default class ValidationListItem extends React.PureComponent {
   render() {
     const {marker, onClick, showLink} = this.props
     return (
-      <li className={styles.item}>
+      <li className={onClick ? styles.inveractiveItem : styles.item} onClick={this.handleClick}>
         <span className={styles.icon}><WarningIcon /></span>
         <span className={styles.message}>{marker.item.message}</span>
         {
           onClick && showLink && (
-            <span className={styles.link} onClick={this.handleClick}>
-              Go to item
+            <span className={styles.link}>
+              <EditIcon /> View
             </span>
           )
         }
