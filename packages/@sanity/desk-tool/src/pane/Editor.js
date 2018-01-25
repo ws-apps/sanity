@@ -431,8 +431,8 @@ export default withRouterHOC(
               Syncing…
             </Tooltip>
           )}
-          {
-            value && !showSavingStatus && (
+          {value &&
+            !showSavingStatus && (
               <Tooltip
                 className={styles.syncStatusSynced}
                 arrow
@@ -443,39 +443,38 @@ export default withRouterHOC(
               >
                 <CheckIcon /> Synced
               </Tooltip>
-            )
-          }
-          {
-            (errors.length > 0 || warnings.length > 0) && (
-              <Tooltip
-                arrow
-                theme="light"
-                trigger="click"
-                position="bottom"
-                interactive
-                duration={100}
-                open={showValidationTooltip}
-                onRequestClose={() => this.setState({showValidationTooltip: false})}
-                html={
-                  <ValidationList
-                    markers={validation}
-                    showLink
-                    onClose={() => this.setState({showValidationTooltip: false})}
-                    onFocus={this.handleFocus}
-                  />
+            )}
+          {(errors.length > 0 || warnings.length > 0) && (
+            <Tooltip
+              arrow
+              theme="light"
+              trigger="click"
+              position="bottom"
+              interactive
+              duration={100}
+              open={showValidationTooltip}
+              onRequestClose={() => this.setState({showValidationTooltip: false})}
+              html={
+                <ValidationList
+                  markers={validation}
+                  showLink
+                  onClose={() => this.setState({showValidationTooltip: false})}
+                  onFocus={this.handleFocus}
+                />
+              }
+            >
+              <Button
+                color="danger"
+                icon={WarningIcon}
+                padding="small"
+                onClick={() =>
+                  this.setState({showValidationTooltip: !this.state.showValidationTooltip})
                 }
               >
-                <Button
-                  color="danger"
-                  icon={WarningIcon}
-                  padding="small"
-                  onClick={() => this.setState({showValidationTooltip: !this.state.showValidationTooltip})}
-                >
-                  {errors.length} <ChevronDown />
-                </Button>
-              </Tooltip>
-            )
-          }
+                {errors.length} <ChevronDown />
+              </Button>
+            </Tooltip>
+          )}
           <Tooltip
             arrow
             theme="light"
@@ -556,10 +555,6 @@ export default withRouterHOC(
         )
       }
 
-      const validation = markers.filter(marker => marker.type === 'validation')
-      const errors = validation.filter(marker => marker.level === 'error')
-      const warnings = validation.filter(marker => marker.level === 'warning')
-
       return (
         <Pane
           title={this.getTitle(value)}
@@ -588,30 +583,12 @@ export default withRouterHOC(
                   'Not published'
                 )}
               </div>
-              {errors.length > 0 && (
-                <div
-                  className={styles.errors}
-                  onClick={() => this.setState({showValidation: !this.state.showValidation})}
-                >
-                  {errors.length} errors
-                </div>
-              )}
-              {warnings.length > 0 && (
-                <div
-                  className={styles.warnings}
-                  onClick={() => this.setState({showValidation: !this.state.showValidation})}
-                >
-                  {warnings.length} warnings
-                </div>
-              )}
             </div>
-
             <form
               className={styles.editor}
               onSubmit={preventDefault}
               id="Sanity_Default_DeskTool_Editor_ScrollContainer"
             >
-              {showValidation && <ValidationList onFocus={this.handleFocus} markers={markers} />}
               <FormBuilder
                 schema={schema}
                 patchChannel={patchChannel}
