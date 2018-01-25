@@ -3,7 +3,7 @@
 exports[`array exact length constraint: exact length: too long 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array must have exactly 2 items],
+    "item": [ValidationError: Must have exactly 2 items],
     "level": "error",
   },
 ]
@@ -12,7 +12,7 @@ Array [
 exports[`array exact length constraint: exact length: too short 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array must have exactly 2 items],
+    "item": [ValidationError: Must have exactly 2 items],
     "level": "error",
   },
 ]
@@ -23,7 +23,7 @@ exports[`array exact length constraint: exact length: valid 1`] = `Array []`;
 exports[`array max length constraint: max length: too long 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array must have at most 2 items],
+    "item": [ValidationError: Must have at most 2 items],
     "level": "error",
   },
 ]
@@ -34,7 +34,7 @@ exports[`array max length constraint: max length: valid 1`] = `Array []`;
 exports[`array min length constraint: min length: too short 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array must have at least 2 items],
+    "item": [ValidationError: Must have at least 2 items],
     "level": "error",
   },
 ]
@@ -51,7 +51,7 @@ Array [
     "level": "error",
   },
   Object {
-    "item": [ValidationError: This field is required],
+    "item": [ValidationError: Required],
     "level": "error",
   },
 ]
@@ -60,7 +60,7 @@ Array [
 exports[`array required constraint: required: undefined 1`] = `
 Array [
   Object {
-    "item": [ValidationError: This field is required],
+    "item": [ValidationError: Required],
     "level": "error",
   },
 ]
@@ -71,14 +71,14 @@ exports[`array required constraint: required: valid 1`] = `Array []`;
 exports[`array unique constraint (default, array values): array unique: duplicates 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       0,
     ],
   },
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       1,
@@ -92,14 +92,14 @@ exports[`array unique constraint (default, array values): array unique: valid 1`
 exports[`array unique constraint (default, bool values): boolean unique: duplicates 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       0,
     ],
   },
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       2,
@@ -113,14 +113,14 @@ exports[`array unique constraint (default, bool values): boolean unique: valid 1
 exports[`array unique constraint (default, numeric values): numeric unique: duplicates 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       0,
     ],
   },
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       2,
@@ -134,14 +134,14 @@ exports[`array unique constraint (default, numeric values): numeric unique: vali
 exports[`array unique constraint (default, object values): object unique: duplicates 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       0,
     ],
   },
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       3,
@@ -155,14 +155,14 @@ exports[`array unique constraint (default, object values): object unique: valid 
 exports[`array unique constraint (default, simple values): simple unique: duplicates 1`] = `
 Array [
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       0,
     ],
   },
   Object {
-    "item": [ValidationError: Array cannot contain duplicate values],
+    "item": [ValidationError: Can't be a duplicate],
     "level": "error",
     "path": Array [
       3,

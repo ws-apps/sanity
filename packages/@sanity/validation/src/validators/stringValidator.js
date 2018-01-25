@@ -10,7 +10,7 @@ const min = (minLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `String must be at least ${minLength} characters long`)
+  return new ValidationError(message || `Must be at least ${minLength} characters long`)
 }
 
 const max = (maxLength, value, message) => {
@@ -18,7 +18,7 @@ const max = (maxLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `String must be at most ${maxLength} characters long`)
+  return new ValidationError(message || `Must be at most ${maxLength} characters long`)
 }
 
 const length = (wantedLength, value, message) => {
@@ -27,7 +27,7 @@ const length = (wantedLength, value, message) => {
     return true
   }
 
-  return new ValidationError(message || `String must be exactly ${wantedLength} characters long`)
+  return new ValidationError(message || `Must be exactly ${wantedLength} characters long`)
 }
 
 // eslint-disable-next-line complexity
@@ -40,9 +40,7 @@ const uri = (constraints, value, message) => {
   if (matchesConstraint) {
     const url = new URL(strValue, true)
     if (!allowCredentials && url.auth) {
-      return new ValidationError(
-        message || `String is not a valid URL - username/password not allowed`
-      )
+      return new ValidationError(message || `Username/password not allowed`)
     }
 
     return true
@@ -50,24 +48,24 @@ const uri = (constraints, value, message) => {
 
   const isValidUri = createUriRegex().test(strValue)
   if (!isValidUri) {
-    return new ValidationError(message || 'String is not a valid URL')
+    return new ValidationError(message || 'Not a valid URL')
   }
 
   if (relativeOnly) {
     return new ValidationError(message || 'Only relative URLs are allowed')
   }
 
-  return new ValidationError(message || 'URL does not match allowed protocols/schemes')
+  return new ValidationError(message || 'Does not match allowed protocols/schemes')
 }
 
 const stringCasing = (casing, value, message) => {
   const strValue = value || ''
   if (casing === 'uppercase' && strValue !== strValue.toLocaleUpperCase()) {
-    return new ValidationError(message || `String must be all uppercase letters`)
+    return new ValidationError(message || `Must be all uppercase letters`)
   }
 
   if (casing === 'lowercase' && strValue !== strValue.toLocaleLowerCase()) {
-    return new ValidationError(message || `String must be all lowercase letters`)
+    return new ValidationError(message || `Must be all lowercase letters`)
   }
 
   return true
@@ -75,7 +73,7 @@ const stringCasing = (casing, value, message) => {
 
 const presence = (flag, value, message) => {
   if (flag === 'required' && !value) {
-    return new ValidationError(message || `This field is required`)
+    return new ValidationError(message || 'Required')
   }
 
   return true
@@ -88,8 +86,8 @@ const regex = (options, value, message) => {
   const matches = pattern.test(strValue)
   if ((!invert && !matches) || (invert && matches)) {
     const defaultMessage = invert
-      ? `Value should not match ${regName}-pattern`
-      : `Value does not match ${regName}-pattern`
+      ? `Should not match ${regName}-pattern`
+      : `Does not match ${regName}-pattern`
 
     return new ValidationError(message || defaultMessage)
   }
