@@ -308,10 +308,7 @@ export default class ArrayInput extends React.Component<Props, State> {
   }
 
   render() {
-    const {type, level, markers, value} = this.props
-    const validation = markers.filter(
-      marker => marker.type === 'validation' && isEqualPath(marker.path, [])
-    )
+    const {type, level, value} = this.props
 
     return (
       <UploadTargetFieldset
@@ -336,7 +333,6 @@ export default class ArrayInput extends React.Component<Props, State> {
               </Button>
             )}
             {this.props.type.of.length > 1 && this.renderSelectType()}
-            {this.renderValidationResult(validation)}
           </div>
         )}
       </UploadTargetFieldset>

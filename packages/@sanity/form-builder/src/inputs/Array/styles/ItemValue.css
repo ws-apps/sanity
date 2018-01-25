@@ -9,6 +9,10 @@
   justify-content: space-between;
 }
 
+.innerWithError {
+  composes: inner;
+}
+
 .listItem {
   composes: root;
 }
@@ -88,6 +92,12 @@
   outline: none;
 }
 
+.previewWrapperHelper:focus {
+  @nest .innerWithError & {
+    box-shadow: var(--input-box-shadow--error-focus);
+  }
+}
+
 .functions {
   display: flex;
   align-items: center;
@@ -99,9 +109,6 @@
   @nest & > * {
     margin-right: var(--small-padding);
   }
-}
-
-.validationStatus {
 }
 
 .defaultDialogContent {

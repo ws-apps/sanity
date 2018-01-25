@@ -3,7 +3,7 @@
 .item {
   display: flex;
   margin: 0;
-  padding: 0.5em 0;
+  padding: 0.25em 0;
   flex-grow: 1;
   align-items: center;
   width: 100%;
@@ -22,7 +22,7 @@
 
 .message {
   display: block;
-  padding-right: 2rem;
+  padding-right: 2em;
   flex-grow: 1;
   white-space: nowrap;
   overflow: hidden;

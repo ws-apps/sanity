@@ -145,6 +145,7 @@ const INITIAL_STATE = {
   showConfirmDelete: false,
   showConfirmUnpublish: false,
   showValidation: false,
+  showValidationTooltip: false,
   focusPath: []
 }
 
@@ -403,7 +404,7 @@ export default withRouterHOC(
 
     renderFunctions = () => {
       const {draft, published, markers} = this.props
-      const {showSavingStatus} = this.state
+      const {showSavingStatus, showValidationTooltip} = this.state
 
       const value = draft || published
 
@@ -453,9 +454,23 @@ export default withRouterHOC(
                 position="bottom"
                 interactive
                 duration={100}
-                html={<ValidationList markers={validation} showLink onFocus={this.handleFocus} />}
+                open={showValidationTooltip}
+                onRequestClose={() => this.setState({showValidationTooltip: false})}
+                html={
+                  <ValidationList
+                    markers={validation}
+                    showLink
+                    onClose={() => this.setState({showValidationTooltip: false})}
+                    onFocus={this.handleFocus}
+                  />
+                }
               >
-                <Button color="danger" icon={WarningIcon} padding="small">
+                <Button
+                  color="danger"
+                  icon={WarningIcon}
+                  padding="small"
+                  onClick={() => this.setState({showValidationTooltip: true})}
+                >
                   {errors.length} <ChevronDown />
                 </Button>
               </Tooltip>

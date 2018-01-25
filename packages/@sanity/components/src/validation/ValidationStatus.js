@@ -56,13 +56,17 @@ export default class ValidationStatus extends React.PureComponent {
     return (
       <Tooltip
         title={tooltipText}
+        tabIndex={0}
+        trigger="mouseenter focus"
         animation="scale"
         arrow
         theme="light"
         distance="2"
+        duration={50}
+        className={styles.root}
+        onClick={onClick}
       >
-        <div className={styles.root} title={tooltipText} onClick={onClick}>
-
+        <div>
           {
             errors && errors.length > 0 && (
               <div className={styles.error}>

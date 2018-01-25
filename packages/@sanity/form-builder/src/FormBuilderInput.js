@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 // @flow
 import React from 'react'
 import type {Path} from './typedefs/path'
@@ -74,6 +75,12 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
     }
   }
 
+  componentWillUnmount() {
+    if (this.scrollTimeout) {
+      clearTimeout(this.scrollTimeout)
+    }
+  }
+
   resolveInputComponent(type: Type) {
     return this.context.formBuilder.resolveInputComponent(type)
   }
@@ -86,7 +93,7 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
     cb(getDisplayName(this.resolveInputComponent(this.props.type)))
   }
 
-  focus() {
+  focus(event) {
     if (!this._input) {
       // should never happen
       throw new Error('Attempted to set focus on a missing input component')
@@ -101,7 +108,6 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
       )
       return
     }
-
     this._input.focus()
   }
 
@@ -194,7 +200,7 @@ export const FormBuilderInput = class FormBuilderInput extends React.PureCompone
     const leafProps = isLeaf ? {} : {focusPath: childFocusPath}
 
     return (
-      <div ref={this.setElement}>
+      <div ref={this.setElement} data-focus-path={PathUtils.toString(path)}>
         <InputComponent
           {...rest}
           {...rootProps}
