@@ -231,6 +231,16 @@ export default class RenderItemValue extends React.Component<Props> {
     const previewLayout = isGrid ? 'media' : 'default'
     const validation = markers.filter(marker => marker.type === 'validation')
     const errors = validation.filter(marker => marker.level === 'error')
+    const scopedValidation = validation.map(marker => {
+      if (marker.path.length <= 1) {
+        return marker
+      }
+
+      const level = marker.level === 'error' ? 'errors' : 'warnings'
+      return Object.assign({}, marker, {
+        item: marker.item.cloneWithMessage(`Contains ${level}`)
+      })
+    })
 
     return (
       <div className={errors.length > 0 ? styles.innerWithError : styles.inner}>
@@ -253,7 +263,7 @@ export default class RenderItemValue extends React.Component<Props> {
 
         <div className={styles.functions}>
           <div className={styles.validationStatus}>
-            <ValidationStatus markers={markers} />
+            <ValidationStatus markers={scopedValidation} />
           </div>
           {value._ref && (
             <IntentLink className={styles.linkToReference} intent="edit" params={{id: value._ref}}>

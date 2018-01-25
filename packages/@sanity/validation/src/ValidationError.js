@@ -12,6 +12,14 @@ class ValidationError extends ExtendableError {
     this.paths = this.paths.map(path => prefix.concat(path))
     return this
   }
+
+  cloneWithMessage(msg) {
+    return new ValidationError(msg, {
+      paths: this.paths,
+      children: this.children,
+      operation: this.operation
+    })
+  }
 }
 
 module.exports = ValidationError
