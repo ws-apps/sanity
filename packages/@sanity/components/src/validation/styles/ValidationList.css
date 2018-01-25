@@ -1,12 +1,16 @@
 @import "part:@sanity/base/theme/variables-style";
 
 .root {
+  margin: 0;
+  padding: 0;
   display: block;
   font-size: var(--font-size-small);
 }
 
 .block {
   text-align: left;
+  margin: 0;
+  padding: 0;
 
   @nest & > h3 {
     margin: 0;
