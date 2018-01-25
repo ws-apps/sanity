@@ -59,12 +59,8 @@ export default class ValidationList extends React.PureComponent {
 
   handleClick = (event, path) => {
     const {onFocus, onClose} = this.props
-    console.log(path)
     const pathString = path[0]
-    // const isNested = path.some(i => typeof i === 'object')
-    // console.log('isNested', isNested, pathString)
     const element = document.querySelector(`[data-focus-path="${pathString}"]`)
-    console.log('element', element, pathString)
 
     if (element) {
       element.scrollIntoView({behavior: 'smooth', alignToTop: false, inline: 'center'})
