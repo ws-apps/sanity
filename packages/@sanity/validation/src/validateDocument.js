@@ -26,6 +26,11 @@ function validateItem(item, type, path, options) {
 function validateObject(obj, type, path, options) {
   let results = []
 
+  if (!type) {
+    console.log(options, path, obj)
+    return []
+  }
+
   // Validate actual object itself
   if (type.validation) {
     results = type.validation.reduce((acc, rule) => {
@@ -86,9 +91,14 @@ function validatePrimitive(item, type, path, options) {
 
 function resolveTypeForArrayItem(item, candidates) {
   const primitive = !item._type && Type.string(item).toLowerCase()
-  return primitive
-    ? candidates.find(candidate => candidate.jsonType === primitive)
-    : candidates.find(candidate => candidate.type.name === item._type)
+  if (primitive) {
+    return candidates.find(candidate => candidate.jsonType === primitive)
+  }
+
+  return (
+    candidates.find(candidate => candidate.type.name === item._type) ||
+    candidates.find(candidate => candidate.name === item._type)
+  )
 }
 
 function appendPath(base, next) {
