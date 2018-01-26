@@ -13,6 +13,7 @@ export default class TagsTextField extends React.Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
     onBlur: PropTypes.func,
+    markers: PropTypes.array,
     value: PropTypes.arrayOf(PropTypes.string)
   }
 
@@ -88,19 +89,15 @@ export default class TagsTextField extends React.Component {
 
   render() {
     const {inputValue} = this.state
-    const {
-      onChange,
-      value,
-      ...rest
-    } = this.props
+    const {onChange, value, markers, ...rest} = this.props
 
     return (
       <div className={styles.wrapper}>
         <div className={`${styles.inner}`}>
           <div className={styles.content}>
             <ul className={styles.tags}>
-              {
-                value && value.map((tag, i) => {
+              {value &&
+                value.map((tag, i) => {
                   return (
                     <li key={i} className={styles.tag}>
                       {tag}
@@ -113,8 +110,7 @@ export default class TagsTextField extends React.Component {
                       </a>
                     </li>
                   )
-                })
-              }
+                })}
             </ul>
             <input
               {...rest}
