@@ -22,6 +22,7 @@ const INITIAL_STATE = {
   isSaving: true,
   isCreatingDraft: false,
   transactionResult: null,
+  validationPending: true,
   draft: INITIAL_DOCUMENT_STATE,
   published: INITIAL_DOCUMENT_STATE
 }
@@ -90,6 +91,7 @@ export default class EditorPane extends React.Component {
         this.setState(prevState => {
           const version = event.version // either 'draft' or 'published'
           return {
+            validationPending: true,
             [version]: {
               ...(prevState[version] || {}),
               ...documentEventToState(event),
@@ -114,7 +116,7 @@ export default class EditorPane extends React.Component {
     }
 
     const markers = validateDocument(doc, schema)
-    this.setState({markers})
+    this.setState({markers, validationPending: false})
     return markers
   }, 300)
 
@@ -158,6 +160,7 @@ export default class EditorPane extends React.Component {
       this.subscription.unsubscribe()
       this.subscription = null
     }
+    this.validateDocument.cancel()
     this.published = null
     this.draft = null
   }
@@ -343,7 +346,8 @@ export default class EditorPane extends React.Component {
       isUnpublishing,
       transactionResult,
       isPublishing,
-      isSaving
+      isSaving,
+      validationPending
     } = this.state
 
     if (isRecoverable(draft, published)) {
@@ -357,6 +361,7 @@ export default class EditorPane extends React.Component {
         published={published.snapshot}
         draft={draft.snapshot}
         markers={markers}
+        validationPending={validationPending}
         isLoading={draft.isLoading || published.isLoading}
         isSaving={isSaving}
         isPublishing={isPublishing}
