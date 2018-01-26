@@ -5,10 +5,11 @@ import styles from 'part:@sanity/components/toggles/switch-style'
 export default class Switch extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
+    markers: PropTypes.array,
     checked: PropTypes.bool,
     disabled: PropTypes.bool,
     onFocus: PropTypes.func,
-    onBlur: PropTypes.func,
+    onBlur: PropTypes.func
   }
 
   state = {
@@ -36,7 +37,7 @@ export default class Switch extends React.Component {
   }
 
   render() {
-    const {disabled, checked, label, ...rest} = this.props
+    const {disabled, checked, label, markers, ...rest} = this.props
     const {hasFocus} = this.state
 
     return (
@@ -63,10 +64,7 @@ export default class Switch extends React.Component {
           ref={this.setInput}
           onFocus={this.handleFocus}
         />
-        <div className={styles.label}>
-          {label}
-        </div>
-
+        <div className={styles.label}>{label}</div>
       </label>
     )
   }
