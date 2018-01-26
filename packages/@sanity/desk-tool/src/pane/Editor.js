@@ -36,6 +36,7 @@ import ValidationList from 'part:@sanity/components/validation/list'
 import {Tooltip} from '@sanity/react-tippy'
 import ChevronDown from 'part:@sanity/base/chevron-down-icon'
 import WarningIcon from 'part:@sanity/base/warning-icon'
+import ValidationPending from '../components/ValidationPending'
 
 const preventDefault = ev => ev.preventDefault()
 
@@ -135,6 +136,8 @@ const getMenuItems = (draft, published) =>
     .map(fn => fn(draft, published))
     .filter(Boolean)
 
+const isValidationError = marker => marker.type === 'validation' && marker.level === 'error'
+
 const INITIAL_STATE = {
   inspect: false,
   isMenuOpen: false,
@@ -144,24 +147,10 @@ const INITIAL_STATE = {
   showConfirmDiscard: false,
   showConfirmDelete: false,
   showConfirmUnpublish: false,
-  showValidation: false,
   showValidationTooltip: false,
+  showPublishPendingValidationDialog: false,
+  validationResults: null,
   focusPath: []
-}
-
-function getToggleKeyState(event) {
-  if (event.ctrlKey && event.code === 'KeyI' && event.altKey && !event.shiftKey) {
-    return 'inspect'
-  }
-
-  if (event.ctrlKey && event.code === 'KeyP' && event.altKey && !event.shiftKey) {
-    return 'showConfirmPublish'
-  }
-
-  return undefined
-}
-function navigateUrl(url) {
-  window.open(url)
 }
 
 export default withRouterHOC(
@@ -189,6 +178,7 @@ export default withRouterHOC(
       transactionResult: PropTypes.func,
       onClearTransactionResult: PropTypes.func,
 
+      validationPending: PropTypes.bool,
       isCreatingDraft: PropTypes.bool,
       isUnpublishing: PropTypes.bool,
       isPublishing: PropTypes.bool,
@@ -216,10 +206,17 @@ export default withRouterHOC(
 
     componentDidMount() {
       this.unlistenForKey = listen(window, 'keyup', event => {
-        const toggleKey = getToggleKeyState(event)
-        if (toggleKey) {
-          this.setState(prevState => ({[toggleKey]: !prevState[toggleKey]}))
-        } else if (event.ctrlKey && event.code === 'KeyO' && event.altKey && !event.shiftKey) {
+        if (event.ctrlKey && event.code === 'KeyI' && event.altKey && !event.shiftKey) {
+          this.setState(prevState => ({inspect: !prevState.inspect}))
+          return
+        }
+
+        if (event.ctrlKey && event.code === 'KeyP' && event.altKey && !event.shiftKey) {
+          this.handlePublishRequested()
+          return
+        }
+
+        if (event.ctrlKey && event.code === 'KeyO' && event.altKey && !event.shiftKey) {
           const {draft, published} = this.props
           const item = getProductionPreviewItem(draft || published)
           if (item && item.url) {
@@ -246,6 +243,24 @@ export default withRouterHOC(
       const nextDocId = (nextProps.draft || nextProps.published || {})._id
       if (prevDocId !== nextDocId) {
         this.setState({focusPath: []})
+      }
+
+      // If we are waiting for a validation result in order to publish the document,
+      // make sure we update our current state once the validation results are in
+      const needsPublishStateUpdate =
+        this.props.validationPending &&
+        !nextProps.validationPending &&
+        (this.state.showPublishPendingValidationDialog || this.state.showConfirmPublish)
+
+      if (needsPublishStateUpdate) {
+        const errors = nextProps.markers.filter(isValidationError)
+        const hasErrors = errors.length > 0
+
+        this.setState({
+          showPublishPendingValidationDialog: hasErrors,
+          validationResults: hasErrors ? errors : null,
+          showConfirmPublish: !hasErrors
+        })
       }
     }
 
@@ -310,8 +325,34 @@ export default withRouterHOC(
       })
     }
 
-    handlePublishButtonClick = () => {
-      this.setState({showConfirmPublish: true})
+    handlePublishRequested = async () => {
+      const {markers, validationPending} = this.props
+
+      if (this.state.showPublishPendingValidationDialog) {
+        return
+      }
+
+      if (validationPending) {
+        this.setState({showPublishPendingValidationDialog: true})
+        return
+      }
+
+      const errors = markers.filter(isValidationError)
+      const hasErrors = errors.length > 0
+
+      if (!hasErrors) {
+        this.setState({showConfirmPublish: true})
+        return
+      }
+
+      this.setState({
+        showPublishPendingValidationDialog: true,
+        validationResults: errors
+      })
+    }
+
+    handleCancelPendingValidation = () => {
+      this.setState({showPublishPendingValidationDialog: false, validationResults: null})
     }
 
     handleCancelConfirmPublish = () => {
@@ -356,6 +397,10 @@ export default withRouterHOC(
         onDiscardDraft()
       }
       this.setState({showConfirmDelete: false})
+    }
+
+    handleHideInspector = () => {
+      this.setState({inspect: false})
     }
 
     handleMenuClick = item => {
@@ -483,7 +528,7 @@ export default withRouterHOC(
           >
             <Button
               disabled={!draft || errors.length > 0}
-              onClick={this.handlePublishButtonClick}
+              onClick={this.handlePublishRequested}
               color="primary"
             >
               {published ? 'Publish changes' : 'Publish'}
@@ -529,7 +574,8 @@ export default withRouterHOC(
         showConfirmDelete,
         showConfirmDiscard,
         showConfirmUnpublish,
-        showValidation
+        showPublishPendingValidationDialog,
+        validationResults
       } = this.state
 
       const value = draft || published
@@ -606,8 +652,12 @@ export default withRouterHOC(
               <AfterEditorComponent key={i} documentId={published._id} />
             ))}
 
-            {inspect && (
-              <InspectView value={value} onClose={() => this.setState({inspect: false})} />
+            {inspect && <InspectView value={value} onClose={this.handleHideInspector} />}
+            {showPublishPendingValidationDialog && (
+              <ValidationPending
+                results={validationResults}
+                onClose={this.handleCancelPendingValidation}
+              />
             )}
             {showConfirmPublish && (
               <ConfirmPublish
