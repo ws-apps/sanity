@@ -13,6 +13,8 @@ import sanityClient from 'part:@sanity/base/client'
 
 const imageBuilder = imageUrlBuilder(sanityClient)
 
+const sanityUrlMatch = /^https?:\/\/cdn.sanity.\w+\/images\//
+
 const previewComponentMap = {
   default: PreviewComponentDefault,
   card: PreviewComponentCard,
@@ -28,6 +30,10 @@ function extractUploadState(value) {
   }
   const {_upload, ...rest} = value
   return {_upload, value: rest}
+}
+
+function isSanityCdnImage(url) {
+  return sanityUrlMatch.test(url)
 }
 
 export default class SanityDefaultPreview extends React.PureComponent {
@@ -68,11 +74,19 @@ export default class SanityDefaultPreview extends React.PureComponent {
     const {dimensions} = options
     const {value} = this.props
     const imageUrl = value.imageUrl
-    if (imageUrl) {
+
+    if (!imageUrl) {
+      return undefined
+    }
+
+    if (isSanityCdnImage) {
       const assetUrl = assetUrlBuilder(imageUrl, dimensions)
       return <img src={assetUrl} alt={value.title} />
     }
-    return undefined
+
+    // Guard that custom image does not loose aspect ratio or goes outside the media preview
+    return <img src={imageUrl} style={{height: '100%', width: '100%', objectFit: 'contain'}} />
+
   }
 
   renderIcon = options => {
