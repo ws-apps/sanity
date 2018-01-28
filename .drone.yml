@@ -1,0 +1,42 @@
+aliases:
+- &volumes
+  - "/root/.npmrc:/root/.npmrc"
+  - "/var/run/docker.sock:/var/run/docker.sock"
+
+cache:
+  mount:
+  - .git
+
+build:
+  test:
+    image: node:6
+    pull: true
+    volumes: *volumes
+    when:
+      event: push
+      branches: [next, drone-ci]
+    commands:
+    # Install dependencies
+    - npm install -s
+    - npm run bootstrap
+    - npm run build
+
+    # Allow running the Sanity CLI tool without specifying absolute path
+    - export PATH="${DRONE_DIR}/packages/@sanity/cli/bin:$PATH"
+
+    # Build CLI to a single file
+    - cd packages/@sanity/cli
+    - npm run pack
+
+    # Test initializing a project in unattended mode
+    - sanity init -y --project=ppsg7ml5 --dataset=test --output-path=/tmp/test-project
+
+    # Use the newly commited changes instead of the latest dependencies from NPM
+    - cd /tmp/test-project
+    - $DRONE_DIR/scripts/symlinkDependencies.js .
+
+    # Test building the project with latest dependencies
+    - sanity build --skip-minify
+
+    # Publish a new `next`
+    lerna publish --npm-tag=next --skip-git --cd-version=prepatch --preid=next --yes
