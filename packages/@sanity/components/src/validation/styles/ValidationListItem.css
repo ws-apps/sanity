@@ -1,4 +1,4 @@
-@import "part:@sanity/base/theme/variables-style";
+@import 'part:@sanity/base/theme/variables-style';
 
 .item {
   display: flex;
@@ -9,7 +9,7 @@
   width: 100%;
 }
 
-.inveractiveItem {
+.interactiveItem {
   composes: item;
   border-radius: var(--border-radius-small);
 
