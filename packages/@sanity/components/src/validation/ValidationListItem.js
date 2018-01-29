@@ -36,17 +36,20 @@ export default class ValidationListItem extends React.PureComponent {
 
   render() {
     const {marker, onClick, showLink} = this.props
+    const shouldRenderLink = onClick && showLink
+
     return (
-      <li className={onClick ? styles.inveractiveItem : styles.item} onClick={this.handleClick}>
-        <span className={styles.icon}><WarningIcon /></span>
+      <li className={onClick ? styles.interactiveItem : styles.item} onClick={this.handleClick}>
+        <span className={styles.icon}>
+          <WarningIcon />
+        </span>
+
         <span className={styles.message}>{marker.item.message}</span>
-        {
-          onClick && showLink && (
-            <span className={styles.link}>
-              <EditIcon /> View
-            </span>
-          )
-        }
+        {shouldRenderLink && (
+          <span className={styles.link}>
+            <EditIcon /> View
+          </span>
+        )}
       </li>
     )
   }
