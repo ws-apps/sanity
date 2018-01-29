@@ -39,4 +39,4 @@ build:
     - sanity build --skip-minify
 
     # Publish a new `next`
-    lerna publish --npm-tag=next --skip-git --cd-version=prepatch --preid=next --yes
+    - lerna publish --npm-tag=next --skip-git --cd-version=prepatch --preid=next --yes
