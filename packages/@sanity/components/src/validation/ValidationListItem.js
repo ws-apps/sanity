@@ -8,6 +8,7 @@ export default class ValidationListItem extends React.PureComponent {
   static propTypes = {
     onClick: PropTypes.func,
     showLink: PropTypes.bool,
+    path: PropTypes.string,
     marker: PropTypes.shape({
       path: PropTypes.arrayOf(
         PropTypes.oneOfType([
@@ -23,6 +24,7 @@ export default class ValidationListItem extends React.PureComponent {
   }
 
   static defaultProps = {
+    path: '',
     onClick: undefined,
     showLink: false
   }
@@ -35,7 +37,7 @@ export default class ValidationListItem extends React.PureComponent {
   }
 
   render() {
-    const {marker, onClick, showLink} = this.props
+    const {marker, onClick, path, showLink} = this.props
     const shouldRenderLink = onClick && showLink
 
     return (
@@ -44,7 +46,11 @@ export default class ValidationListItem extends React.PureComponent {
           <WarningIcon />
         </span>
 
-        <span className={styles.message}>{marker.item.message}</span>
+        <span className={styles.message}>
+          {path && `${path}: `}
+          {marker.item.message}
+        </span>
+
         {shouldRenderLink && (
           <span className={styles.link}>
             <EditIcon /> View
