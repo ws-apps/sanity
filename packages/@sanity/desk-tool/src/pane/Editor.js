@@ -448,7 +448,7 @@ export default withRouterHOC(
     }
 
     renderFunctions = () => {
-      const {draft, published, markers} = this.props
+      const {draft, published, markers, type} = this.props
       const {showSavingStatus, showValidationTooltip} = this.state
 
       const value = draft || published
@@ -503,6 +503,7 @@ export default withRouterHOC(
                 <ValidationList
                   markers={validation}
                   showLink
+                  documentType={type}
                   onClose={() => this.setState({showValidationTooltip: false})}
                   onFocus={this.handleFocus}
                 />
