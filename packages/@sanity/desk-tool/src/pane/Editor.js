@@ -136,7 +136,8 @@ const getMenuItems = (draft, published) =>
     .map(fn => fn(draft, published))
     .filter(Boolean)
 
-const isValidationError = marker => marker.type === 'validation' && marker.level === 'error'
+const isValidationError = marker =>
+  marker.type === 'validation' && marker.level === 'error'
 
 const INITIAL_STATE = {
   inspect: false,
@@ -209,17 +210,32 @@ export default withRouterHOC(
           return
         }
 
-        if (event.ctrlKey && event.code === 'KeyI' && event.altKey && !event.shiftKey) {
+        if (
+          event.ctrlKey &&
+          event.code === 'KeyI' &&
+          event.altKey &&
+          !event.shiftKey
+        ) {
           this.setState(prevState => ({inspect: !prevState.inspect}))
           return
         }
 
-        if (event.ctrlKey && event.code === 'KeyP' && event.altKey && !event.shiftKey) {
+        if (
+          event.ctrlKey &&
+          event.code === 'KeyP' &&
+          event.altKey &&
+          !event.shiftKey
+        ) {
           this.handlePublishRequested()
           return
         }
 
-        if (event.ctrlKey && event.code === 'KeyO' && event.altKey && !event.shiftKey) {
+        if (
+          event.ctrlKey &&
+          event.code === 'KeyO' &&
+          event.altKey &&
+          !event.shiftKey
+        ) {
           const {draft, published} = this.props
           const item = getProductionPreviewItem(draft || published)
           if (item && item.url) {
@@ -269,13 +285,15 @@ export default withRouterHOC(
 
     handleCreateCopy = () => {
       const {router, draft, published} = this.props
-      documentStore.create(newDraftFrom(copyDocument(draft || published))).subscribe(copied => {
-        router.navigate({
-          ...router.state,
-          action: 'edit',
-          selectedDocumentId: getPublishedId(copied._id)
+      documentStore
+        .create(newDraftFrom(copyDocument(draft || published)))
+        .subscribe(copied => {
+          router.navigate({
+            ...router.state,
+            action: 'edit',
+            selectedDocumentId: getPublishedId(copied._id)
+          })
         })
-      })
     }
 
     handleEditAsActualType = () => {
@@ -310,13 +328,15 @@ export default withRouterHOC(
       })
     }
 
-    handlePublishRequested = async () => {
+    handlePublishRequested = () => {
       const {markers, validationPending} = this.props
       const errors = markers.filter(isValidationError)
       const hasErrors = errors.length > 0
 
       if (validationPending || hasErrors) {
-        this.setState({showValidationTooltip: !this.state.showValidationTooltip})
+        this.setState({
+          showValidationTooltip: !this.state.showValidationTooltip
+        })
         return
       }
 
@@ -499,7 +519,9 @@ export default withRouterHOC(
             arrow
             theme="light"
             className={styles.publishButton}
-            title={errors.length > 0 ? 'Fix errors before publishing' : 'Ctrl+Alt+P'}
+            title={
+              errors.length > 0 ? 'Fix errors before publishing' : 'Ctrl+Alt+P'
+            }
           >
             <Button
               disabled={!draft || errors.length > 0}
@@ -565,10 +587,12 @@ export default withRouterHOC(
       if (hasTypeMismatch) {
         return (
           <div className={styles.typeMisMatchMessage}>
-            This document is of type <code>{value._type}</code> and cannot be edited as{' '}
-            <code>{type.name}</code>
+            This document is of type <code>{value._type}</code> and cannot be
+            edited as <code>{type.name}</code>
             <div>
-              <Button onClick={this.handleEditAsActualType}>Edit as {value._type} instead</Button>
+              <Button onClick={this.handleEditAsActualType}>
+                Edit as {value._type} instead
+              </Button>
             </div>
           </div>
         )
@@ -582,7 +606,9 @@ export default withRouterHOC(
           onMenuToggle={this.handleMenuToggle}
         >
           <div className={styles.root}>
-            {isCreatingDraft && <Spinner fullscreen message="Making changes…" />}
+            {isCreatingDraft && (
+              <Spinner fullscreen message="Making changes…" />
+            )}
             {isPublishing && <Spinner fullscreen message="Publishing…" />}
             {isUnpublishing && <Spinner fullscreen message="Unpublishing…" />}
             <div className={styles.top}>
@@ -625,7 +651,9 @@ export default withRouterHOC(
               <AfterEditorComponent key={i} documentId={published._id} />
             ))}
 
-            {inspect && <InspectView value={value} onClose={this.handleHideInspector} />}
+            {inspect && (
+              <InspectView value={value} onClose={this.handleHideInspector} />
+            )}
             {showConfirmPublish && (
               <ConfirmPublish
                 draft={draft}
