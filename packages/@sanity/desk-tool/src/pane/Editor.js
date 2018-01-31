@@ -484,7 +484,7 @@ export default withRouterHOC(
                 theme="light"
                 size="small"
                 distance="0"
-                title="Synced with the sanity cloud"
+                title="Synced with the Sanity cloud"
               >
                 <CheckIcon /> Synced
               </Tooltip>
