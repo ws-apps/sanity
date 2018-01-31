@@ -53,6 +53,7 @@ export default class OptionsArrayInput extends React.PureComponent {
       description: PropTypes.string,
       of: PropTypes.array
     }),
+    markers: PropTypes.array,
     value: PropTypes.array,
     level: PropTypes.number,
     onChange: PropTypes.func
@@ -85,13 +86,13 @@ export default class OptionsArrayInput extends React.PureComponent {
   }
 
   render() {
-    const {type, value, level} = this.props
+    const {type, value, level, markers} = this.props
 
     const options = get(type.options, 'list')
     const direction = get(type.options, 'direction') // vertical and horizontal
 
     return (
-      <Fieldset legend={type.title} description={type.description} level={level}>
+      <Fieldset legend={type.title} description={type.description} markers={markers} level={level}>
         {options.map((option, index) => {
           const optionType = this.getMemberTypeOfItem(option)
           if (!optionType) {

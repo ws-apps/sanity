@@ -1,5 +1,5 @@
 const Type = require('type-of-is')
-const deepEqual = require('fast-deep-equal')
+const deepEquals = require('../util/deepEquals')
 const ValidationError = require('../ValidationError')
 
 const type = (expected, value, message) => {
@@ -61,7 +61,7 @@ const valid = (allowedValues, actual, message) => {
     ? `Value "${strValue}" did not match any of allowed values`
     : 'Value did not match any of allowed values'
 
-  return allowedValues.some(expected => deepEqual(expected, actual))
+  return allowedValues.some(expected => deepEquals(expected, actual))
     ? true
     : new ValidationError(message || defaultMessage)
 }
