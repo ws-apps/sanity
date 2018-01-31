@@ -13,7 +13,14 @@
     "type": "git",
     "url": "git+https://github.com/sanity-io/sanity.git"
   },
-  "keywords": ["sanity", "cms", "headless", "realtime", "content", "base"],
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "base"
+  ],
   "author": "Sanity.io <hello@sanity.io>",
   "license": "MIT",
   "bugs": {
@@ -28,7 +35,7 @@
     "@sanity/preview": "^0.125.4",
     "@sanity/schema": "0.125.0",
     "@sanity/state-router": "0.125.0",
-    "@sanity/validation": "0.125.0",
+    "@sanity/validation": "0.125.1",
     "history": "^4.6.3",
     "in-publish": "^2.0.0",
     "lodash": "^4.17.4",

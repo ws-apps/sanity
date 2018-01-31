@@ -11,7 +11,14 @@
     "test:watch": "jest --watchAll",
     "typecheck": "flow check"
   },
-  "keywords": ["sanity", "cms", "headless", "realtime", "content", "schema"],
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "schema"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {

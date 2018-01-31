@@ -1,6 +1,6 @@
 {
   "name": "@sanity/validation",
-  "version": "0.124.6",
+  "version": "0.125.1",
   "description": "Validation and warning infrastructure for Sanity projects",
   "main": "lib/index.js",
   "scripts": {
@@ -15,7 +15,14 @@
   "publishConfig": {
     "access": "public"
   },
-  "keywords": ["sanity", "cms", "headless", "realtime", "content", "validation"],
+  "keywords": [
+    "sanity",
+    "cms",
+    "headless",
+    "realtime",
+    "content",
+    "validation"
+  ],
   "homepage": "https://www.sanity.io/",
   "repository": {
     "type": "git",
