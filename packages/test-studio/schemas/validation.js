@@ -232,7 +232,7 @@ export default {
       title: 'Array of predefined options',
       description: 'We required at least one of these to be checked',
       type: 'array',
-      validation: Rule => Rule.min(1),
+      validation: Rule => Rule.required().min(1),
       of: [
         {
           type: 'reference',

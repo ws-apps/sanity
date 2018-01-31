@@ -34,6 +34,28 @@ const presence = (flag, value, message) => {
   return true
 }
 
+const valid = (allowedValues, values, message) => {
+  const valueType = typeof values
+  if (valueType === 'undefined') {
+    return true
+  }
+
+  const paths = []
+  for (let i = 0; i < values.length; i++) {
+    const value = values[i]
+    if (allowedValues.some(expected => deepEquals(expected, value))) {
+      continue
+    }
+
+    const pathSegment = value && value._key ? {_key: value._key} : i
+    paths.push([pathSegment])
+  }
+
+  return paths.length === 0
+    ? true
+    : new ValidationError(message || 'Value did not match any of allowed values', {paths})
+}
+
 const unique = (flag, value, message) => {
   const dupeIndices = []
   if (!value) {
@@ -76,6 +98,7 @@ module.exports = Object.assign({}, genericValidator, {
   presence,
   unique,
   length,
+  valid,
   min,
   max
 })
