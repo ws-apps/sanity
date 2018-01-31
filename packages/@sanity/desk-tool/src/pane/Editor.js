@@ -148,8 +148,6 @@ const INITIAL_STATE = {
   showConfirmDelete: false,
   showConfirmUnpublish: false,
   showValidationTooltip: false,
-  showPublishPendingValidationDialog: false,
-  validationResults: null,
   focusPath: []
 }
 
@@ -206,6 +204,11 @@ export default withRouterHOC(
 
     componentDidMount() {
       this.unlistenForKey = listen(window, 'keyup', event => {
+        if (event.code === 'Escape' && this.state.showValidationTooltip) {
+          this.setState({showValidationTooltip: false})
+          return
+        }
+
         if (event.ctrlKey && event.code === 'KeyI' && event.altKey && !event.shiftKey) {
           this.setState(prevState => ({inspect: !prevState.inspect}))
           return
@@ -243,24 +246,6 @@ export default withRouterHOC(
       const nextDocId = (nextProps.draft || nextProps.published || {})._id
       if (prevDocId !== nextDocId) {
         this.setState({focusPath: []})
-      }
-
-      // If we are waiting for a validation result in order to publish the document,
-      // make sure we update our current state once the validation results are in
-      const needsPublishStateUpdate =
-        this.props.validationPending &&
-        !nextProps.validationPending &&
-        (this.state.showPublishPendingValidationDialog || this.state.showConfirmPublish)
-
-      if (needsPublishStateUpdate) {
-        const errors = nextProps.markers.filter(isValidationError)
-        const hasErrors = errors.length > 0
-
-        this.setState({
-          showPublishPendingValidationDialog: hasErrors,
-          validationResults: hasErrors ? errors : null,
-          showConfirmPublish: !hasErrors
-        })
       }
     }
 
@@ -327,32 +312,15 @@ export default withRouterHOC(
 
     handlePublishRequested = async () => {
       const {markers, validationPending} = this.props
-
-      if (this.state.showPublishPendingValidationDialog) {
-        return
-      }
-
-      if (validationPending) {
-        this.setState({showPublishPendingValidationDialog: true})
-        return
-      }
-
       const errors = markers.filter(isValidationError)
       const hasErrors = errors.length > 0
 
-      if (!hasErrors) {
-        this.setState({showConfirmPublish: true})
+      if (validationPending || hasErrors) {
+        this.setState({showValidationTooltip: !this.state.showValidationTooltip})
         return
       }
 
-      this.setState({
-        showPublishPendingValidationDialog: true,
-        validationResults: errors
-      })
-    }
-
-    handleCancelPendingValidation = () => {
-      this.setState({showPublishPendingValidationDialog: false, validationResults: null})
+      this.setState({showConfirmPublish: true})
     }
 
     handleCancelConfirmPublish = () => {
@@ -435,6 +403,14 @@ export default withRouterHOC(
       this.setState({isMenuOpen: false})
     }
 
+    handleCloseValidationResults = () => {
+      this.setState({showValidationTooltip: false})
+    }
+
+    handleToggleValidationResults = () => {
+      this.setState({showValidationTooltip: !this.state.showValidationTooltip})
+    }
+
     getTitle(value) {
       const {type} = this.props
       if (!value) {
@@ -498,13 +474,13 @@ export default withRouterHOC(
               interactive
               duration={100}
               open={showValidationTooltip}
-              onRequestClose={() => this.setState({showValidationTooltip: false})}
+              onRequestClose={this.handleCloseValidationResults}
               html={
                 <ValidationList
                   markers={validation}
                   showLink
                   documentType={type}
-                  onClose={() => this.setState({showValidationTooltip: false})}
+                  onClose={this.handleCloseValidationResults}
                   onFocus={this.handleFocus}
                 />
               }
@@ -513,9 +489,7 @@ export default withRouterHOC(
                 color="danger"
                 icon={WarningIcon}
                 padding="small"
-                onClick={() =>
-                  this.setState({showValidationTooltip: !this.state.showValidationTooltip})
-                }
+                onClick={this.handleToggleValidationResults}
               >
                 {errors.length} <ChevronDown />
               </Button>
@@ -574,9 +548,7 @@ export default withRouterHOC(
         showConfirmPublish,
         showConfirmDelete,
         showConfirmDiscard,
-        showConfirmUnpublish,
-        showPublishPendingValidationDialog,
-        validationResults
+        showConfirmUnpublish
       } = this.state
 
       const value = draft || published
@@ -654,12 +626,6 @@ export default withRouterHOC(
             ))}
 
             {inspect && <InspectView value={value} onClose={this.handleHideInspector} />}
-            {showPublishPendingValidationDialog && (
-              <ValidationPending
-                results={validationResults}
-                onClose={this.handleCancelPendingValidation}
-              />
-            )}
             {showConfirmPublish && (
               <ConfirmPublish
                 draft={draft}
