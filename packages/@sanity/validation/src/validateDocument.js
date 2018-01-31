@@ -27,7 +27,6 @@ function validateObject(obj, type, path, options) {
   let results = []
 
   if (!type) {
-    console.log(options, path, obj)
     return []
   }
 

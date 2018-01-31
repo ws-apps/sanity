@@ -3,6 +3,7 @@ const ValidationError = require('./ValidationError')
 const genericValidator = require('./validators/genericValidator')
 
 const typeValidators = {
+  Boolean: require('./validators/booleanValidator'),
   Number: require('./validators/numberValidator'),
   String: require('./validators/stringValidator'),
   Array: require('./validators/arrayValidator'),
