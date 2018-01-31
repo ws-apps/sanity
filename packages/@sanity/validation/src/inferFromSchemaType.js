@@ -30,6 +30,10 @@ function inferFromSchemaType(typeDef, isRoot = true) {
     base = base.email()
   }
 
+  if (typeDef.options && typeDef.options.list) {
+    base = base.valid(typeDef.options.list)
+  }
+
   typeDef.validation = inferValidation(typeDef, base)
 
   if (typeDef.fields) {
@@ -48,26 +52,9 @@ function inferValidation(field, baseRule) {
     return [baseRule]
   }
 
-  const validation =
-    typeof field.validation === 'function' ? field.validation(baseRule) : field.validation
-
-  return Array.isArray(validation)
-    ? validation.map(rule => applyBaseRule(rule, baseRule))
-    : [applyBaseRule(validation, baseRule)]
-}
-
-function applyBaseRule(validation, baseRule) {
-  // Pre-initialized rule
-  if (validation && typeof validation.validate === 'function') {
-    return baseRule.merge(validation)
-  }
-
-  // Lazy-instantiated
-  if (validation && typeof validation === 'function') {
-    return validation(baseRule)
-  }
-
-  return baseRule
+  const isLazy = typeof field.validation === 'function'
+  const validation = isLazy ? field.validation(baseRule) : field.validation
+  return Array.isArray(validation) ? validation : [validation]
 }
 
 module.exports = inferFromSchemaType

@@ -3,7 +3,7 @@ const ValidationError = require('../ValidationError')
 const genericValidator = require('./genericValidator')
 
 const min = (minLength, value, message) => {
-  if (value.length >= minLength) {
+  if (!value || value.length >= minLength) {
     return true
   }
 
@@ -11,7 +11,7 @@ const min = (minLength, value, message) => {
 }
 
 const max = (maxLength, value, message) => {
-  if (value.length <= maxLength) {
+  if (!value || value.length <= maxLength) {
     return true
   }
 
@@ -19,7 +19,7 @@ const max = (maxLength, value, message) => {
 }
 
 const length = (wantedLength, value, message) => {
-  if (value.length === wantedLength) {
+  if (!value || value.length === wantedLength) {
     return true
   }
 
@@ -36,6 +36,9 @@ const presence = (flag, value, message) => {
 
 const unique = (flag, value, message) => {
   const dupeIndices = []
+  if (!value) {
+    return true
+  }
 
   /* eslint-disable max-depth */
   for (let x = 0; x < value.length; x++) {

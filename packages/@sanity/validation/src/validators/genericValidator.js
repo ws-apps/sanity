@@ -49,9 +49,21 @@ const either = (children, value, message) => {
 }
 
 const valid = (allowedValues, actual, message) => {
+  const valueType = typeof actual
+  if (valueType === 'undefined') {
+    return true
+  }
+
+  const value = (valueType === 'number' || valueType === 'string') && `${actual}`
+  const strValue = value && value.length > 30 ? `${value.slice(0, 30)}…` : value
+
+  const defaultMessage = value
+    ? `Value "${strValue}" did not match any of allowed values`
+    : 'Value did not match any of allowed values'
+
   return allowedValues.some(expected => deepEqual(expected, actual))
     ? true
-    : new ValidationError(message || 'Value did not match any of allowed values')
+    : new ValidationError(message || defaultMessage)
 }
 
 function formatValidationErrors(message, results, options = {}) {

@@ -14,6 +14,16 @@ export default {
           .max(100)
     },
     {
+      name: 'slug',
+      type: 'slug',
+      title: 'Field of slug type',
+      description: 'Required, updates from title',
+      validation: Rule => Rule.required(),
+      options: {
+        source: document => document.title
+      }
+    },
+    {
       name: 'myUrlField',
       type: 'url',
       title: 'Plain url',
@@ -120,6 +130,221 @@ export default {
         Rule.min(1)
           .regex(/^(?:[A-Z][^\s]*\s?)+$/)
           .error('Must be in Title Case')
+    },
+    {
+      name: 'translations',
+      title: 'Translations',
+      description: 'Needs at least one field to be valid',
+      type: 'object',
+      validation: Rule => Rule.required(),
+      fields: [
+        {name: 'no', type: 'string', title: 'Norwegian (Bokmål)'},
+        {name: 'nn', type: 'string', title: 'Norwegian (Nynorsk)'},
+        {name: 'se', type: 'string', title: 'Swedish'}
+      ]
+    },
+    {
+      name: 'image',
+      title: 'Image',
+      type: 'image',
+      options: {hotspot: true}
+    },
+    {
+      name: 'dropdown',
+      title: 'Dropdown thing',
+      description: 'Inferred to have one of the defined values, and explicitly set as required',
+      type: 'string',
+      validation: Rule => Rule.required(),
+      options: {
+        list: ['one', 'two', 'three']
+      }
+    },
+    {
+      name: 'radio',
+      title: 'Radio thing',
+      type: 'string',
+      description: 'Same as above, but as radio',
+      options: {
+        layout: 'radio',
+        list: ['one', 'two', 'three']
+      }
+    },
+    {
+      name: 'readonlyField',
+      type: 'string',
+      title: 'A read only string',
+      description: 'It may have a value, but it cannot be edited',
+      validation: Rule => Rule.required().min(5),
+      readOnly: true
+    },
+    {
+      name: 'switch',
+      type: 'boolean',
+      title: 'Check me?',
+      validation: Rule => Rule.required().valid(true),
+      description: 'Must be true'
+    },
+    {
+      name: 'checkbox',
+      type: 'boolean',
+      title: 'Checked?',
+      description: 'Must be false, should be displayed as a checkbox',
+      validation: Rule => Rule.required().valid(false),
+      options: {
+        layout: 'checkbox'
+      }
+    },
+    {
+      name: 'person',
+      type: 'object',
+      fieldsets: [{name: 'social', title: 'Social media handles'}],
+      fields: [
+        {
+          name: 'name',
+          title: 'Name',
+          type: 'string'
+        },
+        {
+          name: 'twitter',
+          title: 'Twitter',
+          type: 'string',
+          description: 'Required within a fieldset',
+          validation: Rule => Rule.required(),
+          fieldset: 'social'
+        },
+        {
+          name: 'instagram',
+          title: 'Instagram',
+          type: 'string',
+          fieldset: 'social'
+        },
+        {
+          name: 'facebook',
+          title: 'Facebook',
+          type: 'string',
+          fieldset: 'social'
+        }
+      ]
+    },
+
+    {
+      name: 'arrayOfPredefined',
+      title: 'Array of predefined options',
+      description: 'We required at least one of these to be checked',
+      type: 'array',
+      validation: Rule => Rule.min(1),
+      of: [
+        {
+          type: 'reference',
+          to: [{type: 'author'}]
+        }
+      ],
+      options: {
+        direction: 'vertical',
+        list: [
+          {_type: 'reference', _key: 'espen', _ref: 'espen'},
+          {_type: 'reference', _key: 'bjoerge', _ref: 'bjoerge'}
+        ]
+      }
+    },
+
+    {
+      name: 'location',
+      type: 'geopoint',
+      title: 'A geopoint',
+      description: 'Required',
+      validation: Rule => Rule.required()
+    },
+
+    {
+      name: 'body',
+      title: 'Block content',
+      description: 'Requires',
+      type: 'array',
+      of: [
+        {type: 'image', title: 'Image', options: {inline: true}},
+        {type: 'author', title: 'Author'},
+        {
+          type: 'block',
+          styles: [
+            {title: 'Normal', value: 'normal'},
+            {title: 'H1', value: 'h1'},
+            {title: 'H2', value: 'h2'},
+            {title: 'Quote', value: 'blockquote'}
+          ],
+          lists: [{title: 'Bullet', value: 'bullet'}, {title: 'Numbered', value: 'number'}],
+          marks: {
+            decorators: [{title: 'Strong', value: 'strong'}, {title: 'Emphasis', value: 'em'}],
+            annotations: [
+              {name: 'Author', title: 'Author', type: 'reference', to: {type: 'author'}}
+            ]
+          }
+        }
+      ]
+    },
+
+    {
+      name: 'deepInline',
+      type: 'object',
+      title: 'Deep inline object',
+      description: 'Because why not, right?',
+      fields: [
+        {
+          name: 'title',
+          title: 'Title',
+          type: 'string'
+        },
+        {
+          name: 'deeper',
+          title: 'Child',
+          type: 'object',
+          fields: [
+            {
+              name: 'title',
+              title: 'Title',
+              type: 'string'
+            },
+            {
+              name: 'deeper',
+              title: 'Child',
+              type: 'object',
+              fields: [
+                {
+                  name: 'title',
+                  title: 'Title',
+                  type: 'string'
+                },
+                {
+                  name: 'deeper',
+                  title: 'Child',
+                  type: 'object',
+                  fields: [
+                    {
+                      name: 'title',
+                      title: 'Title',
+                      type: 'string'
+                    },
+                    {
+                      name: 'deeper',
+                      title: 'Child',
+                      type: 'object',
+                      fields: [
+                        {
+                          name: 'title',
+                          title: 'Title',
+                          type: 'string',
+                          description: 'Required, uppercase',
+                          validation: Rule => Rule.required().uppercase()
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
