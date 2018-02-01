@@ -137,6 +137,10 @@ class Rule {
     return rule
   }
 
+  custom(fn) {
+    return this.cloneWithRules([{flag: 'custom', constraint: fn}])
+  }
+
   min(len) {
     return this.cloneWithRules([{flag: 'min', constraint: len}])
   }

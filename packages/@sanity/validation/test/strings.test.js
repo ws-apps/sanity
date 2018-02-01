@@ -95,4 +95,19 @@ describe('string', () => {
       'uri: username specified but not allowed'
     )
   })
+
+  test('custom rule with string', () => {
+    const rule = Rule.string().custom(
+      val =>
+        val
+          .split('')
+          .reverse()
+          .join('') === val
+          ? true
+          : 'Must be a palindrome!'
+    )
+
+    expect(rule.validate('hei')).toMatchSnapshot('not a palindrome')
+    expect(rule.validate('madam')).toHaveLength(0)
+  })
 })

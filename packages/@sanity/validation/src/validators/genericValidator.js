@@ -66,6 +66,29 @@ const valid = (allowedValues, actual, message) => {
     : new ValidationError(message || defaultMessage)
 }
 
+const custom = (fn, value, message) => {
+  let result
+  try {
+    result = fn(value)
+  } catch (err) {
+    return `Error validating value: ${err.message}`
+  }
+
+  if (result === true) {
+    return true
+  }
+
+  if (typeof result === 'string') {
+    return new ValidationError(message || result)
+  }
+
+  if (result && (result.message && result.paths)) {
+    return new ValidationError(message || result.message, {paths: result.paths})
+  }
+
+  throw new Error('Validator must return `true` if valid or a string with an error message')
+}
+
 function formatValidationErrors(message, results, options = {}) {
   const errOpts = {
     children: results.length > 1 ? results : undefined,
@@ -85,5 +108,6 @@ module.exports = {
   type,
   either,
   valid,
+  custom,
   presence
 }
