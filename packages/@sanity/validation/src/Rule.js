@@ -124,8 +124,9 @@ class Rule {
     return this.cloneWithRules([{flag: 'either', constraint: children}])
   }
 
+  // Shared rules
   optional() {
-    const rule = this.cloneWithRules([{flag: 'presence', constraint: 'required'}])
+    const rule = this.cloneWithRules([{flag: 'presence', constraint: 'optional'}])
     rule._required = false
     return rule
   }

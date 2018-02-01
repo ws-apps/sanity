@@ -1,7 +1,7 @@
 const URL = require('url-parse')
 const ValidationError = require('../ValidationError')
-const genericValidator = require('./genericValidator')
 const createUriRegex = require('../util/createUriRegex')
+const genericValidator = require('./genericValidator')
 
 const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
