@@ -19,10 +19,7 @@ export default class DefaultFormField extends React.Component {
     labelFor: PropTypes.string,
     markers: PropTypes.arrayOf(
       PropTypes.shape({
-        path: PropTypes.arrayOf(PropTypes.string),
-        type: PropTypes.string,
-        level: PropTypes.string,
-        item: PropTypes.any
+        type: PropTypes.string
       })
     )
   }
@@ -37,23 +34,13 @@ export default class DefaultFormField extends React.Component {
   }
 
   handleToggleShowValidation = event => {
-    this.setState({
-      showValidationMessages: !this.state.showValidationMessages
-    })
+    this.setState(prevState => ({
+      showValidationMessages: !prevState.showValidationMessages
+    }))
   }
 
   render() {
-    const {
-      level,
-      label,
-      labelFor,
-      description,
-      children,
-      inline,
-      wrapped,
-      className,
-      markers
-    } = this.props
+    const {level, label, labelFor, description, children, inline, wrapped, className, markers} = this.props
 
     const {showValidationMessages} = this.state
 
@@ -68,25 +55,23 @@ export default class DefaultFormField extends React.Component {
           ${className || ''}`}
       >
         <label className={styles.inner} htmlFor={labelFor}>
-          {
-            label && (
-              <div className={styles.header}>
-                <div className={styles.headerMain}>
-                  {label && (
-                    <DefaultLabel className={styles.label} level={level}>
-                      {label}
-                    </DefaultLabel>
-                  )}
-                  {description && <div className={styles.description}>{description}</div>}
-                </div>
-                <div className={styles.headerStatus}>
-                  <div onClick={this.handleToggleShowValidation} className={styles.validationStatus}>
-                    <ValidationStatus markers={markers} />
-                  </div>
+          {label && (
+            <div className={styles.header}>
+              <div className={styles.headerMain}>
+                {label && (
+                  <DefaultLabel className={styles.label} level={level}>
+                    {label}
+                  </DefaultLabel>
+                )}
+                {description && <div className={styles.description}>{description}</div>}
+              </div>
+              <div className={styles.headerStatus}>
+                <div onClick={this.handleToggleShowValidation} className={styles.validationStatus}>
+                  <ValidationStatus markers={markers} />
                 </div>
               </div>
-            )
-          }
+            </div>
+          )}
           <div className={showValidationMessages ? styles.validationList : styles.validationListClosed}>
             <ValidationList markers={markers} />
           </div>
