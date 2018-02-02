@@ -8,7 +8,7 @@ import TRANSFER_TYPES from 'slate-react/lib/constants/transfer-types'
 import Base64 from 'slate-base64-serializer'
 import {Selection} from 'slate'
 import ItemForm from './ItemForm'
-import DefaultDialog from 'part:@sanity/components/dialogs/default'
+import Popover from 'part:@sanity/components/dialogs/popover'
 import Preview from '../../Preview'
 import styles from './styles/FormBuilderInline.css'
 import createRange from './util/createRange'
@@ -245,11 +245,21 @@ export default class FormBuilderInline extends React.Component {
     const memberType = this.getMemberTypeOf(value)
 
     return (
-      <DefaultDialog
-        isOpen
+      <Popover
         title={this.props.node.title}
         onClose={this.handleClose}
         onAction={this.handleDialogAction}
+        modifiers={
+          {
+            flip: {
+              boundariesElement: 'viewport'
+            },
+            preventOverflow: {
+              priority: ['bottom', 'top', 'right', 'left'],
+              boundariesElement: 'viewport'
+            }
+          }
+        }
         showCloseButton={false}
         actions={[
           {
@@ -268,7 +278,7 @@ export default class FormBuilderInline extends React.Component {
             onChange={this.handleChange}
           />
         </div>
-      </DefaultDialog>
+      </Popover>
     )
   }
 
@@ -328,12 +338,12 @@ export default class FormBuilderInline extends React.Component {
         onDrop={this.handleCancelEvent}
         draggable
         ref={this.refFormBuilderInline}
-        onClick={this.handleToggleEdit}
         className={className}
       >
         <span
           ref={this.refPreview}
           className={styles.previewContainer}
+          onClick={this.handleToggleEdit}
         >
           {this.renderPreview()}
         </span>
