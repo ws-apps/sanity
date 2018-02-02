@@ -3,8 +3,8 @@ const semver = require('semver')
 const resolveFrom = require('resolve-from')
 
 const supported = {
-  react: '^15.0.0',
-  'react-dom': '^15.0.0'
+  react: '^16.0.0',
+  'react-dom': '^16.0.0'
 }
 
 module.exports = workDir => {
