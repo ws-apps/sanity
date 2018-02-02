@@ -1,6 +1,7 @@
-const {get} = require('lodash')
+const {get, flatten} = require('lodash')
 const ValidationError = require('./ValidationError')
 const genericValidator = require('./validators/genericValidator')
+const promiseLimiter = require('./util/promiseLimiter')
 
 const typeValidators = {
   Boolean: require('./validators/booleanValidator'),
@@ -17,49 +18,58 @@ module.exports = (rule, value, options = {}) => {
 
   // Short-circuit on optional, empty fields
   if (!rule._required && (value === null || typeof value === 'undefined')) {
-    return []
+    return Promise.resolve([])
+  }
+
+  const tasks = rule._rules.map(createValidationTask)
+  return Promise.all(tasks)
+    .then(results => results.filter(Boolean))
+    .then(flatten)
+
+  function createValidationTask(curr) {
+    const limiter = options.isChild ? promiseLimiter.children : promiseLimiter.root
+    return limiter(() => validateRule(curr))
   }
 
   // eslint-disable-next-line complexity
-  return rule._rules.reduce((results, curr) => {
+  function validateRule(curr) {
     if (typeof curr.flag === 'undefined') {
-      throw new Error('Invalid rule, did not contain "flag"-property')
+      return Promise.reject(new Error('Invalid rule, did not contain "flag"-property'))
     }
 
     const validator = validators[curr.flag]
     if (!validator) {
       const forType = type ? `type "${type}"` : 'rule without declared type'
-      throw new Error(`Validator for flag "${curr.flag}" not found for ${forType}`)
+      return Promise.reject(new Error(`Validator for flag "${curr.flag}" not found for ${forType}`))
     }
 
     let itemConstraint = curr.constraint
     if (itemConstraint && itemConstraint.type === rule.FIELD_REF) {
       if (!options.parent) {
-        throw new Error('Field reference provided, but no parent received')
+        return Promise.reject(new Error('Field reference provided, but no parent received'))
       }
 
       itemConstraint = get(options.parent, itemConstraint.path)
     }
 
     const result = validator(itemConstraint, value, rule._message)
+    return Promise.resolve(result).then(processResult)
+  }
+
+  function processResult(result) {
     const hasError = result instanceof ValidationError
-    if (hasError) {
-      if (result.paths.length === 0) {
-        // Add an item at "root" level (for arrays, the actual array)
-        results.push({level: rule._level, item: result})
-      }
-
-      // Add individual items for each path
-      result.paths.forEach(path => {
-        results.push({path, level: rule._level, item: result})
-      })
+    if (!hasError) {
+      return null
     }
 
-    // In certain cases it might make more sense to throw as early as possible
-    if (hasError && rule._level === 'error' && options.throwOnError) {
-      throw result
+    const results = []
+
+    if (result.paths.length === 0) {
+      // Add an item at "root" level (for arrays, the actual array)
+      results.push({level: rule._level, item: result})
     }
 
-    return results
-  }, [])
+    // Add individual items for each path
+    return results.concat(result.paths.map(path => ({path, level: rule._level, item: result})))
+  }
 }

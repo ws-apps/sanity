@@ -1,64 +1,64 @@
 const {Rule} = require('../src')
 
 describe('number', () => {
-  test('required constraint', () => {
+  test('required constraint', async () => {
     const rule = Rule.number().required()
-    expect(rule.validate(undefined)).toMatchSnapshot('required: undefined')
-    expect(rule.validate(13)).toMatchSnapshot('required: valid')
+    await expect(rule.validate(undefined)).resolves.toMatchSnapshot('required: undefined')
+    await expect(rule.validate(13)).resolves.toMatchSnapshot('required: valid')
   })
 
-  test('min constraint', () => {
+  test('min constraint', async () => {
     const rule = Rule.number().min(10)
-    expect(rule.validate(3)).toMatchSnapshot('min: too low')
-    expect(rule.validate(10)).toMatchSnapshot('min: valid, at limit')
-    expect(rule.validate(20)).toMatchSnapshot('min: valid')
+    await expect(rule.validate(3)).resolves.toMatchSnapshot('min: too low')
+    await expect(rule.validate(10)).resolves.toMatchSnapshot('min: valid, at limit')
+    await expect(rule.validate(20)).resolves.toMatchSnapshot('min: valid')
   })
 
-  test('greater than constraint', () => {
+  test('greater than constraint', async () => {
     const rule = Rule.number().greaterThan(10)
-    expect(rule.validate(3)).toMatchSnapshot('gt: too low')
-    expect(rule.validate(10)).toMatchSnapshot('gt: too low, at limit')
-    expect(rule.validate(20)).toMatchSnapshot('gt: valid')
+    await expect(rule.validate(3)).resolves.toMatchSnapshot('gt: too low')
+    await expect(rule.validate(10)).resolves.toMatchSnapshot('gt: too low, at limit')
+    await expect(rule.validate(20)).resolves.toMatchSnapshot('gt: valid')
   })
 
-  test('max constraint', () => {
+  test('max constraint', async () => {
     const rule = Rule.number().max(10)
-    expect(rule.validate(20)).toMatchSnapshot('max: too large')
-    expect(rule.validate(10)).toMatchSnapshot('max: valid, at limit')
-    expect(rule.validate(5)).toMatchSnapshot('max: valid')
+    await expect(rule.validate(20)).resolves.toMatchSnapshot('max: too large')
+    await expect(rule.validate(10)).resolves.toMatchSnapshot('max: valid, at limit')
+    await expect(rule.validate(5)).resolves.toMatchSnapshot('max: valid')
   })
 
-  test('less than constraint', () => {
+  test('less than constraint', async () => {
     const rule = Rule.number().lessThan(10)
-    expect(rule.validate(20)).toMatchSnapshot('lt: too high')
-    expect(rule.validate(10)).toMatchSnapshot('lt: too high, at limit')
-    expect(rule.validate(3)).toMatchSnapshot('lt: valid')
+    await expect(rule.validate(20)).resolves.toMatchSnapshot('lt: too high')
+    await expect(rule.validate(10)).resolves.toMatchSnapshot('lt: too high, at limit')
+    await expect(rule.validate(3)).resolves.toMatchSnapshot('lt: valid')
   })
 
-  test('integer constraint', () => {
+  test('integer constraint', async () => {
     const rule = Rule.number().integer()
-    expect(rule.validate(31.14)).toMatchSnapshot('integer: invalid (float)')
-    expect(rule.validate(31)).toMatchSnapshot('integer: valid')
+    await expect(rule.validate(31.14)).resolves.toMatchSnapshot('integer: invalid (float)')
+    await expect(rule.validate(31)).resolves.toMatchSnapshot('integer: valid')
   })
 
-  test('precision constraint', () => {
+  test('precision constraint', async () => {
     const rule = Rule.number().precision(3)
-    expect(rule.validate(Math.PI)).toMatchSnapshot('precision: invalid (pi)')
-    expect(rule.validate(31.133)).toMatchSnapshot('precision: valid (at limit)')
-    expect(rule.validate(31.3)).toMatchSnapshot('precision: valid (below limit)')
+    await expect(rule.validate(Math.PI)).resolves.toMatchSnapshot('precision: invalid (pi)')
+    await expect(rule.validate(31.133)).resolves.toMatchSnapshot('precision: valid (at limit)')
+    await expect(rule.validate(31.3)).resolves.toMatchSnapshot('precision: valid (below limit)')
   })
 
-  test('positive constraint', () => {
+  test('positive constraint', async () => {
     const rule = Rule.number().positive()
-    expect(rule.validate(-31.14)).toMatchSnapshot('positive: invalid')
-    expect(rule.validate(0)).toMatchSnapshot('positive: valid (zero)')
-    expect(rule.validate(13)).toMatchSnapshot('positive: valid')
+    await expect(rule.validate(-31.14)).resolves.toMatchSnapshot('positive: invalid')
+    await expect(rule.validate(0)).resolves.toMatchSnapshot('positive: valid (zero)')
+    await expect(rule.validate(13)).resolves.toMatchSnapshot('positive: valid')
   })
 
-  test('negative constraint', () => {
+  test('negative constraint', async () => {
     const rule = Rule.number().negative()
-    expect(rule.validate(31.14)).toMatchSnapshot('negative: invalid')
-    expect(rule.validate(0)).toMatchSnapshot('negative: invalid (zero)')
-    expect(rule.validate(-13)).toMatchSnapshot('negative: valid')
+    await expect(rule.validate(31.14)).resolves.toMatchSnapshot('negative: invalid')
+    await expect(rule.validate(0)).resolves.toMatchSnapshot('negative: invalid (zero)')
+    await expect(rule.validate(-13)).resolves.toMatchSnapshot('negative: valid')
   })
 })

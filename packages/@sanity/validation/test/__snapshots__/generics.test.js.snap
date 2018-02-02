@@ -44,5 +44,3 @@ Array [
   },
 ]
 `;
-
-exports[`generics throws validation errors if told to 1`] = `"Expected type \\"String\\", got \\"Number\\""`;

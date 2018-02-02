@@ -1,5 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`string custom async rule with string: not a palindrome 1`] = `
+Array [
+  Object {
+    "item": [ValidationError: Must be a palindrome!],
+    "level": "error",
+  },
+]
+`;
+
 exports[`string custom rule with string: not a palindrome 1`] = `
 Array [
   Object {

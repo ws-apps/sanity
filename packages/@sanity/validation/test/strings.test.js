@@ -1,102 +1,106 @@
 const {Rule} = require('../src')
 
 describe('string', () => {
-  test('required constraint', () => {
+  test('required constraint', async () => {
     const rule = Rule.string().required()
-    expect(rule.validate('')).toMatchSnapshot('required: empty string')
-    expect(rule.validate(null)).toMatchSnapshot('required: null')
-    expect(rule.validate(undefined)).toMatchSnapshot('required: undefined')
-    expect(rule.validate('abc')).toMatchSnapshot('required: valid')
+    await expect(rule.validate('')).resolves.toMatchSnapshot('required: empty string')
+    await expect(rule.validate(null)).resolves.toMatchSnapshot('required: null')
+    await expect(rule.validate(undefined)).resolves.toMatchSnapshot('required: undefined')
+    await expect(rule.validate('abc')).resolves.toMatchSnapshot('required: valid')
   })
 
-  test('min length constraint', () => {
+  test('min length constraint', async () => {
     const rule = Rule.string().min(2)
-    expect(rule.validate('a')).toMatchSnapshot('min length: too short')
-    expect(rule.validate('abc')).toMatchSnapshot('min length: valid')
+    await expect(rule.validate('a')).resolves.toMatchSnapshot('min length: too short')
+    await expect(rule.validate('abc')).resolves.toMatchSnapshot('min length: valid')
   })
 
-  test('max length constraint', () => {
+  test('max length constraint', async () => {
     const rule = Rule.string().max(5)
-    expect(rule.validate('abcdefg')).toMatchSnapshot('max length: too long')
-    expect(rule.validate('abc')).toMatchSnapshot('max length: valid')
+    await expect(rule.validate('abcdefg')).resolves.toMatchSnapshot('max length: too long')
+    await expect(rule.validate('abc')).resolves.toMatchSnapshot('max length: valid')
   })
 
-  test('exact length constraint', () => {
+  test('exact length constraint', async () => {
     const rule = Rule.string().length(5)
-    expect(rule.validate('abcdefgh')).toMatchSnapshot('exact length: too long')
-    expect(rule.validate('abc')).toMatchSnapshot('exact length: too short')
-    expect(rule.validate('abcde')).toMatchSnapshot('exact length: valid')
+    await expect(rule.validate('abcdefgh')).resolves.toMatchSnapshot('exact length: too long')
+    await expect(rule.validate('abc')).resolves.toMatchSnapshot('exact length: too short')
+    await expect(rule.validate('abcde')).resolves.toMatchSnapshot('exact length: valid')
   })
 
-  test('uppercase constraint', () => {
+  test('uppercase constraint', async () => {
     const rule = Rule.string().uppercase()
-    expect(rule.validate('sanity')).toMatchSnapshot('uppercase: all lowercase')
-    expect(rule.validate('Sanity')).toMatchSnapshot('uppercase: some lowercase')
-    expect(rule.validate('Sanity')).toMatchSnapshot('uppercase: some lowercase')
-    expect(rule.validate('SäNITY')).toMatchSnapshot('uppercase: locale characters')
-    expect(rule.validate('SANITY')).toMatchSnapshot('uppercase: valid')
+    await expect(rule.validate('sanity')).resolves.toMatchSnapshot('uppercase: all lowercase')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('uppercase: some lowercase')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('uppercase: some lowercase')
+    await expect(rule.validate('SäNITY')).resolves.toMatchSnapshot('uppercase: locale characters')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('uppercase: valid')
   })
 
-  test('lowercase constraint', () => {
+  test('lowercase constraint', async () => {
     const rule = Rule.string().lowercase()
-    expect(rule.validate('SANITY')).toMatchSnapshot('lowercase: all uppercase')
-    expect(rule.validate('Sanity')).toMatchSnapshot('lowercase: some uppercase')
-    expect(rule.validate('sÄnity')).toMatchSnapshot('lowercase: locale characters')
-    expect(rule.validate('sanity')).toMatchSnapshot('lowercase: valid')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('lowercase: all uppercase')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('lowercase: some uppercase')
+    await expect(rule.validate('sÄnity')).resolves.toMatchSnapshot('lowercase: locale characters')
+    await expect(rule.validate('sanity')).resolves.toMatchSnapshot('lowercase: valid')
   })
 
-  test('regex constraint', () => {
+  test('regex constraint', async () => {
     const rule = Rule.string().regex(/^[A-Z][a-z]+$/)
-    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match')
-    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('regex: non-match')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('regex: match')
   })
 
-  test('regex constraint (inverted)', () => {
+  test('regex constraint (inverted)', async () => {
     const rule = Rule.string().regex(/^[A-Z][a-z]+$/, {invert: true})
-    expect(rule.validate('SANITY')).toMatchSnapshot('regex: inverted non-match')
-    expect(rule.validate('Sanity')).toMatchSnapshot('regex: inverted match')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('regex: inverted non-match')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('regex: inverted match')
   })
 
-  test('regex constraint (custom pattern name)', () => {
+  test('regex constraint (custom pattern name)', async () => {
     const rule = Rule.string().regex(/^[A-Z][a-z]+$/, 'PascalCase')
-    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match w/ custom pattern name')
-    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match w/ custom pattern name')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('regex: non-match w/ custom pattern name')
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot('regex: match w/ custom pattern name')
   })
 
-  test('regex constraint (custom pattern name, as options)', () => {
+  test('regex constraint (custom pattern name, as options)', async () => {
     const rule = Rule.string().regex(/^[A-Z][a-z]+$/, {name: 'PascalCase'})
-    expect(rule.validate('SANITY')).toMatchSnapshot('regex: non-match w/ custom pattern name (opt)')
-    expect(rule.validate('Sanity')).toMatchSnapshot('regex: match w/ custom pattern name (opt)')
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot(
+      'regex: non-match w/ custom pattern name (opt)'
+    )
+    await expect(rule.validate('Sanity')).resolves.toMatchSnapshot(
+      'regex: match w/ custom pattern name (opt)'
+    )
   })
 
-  test('uri constraint', () => {
+  test('uri constraint', async () => {
     const rule = Rule.string().uri()
-    expect(rule.validate('SANITY')).toMatchSnapshot('uri: non-match')
-    expect(rule.validate('https://sanity.io/')).toHaveLength(0)
+    await expect(rule.validate('SANITY')).resolves.toMatchSnapshot('uri: non-match')
+    await expect(rule.validate('https://sanity.io/')).resolves.toHaveLength(0)
   })
 
-  test('uri constraint (invalid protocol)', () => {
+  test('uri constraint (invalid protocol)', async () => {
     const rule = Rule.string().uri({scheme: ['http', 'ftp']})
-    expect(rule.validate('https://sanity.io/')).toMatchSnapshot('uri: protocol non-match')
-    expect(rule.validate('ftp://code.sanity.io/')).toHaveLength(0)
+    await expect(rule.validate('https://sanity.io/')).resolves.toMatchSnapshot('uri: protocol non-match')
+    await expect(rule.validate('ftp://code.sanity.io/')).resolves.toHaveLength(0)
   })
 
-  test('uri constraint (credentials)', () => {
+  test('uri constraint (credentials)', async () => {
     let rule = Rule.string().uri({allowCredentials: true})
-    expect(rule.validate('http://foo:bar@sanity.io/')).toHaveLength(0)
-    expect(rule.validate('http://sanity.io/')).toHaveLength(0)
+    await expect(rule.validate('http://foo:bar@sanity.io/')).resolves.toHaveLength(0)
+    await expect(rule.validate('http://sanity.io/')).resolves.toHaveLength(0)
 
     rule = Rule.string().uri({allowCredentials: false})
-    expect(rule.validate('http://sanity.io/')).toHaveLength(0)
-    expect(rule.validate('http://foo:bar@sanity.io/')).toMatchSnapshot(
+    await expect(rule.validate('http://sanity.io/')).resolves.toHaveLength(0)
+    await expect(rule.validate('http://foo:bar@sanity.io/')).resolves.toMatchSnapshot(
       'uri: credentials specified but not allowed'
     )
-    expect(rule.validate('http://espen@sanity.io/')).toMatchSnapshot(
+    await expect(rule.validate('http://espen@sanity.io/')).resolves.toMatchSnapshot(
       'uri: username specified but not allowed'
     )
   })
 
-  test('custom rule with string', () => {
+  test('custom rule with string', async () => {
     const rule = Rule.string().custom(
       val =>
         val
@@ -107,7 +111,30 @@ describe('string', () => {
           : 'Must be a palindrome!'
     )
 
-    expect(rule.validate('hei')).toMatchSnapshot('not a palindrome')
-    expect(rule.validate('madam')).toHaveLength(0)
+    await expect(rule.validate('hei')).resolves.toMatchSnapshot('not a palindrome')
+    await expect(rule.validate('madam')).resolves.toHaveLength(0)
+  })
+
+  test('custom async rule with string', async () => {
+    const rule = Rule.string().custom(
+      val =>
+        new Promise(resolve =>
+          setTimeout(
+            () =>
+              resolve(
+                val
+                  .split('')
+                  .reverse()
+                  .join('') === val
+                  ? true
+                  : 'Must be a palindrome!'
+              ),
+            50
+          )
+        )
+    )
+
+    await expect(rule.validate('hei')).resolves.toMatchSnapshot('not a palindrome')
+    await expect(rule.validate('madam')).resolves.toHaveLength(0)
   })
 })

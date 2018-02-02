@@ -1,6 +1,8 @@
 const Type = require('type-of-is')
+const {flatten} = require('lodash')
 
 /* eslint-disable no-console */
+
 module.exports = (doc, schema) => {
   const type = schema.get(doc._type)
   if (!type) {
@@ -24,57 +26,54 @@ function validateItem(item, type, path, options) {
 }
 
 function validateObject(obj, type, path, options) {
-  let results = []
-
   if (!type) {
     return []
   }
 
   // Validate actual object itself
+  let objChecks = []
   if (type.validation) {
-    results = type.validation.reduce((acc, rule) => {
-      const ruleResults = rule.validate(obj, {parent: options.parent})
-      return acc.concat(applyPath(ruleResults, path))
-    }, results)
+    objChecks = type.validation.map(async rule => {
+      const ruleResults = await rule.validate(obj, {parent: options.parent})
+      return applyPath(ruleResults, path)
+    })
   }
 
   // Validate fields within object
   const fields = type.fields || []
-  fields.forEach(field => {
+  const fieldChecks = fields.map(field => {
     const validation = field.type.validation
     if (!validation) {
-      return
+      return null
     }
 
     const fieldPath = appendPath(path, field.name)
     const fieldValue = obj[field.name]
-    const fieldResults = validateItem(fieldValue, field.type, fieldPath, {parent: obj})
-    results = results.concat(fieldResults)
+    return validateItem(fieldValue, field.type, fieldPath, {parent: obj})
   })
 
-  return results
+  return Promise.all([...objChecks, ...fieldChecks]).then(flatten)
 }
 
 function validateArray(items, type, path, options) {
   // Validate actual array itself
-  let results = []
+  let arrayChecks = []
   if (type.validation) {
-    results = type.validation.reduce((acc, rule) => {
-      const ruleResults = rule.validate(items, {parent: options.parent})
-      return acc.concat(applyPath(ruleResults, path))
-    }, results)
+    arrayChecks = type.validation.map(async rule => {
+      const ruleResults = await rule.validate(items, {parent: options.parent})
+      return applyPath(ruleResults, path)
+    })
   }
 
   // Validate items within array
-  items.forEach((item, i) => {
+  const itemChecks = items.map((item, i) => {
     const pathSegment = item._key ? {_key: item._key} : i
     const itemType = resolveTypeForArrayItem(item, type.of)
     const itemPath = appendPath(path, [pathSegment])
-    const itemResults = validateItem(item, itemType, itemPath, {parent: items})
-    results = results.concat(itemResults)
+    return validateItem(item, itemType, itemPath, {parent: items})
   })
 
-  return results
+  return Promise.all([...arrayChecks, ...itemChecks]).then(flatten)
 }
 
 function validatePrimitive(item, type, path, options) {
@@ -82,10 +81,13 @@ function validatePrimitive(item, type, path, options) {
     return []
   }
 
-  return type.validation.reduce((acc, rule) => {
-    const ruleResults = rule.validate(item, {parent: options.parent})
-    return acc.concat(applyPath(ruleResults, path))
-  }, [])
+  const results = type.validation.map(rule =>
+    rule
+      .validate(item, {parent: options.parent})
+      .then(currRuleResults => applyPath(currRuleResults, path))
+  )
+
+  return Promise.all(results).then(flatten)
 }
 
 function resolveTypeForArrayItem(item, candidates) {
@@ -107,6 +109,6 @@ function appendPath(base, next) {
 function applyPath(results, pathPrefix) {
   return results.map(result => {
     const path = typeof result.path === 'undefined' ? pathPrefix : pathPrefix.concat(result.path)
-    return Object.assign({type: 'validation'}, result, {path})
+    return {type: 'validation', ...result, path}
   })
 }

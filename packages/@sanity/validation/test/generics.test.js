@@ -22,39 +22,35 @@ describe('generics', () => {
     expect(baseRule).not.toBe(specific)
   })
 
-  test('returns arrays of errors/warnings by default', () => {
-    expect(Rule.string().validate(123)).toMatchSnapshot()
+  test('returns arrays of errors/warnings by default', async () => {
+    await expect(Rule.string().validate(123)).resolves.toMatchSnapshot()
   })
 
-  test('throws validation errors if told to', () => {
-    expect(() => Rule.string().validate(123, {throwOnError: true})).toThrowErrorMatchingSnapshot()
-  })
-
-  test('can demote errors to warnings', () => {
-    const result = Rule.string()
+  test('can demote errors to warnings', async () => {
+    const result = await Rule.string()
       .warning()
       .validate(123)
 
     expect(result).toMatchSnapshot()
   })
 
-  test('can customize error messages', () => {
-    const result = Rule.string()
+  test('can customize error messages', async () => {
+    const result = await Rule.string()
       .error('Dude it needs to be a string')
       .validate(123)
 
     expect(result).toMatchSnapshot()
   })
 
-  test('can customize warning messages', () => {
-    const result = Rule.string()
+  test('can customize warning messages', async () => {
+    const result = await Rule.string()
       .warning('Dude it should probably be a string')
       .validate(123)
 
     expect(result).toMatchSnapshot()
   })
 
-  test('can merge rules', () => {
+  test('can merge rules', async () => {
     const rule = new Rule().required()
     const stringRule = Rule.string().min(5)
     const newRule = rule.merge(stringRule)
@@ -63,7 +59,7 @@ describe('generics', () => {
     expect(newRule).not.toBe(stringRule)
     expect(rule).not.toBe(newRule)
 
-    const result = newRule.validate('Hei')
+    const result = await newRule.validate('Hei')
     expect(result).toMatchSnapshot()
   })
 

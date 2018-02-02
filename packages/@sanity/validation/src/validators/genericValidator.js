@@ -1,4 +1,5 @@
 const Type = require('type-of-is')
+const {flatten} = require('lodash')
 const deepEquals = require('../util/deepEquals')
 const ValidationError = require('../ValidationError')
 
@@ -22,31 +23,27 @@ const presence = (expected, value, message) => {
 const multiple = (children, value) => {
   const validate = require('../validate')
 
-  let results = []
-  children.forEach(child => {
-    results = results.concat(validate(child, value))
+  const items = children.map(child => validate(child, value, {isChild: true}))
+  return Promise.all(items).then(flatten)
+}
+
+const all = (children, value, message) =>
+  multiple(children, value).then(results => {
+    const numErrors = results.length
+    return numErrors === 0
+      ? true
+      : formatValidationErrors(message, results, {separator: ' - AND - ', operator: 'AND'})
   })
 
-  return results
-}
+const either = (children, value, message) =>
+  multiple(children, value).then(results => {
+    const numErrors = results.length
 
-const all = (children, value, message) => {
-  const results = multiple(children, value)
-  const numErrors = results.length
-  return numErrors === 0
-    ? true
-    : formatValidationErrors(message, results, {separator: ' - AND - ', operator: 'AND'})
-}
-
-const either = (children, value, message) => {
-  const results = multiple(children, value)
-  const numErrors = results.length
-
-  // Read: There is at least one rule that matched
-  return numErrors < children.length
-    ? true
-    : formatValidationErrors(message, results, {separator: ' - OR - ', operator: 'OR'})
-}
+    // Read: There is at least one rule that matched
+    return numErrors < children.length
+      ? true
+      : formatValidationErrors(message, results, {separator: ' - OR - ', operator: 'OR'})
+  })
 
 const valid = (allowedValues, actual, message) => {
   const valueType = typeof actual
@@ -66,10 +63,10 @@ const valid = (allowedValues, actual, message) => {
     : new ValidationError(message || defaultMessage)
 }
 
-const custom = (fn, value, message) => {
+const custom = async (fn, value, message) => {
   let result
   try {
-    result = fn(value)
+    result = await fn(value)
   } catch (err) {
     return `Error validating value: ${err.message}`
   }

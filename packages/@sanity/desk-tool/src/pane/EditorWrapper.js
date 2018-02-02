@@ -2,15 +2,15 @@ import PropTypes from 'prop-types'
 // Connects the FormBuilder with various sanity roles
 import React from 'react'
 import Observable from '@sanity/observable'
-import {getDraftId, getPublishedId} from '../utils/draftUtils'
-import FormBuilder, {checkout} from 'part:@sanity/form-builder'
+import {validateDocument} from '@sanity/validation'
 import {omit, throttle, debounce} from 'lodash'
-import Editor from './Editor'
+import FormBuilder, {checkout} from 'part:@sanity/form-builder'
 import schema from 'part:@sanity/base/schema'
 import Button from 'part:@sanity/components/buttons/default'
 import client from 'part:@sanity/base/client'
+import {getDraftId, getPublishedId} from '../utils/draftUtils'
+import Editor from './Editor'
 import styles from './styles/EditorWrapper.css'
-import {validateDocument} from '@sanity/validation'
 
 const INITIAL_DOCUMENT_STATE = {
   isLoading: true,
@@ -102,7 +102,7 @@ export default class EditorPane extends React.Component {
       })
   }
 
-  validateDocument = debounce(() => {
+  validateDocument = debounce(async () => {
     const {draft, published} = this.state
     const doc = (draft && draft.snapshot) || (published && published.snapshot)
     if (!doc || !doc._type) {
@@ -111,11 +111,12 @@ export default class EditorPane extends React.Component {
 
     const type = schema.get(doc._type)
     if (!type) {
+      // eslint-disable-next-line no-console
       console.warn('Schema for document type "%s" not found, skipping validation')
       return []
     }
 
-    const markers = validateDocument(doc, schema)
+    const markers = await validateDocument(doc, schema)
     this.setState({markers, validationPending: false})
     return markers
   }, 300)
