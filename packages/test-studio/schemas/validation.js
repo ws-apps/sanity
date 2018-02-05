@@ -1,3 +1,7 @@
+import {points, featureCollection} from '@turf/helpers'
+import pointsWithinPolygon from '@turf/points-within-polygon'
+import norway from '../data/norway'
+
 export default {
   name: 'validationTest',
   type: 'document',
@@ -252,8 +256,18 @@ export default {
       name: 'location',
       type: 'geopoint',
       title: 'A geopoint',
-      description: 'Required',
-      validation: Rule => Rule.required()
+      description: 'Required, must be in Norway somewhere',
+      validation: Rule =>
+        Rule.required().custom(geoPoint => {
+          if (!geoPoint) {
+            return true
+          }
+
+          const location = points([[geoPoint.lng, geoPoint.lat]])
+          const norwayFeature = featureCollection(norway)
+          const ptsWithin = pointsWithinPolygon(location, norwayFeature)
+          return ptsWithin.features.length > 0 ? true : 'Location must be in Norway'
+        })
     },
 
     {

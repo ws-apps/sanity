@@ -68,7 +68,8 @@ const custom = async (fn, value, message) => {
   try {
     result = await fn(value)
   } catch (err) {
-    return `Error validating value: ${err.message}`
+    err.message = `Error validating value: ${err.message}`
+    throw err
   }
 
   if (result === true) {
