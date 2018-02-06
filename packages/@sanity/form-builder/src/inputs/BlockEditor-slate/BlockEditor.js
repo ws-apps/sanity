@@ -5,6 +5,7 @@ import {Data, State} from 'slate'
 import {Editor} from 'slate-react'
 import FullscreenDialog from 'part:@sanity/components/dialogs/fullscreen?'
 import ScrollContainer from 'part:@sanity/components/utilities/scroll-container'
+import ActivateOnFocus from 'part:@sanity/components/utilities/activate-on-focus'
 import {uniqueId} from 'lodash'
 
 import FormField from 'part:@sanity/components/formfields/default'
@@ -36,7 +37,9 @@ export default class BlockEditor extends React.Component {
 
   state = {
     fullscreen: false,
-    toolbarStyle: {}
+    toolbarStyle: {},
+    preventScroll: false,
+    editorHasFocus: false
   }
 
   _inputId = uniqueId('SlateBlockEditor')
@@ -58,11 +61,28 @@ export default class BlockEditor extends React.Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown)
     // this._inputContainer.addEventListener('mousewheel', this.handleInputScroll)
+    this.checkScrollHeight()
   }
 
   componentWillUnmount() {
     window.removeEventListener('keydown', this.handleKeyDown)
     // this._inputContainer.removeEventListener('mousewheel', this.handleInputScroll)
+  }
+
+  checkScrollHeight = () => {
+    if (!this._inputContainer || !this._editorWrapper) {
+      return
+    }
+
+    const inputHeight = this._inputContainer.offsetHeight
+    const contentHeight = this._editorWrapper.offsetHeight
+
+    if (contentHeight > inputHeight + 100) {
+      this.setState({
+        preventScroll: true
+      })
+    }
+
   }
 
   handleNodePatch = event => this.props.onNodePatch(event)
@@ -260,6 +280,19 @@ export default class BlockEditor extends React.Component {
     this.editor.focus()
   }
 
+  handleEditorFocus = event => {
+    this.setState({
+      editorHasFocus: true
+    })
+    this.focus()
+  }
+
+  handleEditorBlur = event => {
+    this.setState({
+      editorHasFocus: false
+    })
+  }
+
   handleInputScroll = event => {
     // Prevents the parent container to scroll when user tries
     // to scroll to the top/bottom of the block editor with momentum scroll or
@@ -294,9 +327,13 @@ export default class BlockEditor extends React.Component {
     this._inputContainer = element
   }
 
+  setEditorWrapper = element => {
+    this._editorWrapper = element
+  }
+
   renderBlockEditor() {
     const {value, onChange} = this.props
-    const {fullscreen, toolbarStyle} = this.state
+    const {fullscreen, toolbarStyle, preventScroll, editorHasFocus} = this.state
 
     return (
       <div
@@ -318,31 +355,38 @@ export default class BlockEditor extends React.Component {
           decorators={this.getActiveDecorators()}
           style={toolbarStyle}
         />
-        <div
-          className={styles.inputContainer}
-          id={this._inputId}
-          onClick={this.handleEditorContainerClick}
-          ref={this.setInputContainerElement}
-          onWheel={this.handleInputScroll}
+        <ActivateOnFocus
+          isActive={editorHasFocus || fullscreen || !preventScroll}
+          message="Click to edit"
         >
-          <div>
-            <Editor
-              ref={this.refEditor}
-              className={styles.input}
-              onChange={onChange}
-              placeholder=""
-              state={value}
-              blockEditor={this}
-              plugins={this.slatePlugins}
-              schema={this.slateSchema}
-            />
-            <div
-              ref={this.refBlockDragMarker}
-              style={{display: 'none'}}
-              className={styles.blockDragMarker}
-            />
+          <div
+            className={styles.inputContainer}
+            id={this._inputId}
+            onClick={this.handleEditorContainerClick}
+            ref={this.setInputContainerElement}
+            onWheel={this.handleInputScroll}
+          >
+            <div ref={this.setEditorWrapper}>
+              <Editor
+                ref={this.refEditor}
+                className={styles.input}
+                onChange={onChange}
+                placeholder=""
+                state={value}
+                blockEditor={this}
+                plugins={this.slatePlugins}
+                schema={this.slateSchema}
+                onFocus={this.handleEditorFocus}
+                onBlur={this.handleEditorBlur}
+              />
+              <div
+                ref={this.refBlockDragMarker}
+                style={{display: 'none'}}
+                className={styles.blockDragMarker}
+              />
+            </div>
           </div>
-        </div>
+        </ActivateOnFocus>
       </div>
     )
   }
@@ -372,6 +416,7 @@ export default class BlockEditor extends React.Component {
     const {type, level} = this.props
     const {fullscreen} = this.state
     const blockEditor = this.renderBlockEditor()
+
     return (
       <FormField
         label={type.title}
@@ -379,7 +424,7 @@ export default class BlockEditor extends React.Component {
         labelFor={this._inputId}
         level={level}
       >
-        <button tabIndex={0} className={styles.focusSkipper} onClick={() => this.focus()}>Jump to editor</button>
+        <button tabIndex={0} className={styles.focusSkipper} onClick={() => this.handleEditorFocus()}>Jump to editor</button>
         {
           fullscreen ? (
             <FullscreenDialog isOpen onClose={this.handleFullScreenClose}>
@@ -387,7 +432,7 @@ export default class BlockEditor extends React.Component {
                 {blockEditor}
               </ScrollContainer>
             </FullscreenDialog>
-          ) : blockEditor
+        ) : blockEditor
         }
       </FormField>
     )
