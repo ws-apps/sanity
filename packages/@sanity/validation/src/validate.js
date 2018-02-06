@@ -52,7 +52,7 @@ module.exports = (rule, value, options = {}) => {
       itemConstraint = get(options.parent, itemConstraint.path)
     }
 
-    const result = validator(itemConstraint, value, rule._message)
+    const result = validator(itemConstraint, value, rule._message, options)
     return Promise.resolve(result).then(processResult)
   }
 

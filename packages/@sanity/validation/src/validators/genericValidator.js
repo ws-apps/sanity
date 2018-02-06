@@ -1,6 +1,7 @@
 const Type = require('type-of-is')
 const {flatten} = require('lodash')
 const deepEquals = require('../util/deepEquals')
+const pathToString = require('../util/pathToString')
 const ValidationError = require('../ValidationError')
 
 const type = (expected, value, message) => {
@@ -63,7 +64,7 @@ const valid = (allowedValues, actual, message) => {
     : new ValidationError(message || defaultMessage)
 }
 
-const custom = async (fn, value, message) => {
+const custom = async (fn, value, message, options) => {
   let result
   try {
     result = await fn(value)
@@ -84,7 +85,10 @@ const custom = async (fn, value, message) => {
     return new ValidationError(message || result.message, {paths: result.paths})
   }
 
-  throw new Error('Validator must return `true` if valid or a string with an error message')
+  const path = pathToString(options.path)
+  throw new Error(
+    `${path}: Validator must return 'true' if valid or an error message as a string on errors`
+  )
 }
 
 function formatValidationErrors(message, results, options = {}) {

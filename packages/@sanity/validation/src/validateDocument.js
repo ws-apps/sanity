@@ -39,7 +39,7 @@ function validateObject(obj, type, path, options) {
   let objChecks = []
   if (type.validation) {
     objChecks = type.validation.map(async rule => {
-      const ruleResults = await rule.validate(obj, {parent: options.parent})
+      const ruleResults = await rule.validate(obj, {parent: options.parent, path})
       return applyPath(ruleResults, path)
     })
   }
@@ -54,7 +54,7 @@ function validateObject(obj, type, path, options) {
 
     const fieldPath = appendPath(path, field.name)
     const fieldValue = obj[field.name]
-    return validateItem(fieldValue, field.type, fieldPath, {parent: obj})
+    return validateItem(fieldValue, field.type, fieldPath, {parent: obj, path: fieldPath})
   })
 
   return Promise.all([...objChecks, ...fieldChecks]).then(flatten)
@@ -65,7 +65,7 @@ function validateArray(items, type, path, options) {
   let arrayChecks = []
   if (type.validation) {
     arrayChecks = type.validation.map(async rule => {
-      const ruleResults = await rule.validate(items, {parent: options.parent})
+      const ruleResults = await rule.validate(items, {parent: options.parent, path})
       return applyPath(ruleResults, path)
     })
   }
@@ -75,7 +75,7 @@ function validateArray(items, type, path, options) {
     const pathSegment = item._key ? {_key: item._key} : i
     const itemType = resolveTypeForArrayItem(item, type.of)
     const itemPath = appendPath(path, [pathSegment])
-    return validateItem(item, itemType, itemPath, {parent: items})
+    return validateItem(item, itemType, itemPath, {parent: items, path: itemPath})
   })
 
   return Promise.all([...arrayChecks, ...itemChecks]).then(flatten)
@@ -88,7 +88,7 @@ function validatePrimitive(item, type, path, options) {
 
   const results = type.validation.map(rule =>
     rule
-      .validate(item, {parent: options.parent})
+      .validate(item, {parent: options.parent, path})
       .then(currRuleResults => applyPath(currRuleResults, path))
   )
 

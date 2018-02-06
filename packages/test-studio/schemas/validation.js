@@ -1,3 +1,4 @@
+import client from 'part:@sanity/base/client'
 import {points, featureCollection} from '@turf/helpers'
 import pointsWithinPolygon from '@turf/points-within-polygon'
 import norway from '../data/norway'
@@ -124,6 +125,26 @@ export default {
           to: [{type: 'book'}]
         }
       ]
+    },
+    {
+      name: 'bookWithCover',
+      title: 'Book that has a cover photo',
+      description: 'Reference to a book with custom rule that ensures referenced book has a cover',
+      type: 'reference',
+      to: [{type: 'book'}],
+      validation: Rule =>
+        Rule.custom(
+          value =>
+            new Promise(resolve => {
+              if (!value || !value._ref) {
+                return resolve(true)
+              }
+
+              return client.fetch('*[_id == $id].coverImage', {id: value._ref}).then(cover => {
+                resolve(cover ? true : 'Referenced book must have a cover image')
+              })
+            })
+        )
     },
     {
       name: 'titleCase',
