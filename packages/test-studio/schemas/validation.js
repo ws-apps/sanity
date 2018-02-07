@@ -7,6 +7,17 @@ export default {
   name: 'validationTest',
   type: 'document',
   title: 'Validation test',
+  validation: Rule =>
+    Rule.custom(doc => {
+      if (!doc || !doc.title) {
+        return true
+      }
+
+      const needsUrl = (doc.title[0] || '').toUpperCase() === doc.title[0]
+      return needsUrl && !doc.myUrlField
+        ? 'When the first character of the title is uppercase, you will need to fill out the "Plain url"-field'
+        : true
+    }),
   fields: [
     {
       name: 'title',
