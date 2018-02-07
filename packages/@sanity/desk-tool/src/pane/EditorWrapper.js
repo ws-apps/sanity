@@ -165,7 +165,7 @@ export default class EditorPane extends React.Component {
     }
 
     if (this.validateLatestDocument) {
-      this.validateDocument.cancel()
+      this.validateLatestDocument.cancel()
     }
 
     this.published = null
