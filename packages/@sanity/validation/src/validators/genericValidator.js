@@ -4,6 +4,8 @@ const deepEquals = require('../util/deepEquals')
 const pathToString = require('../util/pathToString')
 const ValidationError = require('../ValidationError')
 
+const SLOW_VALIDATOR_TIMEOUT = 5000
+
 const type = (expected, value, message) => {
   const actualType = Type.string(value)
   if (actualType !== expected && actualType !== 'undefined') {
@@ -65,6 +67,15 @@ const valid = (allowedValues, actual, message) => {
 }
 
 const custom = async (fn, value, message, options) => {
+  const slowTimer = setTimeout(() => {
+    const path = pathToString(options.path)
+
+    // eslint-disable-next-line no-console
+    console.warn(
+      `Custom validator at ${path} has taken more than ${SLOW_VALIDATOR_TIMEOUT}ms to respond`
+    )
+  }, SLOW_VALIDATOR_TIMEOUT)
+
   let result
   try {
     result = await fn(value)
@@ -73,6 +84,8 @@ const custom = async (fn, value, message, options) => {
     err.message = `${path}: Error validating value: ${err.message}`
     throw err
   }
+
+  clearTimeout(slowTimer)
 
   if (result === true) {
     return true

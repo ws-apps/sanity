@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import Observable from '@sanity/observable'
 import {validateDocument} from '@sanity/validation'
+import promiseLatest from 'promise-latest'
 import {omit, throttle, debounce} from 'lodash'
 import FormBuilder, {checkout} from 'part:@sanity/form-builder'
 import schema from 'part:@sanity/base/schema'
@@ -81,6 +82,7 @@ export default class EditorPane extends React.Component {
     this.dispose()
     this.published = checkout(getPublishedId(documentId))
     this.draft = checkout(getDraftId(documentId))
+    this.validateLatestDocument = debounce(promiseLatest(this.validateDocument, 300))
 
     this.subscription = this.published.events
       .map(event => ({...event, version: 'published'}))
@@ -98,11 +100,11 @@ export default class EditorPane extends React.Component {
               isLoading: false
             }
           }
-        }, this.validateDocument)
+        }, this.validateLatestDocument)
       })
   }
 
-  validateDocument = debounce(async () => {
+  validateDocument = async () => {
     const {draft, published} = this.state
     const doc = (draft && draft.snapshot) || (published && published.snapshot)
     if (!doc || !doc._type) {
@@ -119,7 +121,7 @@ export default class EditorPane extends React.Component {
     const markers = await validateDocument(doc, schema)
     this.setState({markers, validationPending: false})
     return markers
-  }, 300)
+  }
 
   receiveDraftEvent = event => {
     if (event.type !== 'mutation') {
@@ -161,7 +163,11 @@ export default class EditorPane extends React.Component {
       this.subscription.unsubscribe()
       this.subscription = null
     }
-    this.validateDocument.cancel()
+
+    if (this.validateLatestDocument) {
+      this.validateDocument.cancel()
+    }
+
     this.published = null
     this.draft = null
   }
