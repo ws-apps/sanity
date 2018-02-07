@@ -488,13 +488,14 @@ export default withRouterHOC(
           {(errors.length > 0 || warnings.length > 0) && (
             <Tooltip
               arrow
-              theme="light"
+              theme="light noPadding"
               trigger="click"
               position="bottom"
               interactive
               duration={100}
               open={showValidationTooltip}
               onRequestClose={this.handleCloseValidationResults}
+              style={{padding: 0}}
               html={
                 <ValidationList
                   markers={validation}

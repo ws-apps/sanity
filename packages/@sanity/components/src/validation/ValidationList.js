@@ -72,7 +72,7 @@ export default class ValidationList extends React.PureComponent {
     return (
       <div className={styles.root}>
         {errors.length > 0 && (
-          <div className={styles.errors}>
+          <div className={styles.items}>
             <ul>
               {errors.map((error, i) => (
                 <ValidationListItem
@@ -83,13 +83,6 @@ export default class ValidationList extends React.PureComponent {
                   showLink={showLink}
                 />
               ))}
-            </ul>
-          </div>
-        )}
-
-        {warnings.length > 0 && (
-          <div className={styles.warnings}>
-            <ul>
               {warnings.map((warning, i) => (
                 <ValidationListItem
                   key={i}

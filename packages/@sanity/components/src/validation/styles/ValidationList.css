@@ -5,6 +5,8 @@
   padding: 0;
   display: block;
   font-size: var(--font-size-small);
+  max-height: 80vh;
+  overflow: auto;
 }
 
 .block {
@@ -24,12 +26,7 @@
   }
 }
 
-.warnings {
+.items {
   composes: block;
-  color: var(--state-warning-color);
 }
 
-.errors {
-  composes: block;
-  color: var(--state-danger-color);
-}

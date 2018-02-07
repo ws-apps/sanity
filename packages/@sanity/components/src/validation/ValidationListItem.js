@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styles from './styles/ValidationListItem.css'
 import WarningIcon from 'part:@sanity/base/warning-icon'
-import EditIcon from 'part:@sanity/base/edit-icon'
+import LinkIcon from 'part:@sanity/base/link-icon'
 
 export default class ValidationListItem extends React.PureComponent {
   static propTypes = {
@@ -41,19 +41,28 @@ export default class ValidationListItem extends React.PureComponent {
     const shouldRenderLink = onClick && showLink
 
     return (
-      <li className={onClick ? styles.interactiveItem : styles.item} onClick={this.handleClick}>
+      <li
+        className={`
+          ${onClick ? styles.interactiveItem : styles.item}
+          ${styles[marker.level]}
+        `}
+        onClick={this.handleClick}>
         <span className={styles.icon}>
           <WarningIcon />
         </span>
 
-        <span className={styles.message}>
-          {path && `${path}: `}
-          {marker.item.message}
-        </span>
+        <div className={styles.content}>
+          <span className={styles.path}>
+            {path}
+          </span>
+          <span className={styles.message}>
+            {marker.item.message}
+          </span>
+        </div>
 
         {shouldRenderLink && (
-          <span className={styles.link}>
-            <EditIcon /> View
+          <span className={styles.link} title="View">
+            <LinkIcon />
           </span>
         )}
       </li>
