@@ -33,11 +33,17 @@ export default class ValidationStatus extends React.PureComponent {
     const warnings = validation.filter(marker => marker.level === 'warning') || []
 
     if (errors.length === 0 && warnings.length === 0) {
-      return <div className={styles.ok}><CheckIcon /></div>
+      return (
+        <div className={styles.ok}>
+          <CheckIcon />
+        </div>
+      )
     }
 
-    const errorText = errors.length > 0 && `${errors.length} errors`
-    const warningText = warnings.length > 0 && `${warnings.length} warnings`
+    const errorDef = `error${errors.length === 1 ? '' : 's'}`
+    const errorText = errors.length > 0 && `${errors.length} ${errorDef}`
+    const warningDef = `warning${warnings.length === 1 ? '' : 's'}`
+    const warningText = warnings.length > 0 && `${warnings.length} ${warningDef}`
 
     let tooltipText = errorText
 
@@ -67,20 +73,18 @@ export default class ValidationStatus extends React.PureComponent {
         onClick={onClick}
       >
         <div>
-          {
-            errors && errors.length > 0 && (
+          {errors &&
+            errors.length > 0 && (
               <div className={styles.error}>
                 <WarningIcon />
               </div>
-            )
-          }
-          {
-            warnings && warnings.length > 0 && (
+            )}
+          {warnings &&
+            warnings.length > 0 && (
               <div className={styles.warning}>
                 <WarningIcon />
               </div>
-            )
-          }
+            )}
         </div>
       </Tooltip>
     )
