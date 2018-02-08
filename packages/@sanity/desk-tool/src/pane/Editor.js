@@ -500,6 +500,7 @@ export default withRouterHOC(
                 <ValidationList
                   markers={validation}
                   showLink
+                  isOpen={showValidationTooltip}
                   documentType={type}
                   onClose={this.handleCloseValidationResults}
                   onFocus={this.handleFocus}
