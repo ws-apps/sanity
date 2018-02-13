@@ -118,7 +118,7 @@ export default class BlockEditorInput extends React.Component<Props, State> {
       key: focusKey
     }
     const focus = {
-      block: editorValue.focusBlock.key,
+      block: editorValue.focusBlock ? editorValue.focusBlock.key : null,
       span: editorValue.focusText ? editorValue.focusText.key : null,
       current: current
     }

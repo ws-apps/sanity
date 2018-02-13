@@ -70,10 +70,10 @@ export default withPatchSubscriber(class SyncWrapper extends React.PureComponent
   }
 
   handleChange = (change: SlateChange) => {
-    const {value, onChange} = this.props
+    const {value, onChange, type} = this.props
     this.setState({editorValue: change.value})
-    // const patches = changeToPatches(change, value)
-    // onChange(PatchEvent.from(patches))
+    const patches = changeToPatches(change, value, type)
+    onChange(PatchEvent.from(patches))
   }
 
   focus() {
@@ -81,10 +81,11 @@ export default withPatchSubscriber(class SyncWrapper extends React.PureComponent
   }
 
   receivePatches = ({patches, shouldReset, snapshot}) => {
-    // if (patches.some(patch => patch.origin === 'remote')) {
-    //   const change = patchesToChange(patches, this.state.editorValue, snapshot)
-    //   this.setState({editorValue: change.value})
-    // }
+    const {type} = this.props
+    if (patches.some(patch => patch.origin === 'remote')) {
+      const change = patchesToChange(patches, this.state.editorValue, snapshot, type)
+      this.setState({editorValue: change.value})
+    }
   }
 
   componentWillUnmount() {

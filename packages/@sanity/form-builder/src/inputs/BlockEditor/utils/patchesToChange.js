@@ -1,7 +1,7 @@
 // @flow
-import type {Span, Block, SlateValue} from '../typeDefs'
-import {Text} from 'slate'
-
+import type {Type, Span, Block, SlateValue} from '../typeDefs'
+import {blocksToEditorValue} from '@sanity/block-tools'
+import {Text, Value, Block as SlateBlock} from 'slate'
 
 type Path = string | {_key: string}
 
@@ -41,6 +41,23 @@ function findPatchedSpan(patch, blocks) {
     : null
 }
 
+function findPatchedNodeByKey(key: string, blocks: Block[]) {
+  let node
+  blocks.forEach(block => {
+    if (block._key === key) {
+      node = block
+      return
+    }
+    block.children && block.children.forEach(child => {
+      if (child._key === key) {
+        node = child
+        return
+      }
+    })
+  })
+  return node
+}
+
 function replaceTextByKey(change, key, span) {
   const newText = Text.create({
     text: span.text,
@@ -56,13 +73,61 @@ function diffMatchPatch(patch: Patch, change: () => void, blocks: Block[]) {
   change.call(replaceTextByKey, lastKey, span)
 }
 
-export default function patchesToChange(patches: Patch[], editorValue: SlateValue, blocks: Block[]) {
+function setPatch(patch: Patch, change: () => void, blocks: Block[], type: Type) {
+  const lastKey = findLastKey(patch.path)
+  const node = findPatchedNodeByKey(lastKey, blocks)
+  console.log('node', node)
+  if (!node || node._type === 'block') {
+    const value = blocksToEditorValue([node], type)
+    const block = SlateBlock.fromJSON(value.document.nodes[0])
+    console.log('value', value)
+    console.log(lastKey, value.document.nodes[0])
+    if (node) {
+      console.log(block)
+      change.replaceNodeByKey(lastKey, block)
+    } else {
+      change.insertBlock(block)
+    }
+    return change
+  }
+}
+
+function insertPatch(patch: Patch, change: () => void, blocks: Block[], type: Type) {
+  console.log(patch)
+  // const lastKey = findLastKey(patch.path)
+  // const node = findPatchedNodeByKey(lastKey, blocks)
+  // console.log('node', node)
+  // if (!node || node._type === 'block') {
+  //   const value = blocksToEditorValue([node], type)
+  //   const block = SlateBlock.fromJSON(value.document.nodes[0])
+  //   console.log('value', value)
+  //   console.log(lastKey, value.document.nodes[0])
+  //   if (node) {
+  //     console.log(block)
+  //     change.replaceNodeByKey(lastKey, block)
+  //   } else {
+  //     change.insertBlock(block)
+  //   }
+    return change
+  }
+}
+
+export default function patchesToChange(
+      patches: Patch[],
+      editorValue: SlateValue,
+      blocks: Block[],
+      type: Type
+    ) {
   const change = editorValue.change()
   patches.forEach((patch: Patch) => {
-    console.log(patch.type)
+    console.log('Incoming patch', patch)
     switch (patch.type) {
       case 'diffMatchPatch':
         return diffMatchPatch(patch, change, blocks)
+      case 'set':
+        return setPatch(patch, change, blocks, type)
+      case 'insert':
+        return insertPatch(patch, change, blocks, type)
       default:
         return null
     }

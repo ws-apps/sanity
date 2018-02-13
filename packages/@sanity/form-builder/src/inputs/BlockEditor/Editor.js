@@ -17,6 +17,7 @@ import SoftBreakPlugin from 'slate-soft-break'
 import {Editor as SlateEditor} from 'slate-react'
 import {EDITOR_DEFAULT_BLOCK_TYPE} from '@sanity/block-tools'
 import resolveSchemaType from './utils/resolveSchemaType'
+import validateNode from './utils/validateNode'
 
 import ListItemOnEnterKeyPlugin from './plugins/ListItemOnEnterKeyPlugin'
 import ListItemOnTabKeyPlugin from './plugins/ListItemOnTabKeyPlugin'

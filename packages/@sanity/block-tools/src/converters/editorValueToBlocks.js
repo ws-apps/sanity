@@ -53,7 +53,7 @@ function toSanityBlock(block) {
     const sanityBlock = {
       ...block.data,
       _type: 'block',
-      _key: block.key || block.data._key || randomKey(12),
+      _key: block.data._key || randomKey(12),
       markDefs: []
     }
     let index = 0

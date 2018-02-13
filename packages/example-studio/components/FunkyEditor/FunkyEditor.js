@@ -3,6 +3,9 @@ import React from 'react'
 import {BlockEditor} from 'part:@sanity/form-builder'
 
 function extractTextFromBlocks(blocks) {
+  if (!blocks) {
+    return ''
+  }
   return blocks
     .filter(val => val._type === 'block')
     .map(block => {

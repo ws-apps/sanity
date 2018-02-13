@@ -106,6 +106,9 @@ function sanityBlockToRawNode(sanityBlock, type, blockContentFeatures) {
     sanityBlock._key = randomKey(12)
   }
 
+  // Enforce the data to have the same key
+  restData.data._key = sanityBlock._key
+
   return {
     kind: 'block',
     key: sanityBlock._key,
