@@ -21,6 +21,7 @@ import copyDocument from '../utils/copyDocument'
 import Menu from 'part:@sanity/components/menus/default'
 import ContentCopyIcon from 'part:@sanity/base/content-copy-icon'
 import documentStore from 'part:@sanity/base/datastore/document'
+import presenceStore from 'part:@sanity/base/datastore/presence'
 import schema from 'part:@sanity/base/schema'
 import {debounce} from 'lodash'
 import {getPublishedId, newDraftFrom} from '../utils/draftUtils'
@@ -36,7 +37,6 @@ import ValidationList from 'part:@sanity/components/validation/list'
 import {Tooltip} from '@sanity/react-tippy'
 import ChevronDown from 'part:@sanity/base/chevron-down-icon'
 import WarningIcon from 'part:@sanity/base/warning-icon'
-import ValidationPending from '../components/ValidationPending'
 
 const preventDefault = ev => ev.preventDefault()
 
@@ -248,6 +248,7 @@ export default withRouterHOC(
     componentWillUnmount() {
       this.unlistenForKey()
       this.setSavingStatus.cancel()
+      presenceStore.reportMyState({})
     }
 
     componentWillReceiveProps(nextProps) {
@@ -277,6 +278,11 @@ export default withRouterHOC(
 
     handleFocus = path => {
       this.setState({focusPath: path})
+
+      presenceStore.reportMyState({
+        documentId: this.props.router.state.selectedDocumentId,
+        path: path
+      })
     }
 
     handleBlur = () => {
