@@ -69,6 +69,12 @@ export default class BlockEditor extends React.Component {
     // this._inputContainer.removeEventListener('mousewheel', this.handleInputScroll)
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps !== this.props) {
+      this.checkScrollHeight()
+    }
+  }
+
   checkScrollHeight = () => {
     if (!this._inputContainer || !this._editorWrapper) {
       return
@@ -77,7 +83,7 @@ export default class BlockEditor extends React.Component {
     const inputHeight = this._inputContainer.offsetHeight
     const contentHeight = this._editorWrapper.offsetHeight
 
-    if (contentHeight > inputHeight + 100) {
+    if (contentHeight > inputHeight) {
       this.setState({
         preventScroll: true
       })
