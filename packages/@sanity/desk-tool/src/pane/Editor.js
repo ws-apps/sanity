@@ -176,7 +176,9 @@ export default withRouterHOC(
       onDiscardDraft: PropTypes.func,
       onPublish: PropTypes.func,
       onUnpublish: PropTypes.func,
-      transactionResult: PropTypes.func,
+      transactionResult: PropTypes.shape({
+        type: PropTypes.string
+      }),
       onClearTransactionResult: PropTypes.func,
 
       validationPending: PropTypes.bool,

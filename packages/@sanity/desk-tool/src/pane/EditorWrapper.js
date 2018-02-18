@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types'
-// Connects the FormBuilder with various sanity roles
 import React from 'react'
-import Observable from '@sanity/observable'
-import {validateDocument} from '@sanity/validation'
 import promiseLatest from 'promise-latest'
 import {omit, throttle, debounce} from 'lodash'
+import diffPatch from '@sanity/diff-patch'
+import Observable from '@sanity/observable'
+import {validateDocument} from '@sanity/validation'
 import FormBuilder, {checkout} from 'part:@sanity/form-builder'
 import schema from 'part:@sanity/base/schema'
-import Button from 'part:@sanity/components/buttons/default'
 import client from 'part:@sanity/base/client'
+import Button from 'part:@sanity/components/buttons/default'
 import {getDraftId, getPublishedId} from '../utils/draftUtils'
-import Editor from './Editor'
 import styles from './styles/EditorWrapper.css'
+import Editor from './Editor'
 
 const INITIAL_DOCUMENT_STATE = {
   isLoading: true,
@@ -255,17 +255,36 @@ export default class EditorWrapper extends React.Component {
 
   handlePublish = () => {
     const {documentId} = this.props
-    const {draft} = this.state
+    const {draft, published} = this.state
     this.setState({isPublishing: true})
 
-    const tx = client.observable
-      .transaction()
-      .createOrReplace({
+    const tx = client.observable.transaction()
+
+    if (!published || !published.snapshot) {
+      // If the document has not been published, we want to create it - if it suddenly exists
+      // before being created, we don't want to overwrite if, instead we want to yield an error
+      tx.create({
         ...omit(draft.snapshot, '_updatedAt'),
         _id: getPublishedId(documentId)
       })
-      .delete(getDraftId(documentId))
+    } else {
+      // If it exists already, we want to apply the minimal set of patches we can. In the future,
+      // we probably just want to apply the same operations that have been applied to the draft,
+      // but for now do a diff and update whichever differences we can find.
+      const diffOperations = diffPatch(published.snapshot, draft.snapshot)
 
+      // In some cases there is no difference between the two - only apply the patch if there are changes
+      if (diffOperations) {
+        tx.patch(getPublishedId(documentId), {
+          ...diffOperations,
+          ifRevisionID: published.snapshot._rev
+        })
+      }
+    }
+
+    tx.delete(getDraftId(documentId))
+
+    // @todo check if API returns noop or errors on revision mismatch, add error handling accordingly
     Observable.from(tx.commit())
       .map(result => ({
         type: 'success',
