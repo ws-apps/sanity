@@ -109,7 +109,7 @@ function insertPatch(patch: Patch, change: () => void, blocks: Block[], type: Ty
   //     change.insertBlock(block)
   //   }
     return change
-  }
+  // }
 }
 
 export default function patchesToChange(

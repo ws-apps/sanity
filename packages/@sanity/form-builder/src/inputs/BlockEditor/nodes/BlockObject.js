@@ -18,7 +18,7 @@ import EditItemFold from 'part:@sanity/components/edititem/fold'
 import EditItemPopOver from 'part:@sanity/components/edititem/popover'
 import FocusManager from '../../../sanity/focusManagers/SimpleFocusManager'
 import FullscreenDialog from 'part:@sanity/components/dialogs/fullscreen'
-import InvalidValue from '../../InvalidValue'
+import InvalidValue from '../../InvalidValueInput'
 import Preview from '../../../Preview'
 
 import styles from './styles/BlockObject.css'

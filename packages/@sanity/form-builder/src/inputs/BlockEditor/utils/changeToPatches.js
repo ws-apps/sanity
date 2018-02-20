@@ -4,7 +4,7 @@ import {Document, Operations} from 'slate'
 import {flatten} from 'lodash'
 import {editorValueToBlocks} from '@sanity/block-tools'
 import {unset, set, insert, setIfMissing} from '../../../PatchEvent'
-import randomKey from '../../Array/randomKey'
+import randomKey from './randomKey'
 
 // function insertTextPatch(operation: Operation, blocks: Block[]) {
 //   const {text, offset, value} = operation
