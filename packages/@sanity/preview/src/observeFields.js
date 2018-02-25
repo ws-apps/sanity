@@ -5,6 +5,7 @@ import debounceCollect from './utils/debounceCollect'
 import {combineSelections, reassemble, toGradientQuery} from './utils/optimizeQuery'
 import {flatten, difference} from 'lodash'
 import type {FieldName, Id} from './types'
+import applyMutations from './utils/applyMutation'
 
 let _globalListener
 const getGlobalListener = () => {
@@ -30,20 +31,6 @@ function fetchAllDocumentPaths(selections: Selection[]) {
 const fetchDocumentPathsFast = debounceCollect(fetchAllDocumentPaths, 100)
 const fetchDocumentPathsSlow = debounceCollect(fetchAllDocumentPaths, 1000)
 
-function listenFields(id: Id, fields: FieldName[]) {
-  // console.log('listening on doc #%s for fields %O', id, fields)
-  return fetchDocumentPathsFast(id, fields)
-    .mergeMap(
-      result =>
-        result === undefined
-          ? // hack: if we get undefined as result here it is most likely because the document has
-            // just been created and is not yet indexed. We therefore need to wait a bit and then re-fetch.
-            fetchDocumentPathsSlow(id, fields)
-          : Observable.of(result)
-    )
-    .concat(listen(id).switchMap(event => fetchDocumentPathsSlow(id, fields)))
-}
-
 // keep for debugging purposes for now
 // function fetchDocumentPaths(id, selection) {
 //   return client.observable.fetch(`*[_id==$id]{_id,_type,${selection.join(',')}}`, {id})
@@ -60,18 +47,41 @@ type Cache = {[id: Id]: CachedFieldObserver[]}
 const CACHE: Cache = {} // todo: use a LRU cache instead (e.g. hashlru or quick-lru)
 
 function createCachedFieldObserver(id, fields): CachedFieldObserver {
-  let latest = null
+  let cachedLatest = null
   const changes$ = new Observable(observer => {
-    if (latest) {
-      // Re-emit last known value immediately
-      observer.next(latest)
-      return fetchDocumentPathsSlow(id, fields)
-        .concat(listen(id).switchMap(event => fetchDocumentPathsSlow(id, fields)))
-        .subscribe(observer)
-    }
-    return listenFields(id, fields).subscribe(observer)
+    observer.next(cachedLatest)
+    observer.complete()
   })
-    .do(v => (latest = v))
+    .mergeMap(latest => {
+      const snapshotEvents = latest // Re-emit last known value immediately
+        ? Observable.of(latest)
+            .concat(fetchDocumentPathsSlow(id, fields))
+            .map(snapshot => ({type: 'snapshot', snapshot: snapshot}))
+        : fetchDocumentPathsFast(id, fields).mergeMap(
+            result =>
+              result === undefined
+                ? // hack: if we get undefined as result here it is most likely because the document has
+                  // just been created and is not yet indexed. We therefore need to wait a bit and then re-fetch.
+                  fetchDocumentPathsSlow(id, fields)
+                : Observable.of(result)
+          )
+      return snapshotEvents
+        .map(snapshot => ({type: 'snapshot', snapshot: snapshot}))
+        .concat(listen(id))
+    })
+    .scan((prevSnapshot, event) => {
+      if (event.type === 'snapshot') {
+        return event.snapshot
+      }
+      if (event.type === 'mutation') {
+        return applyMutations(prevSnapshot, event.mutations)
+      }
+      // eslint-disable-next-line no-console
+      console.warn(new Error(`Invalid event: ${event.type}`))
+      return null
+    }, null)
+    .filter(Boolean)
+    .do(v => (cachedLatest = v))
     .publishReplay()
     .refCount()
   return {id, fields, changes$}

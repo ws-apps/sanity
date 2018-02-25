@@ -32,7 +32,7 @@ function stringifyId(id: string) {
 }
 
 function toSubQuery({ids, fields}) {
-  return `*[_id in [${ids.map(stringifyId).join(',')}]][0...${ids.length}]{_id,_type,${fields.join(',')}}`
+  return `*[_id in [${ids.map(stringifyId).join(',')}]][0...${ids.length}]{_id,_type, _rev,${fields.join(',')}}`
 }
 
 export function toGradientQuery(combinedSelections: CombinedSelection[]) {
